@@ -1,2 +1,6 @@
-Vertical Speed,Horizontal Speed,Horizontal Speed Buffed,Min Spawn Interval Buff,Max Spawn Interval Buff,Min Spawn Interval Obstacle Normal,Max Spawn Interval Obstacle Normal,Min Spawn Interval Obstacle Buffed,Max Spawn Interval Obstacle Buffed
-6,0.2,0.6,4,8,1,1.5,0.33,0.5
+Vertical Speed,10
+Horizontal Speed,0.2
+Min Spawn Interval Buff,4
+Max Spawn Interval Buff,8
+Min Spawn Interval Obstacle,1
+Max Spawn Interval Obstacle,1.5

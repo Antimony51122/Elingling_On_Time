@@ -52,15 +52,75 @@ public class PlayerControl : MonoBehaviour {
         // initialise the horizontal movement state with normal where the player keeps steady speed
         HoriMvtState = new HoriMvtState();
         HoriMvtState = HoriMvtState.Normal;
+
+        // assign the player movement upper lower limits
+        _playerMvtUpperLimit = ScreenUtils.ScreenTop    - 1.5f;
+        _playerMvtLowerLimit = ScreenUtils.ScreenBottom + 2.0f;
     }
 
     void Update() {
+        //PhoneSensorControl();
+        KeyboardControl(); // remember to comment out this line when building on android
+        VertMvtHandler();
         HoriMvtHandler();
+        CalculateClampedY();
     }
 
     // ==============================================================
     // Customised Methods
     // ==============================================================
+
+    // ----- Phone Sensor Control -----
+    private void PhoneSensorControl() {
+        if (Input.acceleration.y < -0.60) {
+            VertMvtState = VertMvtState.MovingDown;
+        } else if (Input.acceleration.y > -0.25) {
+            VertMvtState = VertMvtState.MovingUp;
+        } else {
+            VertMvtState = VertMvtState.Still;
+        }
+    }
+
+    // ----- Keyboard Control -----
+    private void KeyboardControl() {
+        if (Input.GetKey(KeyCode.S)) {
+            VertMvtState = VertMvtState.MovingDown;
+        } else if (Input.GetKey(KeyCode.W)) {
+            VertMvtState = VertMvtState.MovingUp;
+        } else {
+            VertMvtState = VertMvtState.Still;
+        }
+    }
+
+    // ----- Change Movements Speeds by Manipulating States -----
+
+    // TODO: try using Rigidbody2D MovePosition Method to rewrite this function
+    private void VertMvtHandler() {
+        switch (VertMvtState) {
+            case VertMvtState.MovingDown:
+                transform.Translate(
+                    -Vector3.up * _vertSpeed * Time.deltaTime,
+                    Space.World);
+                break;
+            case VertMvtState.MovingUp:
+                transform.Translate(
+                    Vector3.up * _vertSpeed * Time.deltaTime,
+                    Space.World);
+                break;
+            case VertMvtState.Still:
+                // stop only the vertical speed by setting the vertical component to 0
+                transform.Translate(
+                    Vector3.up * 0,
+                    Space.World);
+                break;
+            default:
+                //transform.position = gameObject.transform.position;
+                transform.Translate(
+                    Vector3.up * 0,
+                    Space.World);
+                break;
+        }
+    }
 
     private void HoriMvtHandler() {
         if (HoriMvtState == HoriMvtState.Normal) {

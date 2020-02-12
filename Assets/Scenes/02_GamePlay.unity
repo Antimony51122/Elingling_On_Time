@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 998792340}
   - component: {fileID: 998792339}
   - component: {fileID: 998792338}
+  - component: {fileID: 998792342}
   - component: {fileID: 998792341}
   m_Layer: 0
   m_Name: Main Camera
@@ -251,6 +252,18 @@ MonoBehaviour:
   - {fileID: 5948315066738155214}
   _player: {fileID: 841098508}
   Choke: 0
+--- !u!114 &998792342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998792337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b810bd1cb7713a45884c060813fab5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1040420858 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6759020889492134392, guid: 47b1272567f01c44a806bf9b30a21599,
@@ -291,12 +304,12 @@ PrefabInstance:
     - target: {fileID: 781978207769076989, guid: 714c585616c4aa04e87a954b6eb81d26,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.57
+      value: 10.99
       objectReference: {fileID: 0}
     - target: {fileID: 781978207769076989, guid: 714c585616c4aa04e87a954b6eb81d26,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.17
+      value: 7.58
       objectReference: {fileID: 0}
     - target: {fileID: 781978207769076989, guid: 714c585616c4aa04e87a954b6eb81d26,
         type: 3}
@@ -445,12 +458,12 @@ PrefabInstance:
     - target: {fileID: 6759020889492134398, guid: 47b1272567f01c44a806bf9b30a21599,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.38
+      value: 4.8
       objectReference: {fileID: 0}
     - target: {fileID: 6759020889492134398, guid: 47b1272567f01c44a806bf9b30a21599,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.63
+      value: 8.04
       objectReference: {fileID: 0}
     - target: {fileID: 6759020889492134398, guid: 47b1272567f01c44a806bf9b30a21599,
         type: 3}

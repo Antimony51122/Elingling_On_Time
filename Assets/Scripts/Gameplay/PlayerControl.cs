@@ -18,7 +18,7 @@ public class PlayerControl : MonoBehaviour {
     // define the moving moving up and down speed and forward speed
     private float _vertSpeed;
     private float _horiSpeed;
-    private float _horiSpeedBuffed;
+    private float _buffFactor;
 
     public static VertMvtState VertMvtState;
     public static HoriMvtState HoriMvtState;
@@ -36,14 +36,14 @@ public class PlayerControl : MonoBehaviour {
         _rb2dPlayer     = GetComponent<Rigidbody2D>();
 
         // assign the speed values from configuration data
-        //_vertSpeed       = ConfigUtils.VertSpeed;
-        //_horiSpeed       = ConfigUtils.HoriSpeed;
-        //_horiSpeedBuffed = ConfigUtils.HoriSpeedBuffed;
+        _vertSpeed  = ConfigUtils.VertSpeed;
+        _horiSpeed  = ConfigUtils.HoriSpeed;
+        _buffFactor = ConfigUtils.BuffFactor;
 
         // Android platform has trouble reading config streaming assets, thus directly assign
-        _vertSpeed       = 10.0f;
-        _horiSpeed       = 0.2f;
-        _horiSpeedBuffed = 0.6f;
+        //_vertSpeed       = 10.0f;
+        //_horiSpeed       = 0.2f;
+        //_buffFactor      = 3.0f;
 
         // initialise the vertical movement state with still where the player keeps the altitude
         VertMvtState = new VertMvtState();
@@ -126,7 +126,7 @@ public class PlayerControl : MonoBehaviour {
         if (HoriMvtState == HoriMvtState.Normal) {
             transform.Translate(Vector3.right * _horiSpeed);
         } else if (HoriMvtState == HoriMvtState.Buffed) {
-            transform.Translate(Vector3.right * _horiSpeedBuffed);
+            transform.Translate(Vector3.right * _horiSpeed * _buffFactor);
         }
     }
 

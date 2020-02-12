@@ -11,7 +11,7 @@ public class ConfigData {
 
     private const string ConfigDataFileName = "ConfigData.csv";
 
-    private readonly Dictionary<ConfigDataValueName, float> _values = 
+    private readonly Dictionary<ConfigDataValueName, float> _values =
         new Dictionary<ConfigDataValueName, float>();
 
     // ======================================================================
@@ -21,6 +21,7 @@ public class ConfigData {
     // using expression-body style
     public float VertSpeed                => _values[ConfigDataValueName.VertSpeed];
     public float HoriSpeed                => _values[ConfigDataValueName.HoriSpeed];
+    public float BuffFactor               => _values[ConfigDataValueName.BuffFactor];
     public float MinSpawnIntervalBuff     => _values[ConfigDataValueName.MinSpawnIntervalBuff];
     public float MaxSpawnIntervalBuff     => _values[ConfigDataValueName.MaxSpawnIntervalBuff];
     public float MinSpawnIntervalObstacle => _values[ConfigDataValueName.MinSpawnIntervalObstacle];
@@ -44,7 +45,7 @@ public class ConfigData {
                 Application.streamingAssetsPath, ConfigDataFileName));
 
             // populate in names and values
-            string currentLine  = input.ReadLine();
+            string currentLine = input.ReadLine();
             while (currentLine != null) {
                 string[] tokens = currentLine.Split(',');
                 ConfigDataValueName valueName = (ConfigDataValueName) Enum.Parse(
@@ -68,10 +69,11 @@ public class ConfigData {
 
     private void SetDefaultValues() {
         _values.Clear();
-        _values.Add(ConfigDataValueName.VertSpeed, 10.0f);
-        _values.Add(ConfigDataValueName.HoriSpeed, 0.2f);
-        _values.Add(ConfigDataValueName.MinSpawnIntervalBuff, 4.0f);
-        _values.Add(ConfigDataValueName.MaxSpawnIntervalBuff, 8.0f);
+        _values.Add(ConfigDataValueName.VertSpeed,                10.0f);
+        _values.Add(ConfigDataValueName.HoriSpeed,                0.2f);
+        _values.Add(ConfigDataValueName.BuffFactor,               3.0f);
+        _values.Add(ConfigDataValueName.MinSpawnIntervalBuff,     4.0f);
+        _values.Add(ConfigDataValueName.MaxSpawnIntervalBuff,     8.0f);
         _values.Add(ConfigDataValueName.MinSpawnIntervalObstacle, 1.0f);
         _values.Add(ConfigDataValueName.MaxSpawnIntervalObstacle, 1.5f);
     }

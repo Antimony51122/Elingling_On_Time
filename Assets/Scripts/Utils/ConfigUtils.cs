@@ -19,6 +19,7 @@ public class ConfigUtils {
     // using expression-body style
     public static float VertSpeed                => _configData.VertSpeed;
     public static float HoriSpeed                => _configData.HoriSpeed;
+    public static float BuffFactor               => _configData.BuffFactor;
     public static float MinSpawnIntervalBuff     => _configData.MinSpawnIntervalBuff;
     public static float MaxSpawnIntervalBuff     => _configData.MaxSpawnIntervalBuff;
     public static float MinSpawnIntervalObstacle => _configData.MinSpawnIntervalObstacle;

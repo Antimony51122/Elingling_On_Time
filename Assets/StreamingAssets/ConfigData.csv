@@ -1,5 +1,6 @@
 Vertical Speed,10
 Horizontal Speed,0.2
+BuffFactor,3
 Min Spawn Interval Buff,4
 Max Spawn Interval Buff,8
 Min Spawn Interval Obstacle,1

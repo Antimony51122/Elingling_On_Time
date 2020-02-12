@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ConfigDataValueName 
-{
+public enum ConfigDataValueName {
     VertSpeed,
     HoriSpeed,
+    BuffFactor,
     MinSpawnIntervalBuff,
     MaxSpawnIntervalBuff,
     MinSpawnIntervalObstacle,

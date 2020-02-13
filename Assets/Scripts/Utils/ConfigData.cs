@@ -34,37 +34,40 @@ public class ConfigData {
     // Reads configuration data from a file. If the file read fails,
     // the object contains default values for the configuration data
     public ConfigData() {
-        // read and save configuration data from file
-        StreamReader input = null;
+        //// read and save configuration data from file
+        //StreamReader input = null;
 
-        try {
-            // create stream reader object
-            input = File.OpenText(Path.Combine(
-                // put the data file into a folder called StreamingAssets
-                // use this value to get to that folder location without hard-coding
-                Application.streamingAssetsPath, ConfigDataFileName));
+        //try {
+        //    // create stream reader object
+        //    input = File.OpenText(Path.Combine(
+        //        // put the data file into a folder called StreamingAssets
+        //        // use this value to get to that folder location without hard-coding
+        //        Application.streamingAssetsPath, ConfigDataFileName));
 
-            // populate in names and values
-            string currentLine = input.ReadLine();
-            while (currentLine != null) {
-                string[] tokens = currentLine.Split(',');
-                ConfigDataValueName valueName = (ConfigDataValueName) Enum.Parse(
-                    typeof(ConfigDataValueName), tokens[0]);
-                _values.Add(valueName, float.Parse(tokens[1]));
-                currentLine = input.ReadLine();
-            }
-        } catch (Exception e) {
-            Console.WriteLine(e);
-            // set default values if something went wrong
-            SetDefaultValues();
-        } finally {
-            // always close input file
-            // check if input is null
-            // if close a file that never even opened, will get NullReferenceException
-            if (input != null) {
-                input.Close();
-            }
-        }
+        //    // populate in names and values
+        //    string currentLine = input.ReadLine();
+        //    while (currentLine != null) {
+        //        string[] tokens = currentLine.Split(',');
+        //        ConfigDataValueName valueName = (ConfigDataValueName) Enum.Parse(
+        //            typeof(ConfigDataValueName), tokens[0]);
+        //        _values.Add(valueName, float.Parse(tokens[1]));
+        //        currentLine = input.ReadLine();
+        //    }
+        //} catch (Exception e) {
+        //    Console.WriteLine(e);
+        //    // set default values if something went wrong
+        //    SetDefaultValues();
+        //} finally {
+        //    // always close input file
+        //    // check if input is null
+        //    // if close a file that never even opened, will get NullReferenceException
+        //    if (input != null) {
+        //        input.Close();
+        //    }
+        //}
+
+        // direct setting without stream reading, for phone builds
+        SetDefaultValues();
     }
 
     private void SetDefaultValues() {
@@ -74,7 +77,7 @@ public class ConfigData {
         _values.Add(ConfigDataValueName.BuffFactor,               3.0f);
         _values.Add(ConfigDataValueName.MinSpawnIntervalBuff,     4.0f);
         _values.Add(ConfigDataValueName.MaxSpawnIntervalBuff,     8.0f);
-        _values.Add(ConfigDataValueName.MinSpawnIntervalObstacle, 0.75f);
-        _values.Add(ConfigDataValueName.MaxSpawnIntervalObstacle, 1.5f);
+        _values.Add(ConfigDataValueName.MinSpawnIntervalObstacle, 1.25f);
+        _values.Add(ConfigDataValueName.MaxSpawnIntervalObstacle, 1.75f);
     }
 }

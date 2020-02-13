@@ -3,5 +3,5 @@ Horizontal Speed,0.2
 BuffFactor,3
 Min Spawn Interval Buff,4
 Max Spawn Interval Buff,8
-Min Spawn Interval Obstacle,0.75
-Max Spawn Interval Obstacle,1.5
+Min Spawn Interval Obstacle,1.25
+Max Spawn Interval Obstacle,1.75

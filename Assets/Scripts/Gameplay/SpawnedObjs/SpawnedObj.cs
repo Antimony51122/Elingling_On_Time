@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnedObj : MonoBehaviour
+public abstract class SpawnedObj : MonoBehaviour
 {
     // ======================================================================
     // Field Variables
@@ -15,15 +15,13 @@ public class SpawnedObj : MonoBehaviour
     // MonoBehaviour Methods
     // ======================================================================
 
-    void Start() {
-
-    }
+    protected abstract void Start();
 
     protected virtual void Update() {
         DestroySelf();
     }
 
-    //protected abstract void OnTriggerEnter2D(Collider2D coll);
+    protected abstract void OnTriggerEnter2D(Collider2D coll);
 
     // ======================================================================
     // Customised Methods

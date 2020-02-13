@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour {
     protected CustomTimer CustomTimer;
     protected Vector3     SpawnLocation;
     protected float       SpawnXPos;
-    protected float       SpawnYPos;
+    protected float       SpawnYPos = 0;
     protected float       SpawnZPos;
 
     // ======================================================================

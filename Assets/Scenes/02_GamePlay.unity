@@ -120,31 +120,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &215884067 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 781978207769076987, guid: 714c585616c4aa04e87a954b6eb81d26,
-    type: 3}
-  m_PrefabInstance: {fileID: 781978207983371736}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &215884068
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 215884067}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 11a7c17b48cdb194a98ef018603191a9, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &841098508 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9152731990310838147, guid: 5078b9d5870d73c4dab3da28c1d4de82,
@@ -280,31 +255,6 @@ MonoBehaviour:
   _prefabVehicles:
   - {fileID: 781978207769076987, guid: 714c585616c4aa04e87a954b6eb81d26, type: 3}
   - {fileID: 6759020889492134392, guid: 47b1272567f01c44a806bf9b30a21599, type: 3}
---- !u!1 &1040420858 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6759020889492134392, guid: 47b1272567f01c44a806bf9b30a21599,
-    type: 3}
-  m_PrefabInstance: {fileID: 6759020889122805250}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1040420859
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1040420858}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2b0a3a996f60d304c8ccd1a8cfd40ad0, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &781978207983371736
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -371,16 +321,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 781978207769076989, guid: 714c585616c4aa04e87a954b6eb81d26,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 781978207769076989, guid: 714c585616c4aa04e87a954b6eb81d26,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 714c585616c4aa04e87a954b6eb81d26, type: 3}
@@ -525,16 +465,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6759020889492134398, guid: 47b1272567f01c44a806bf9b30a21599,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6759020889492134398, guid: 47b1272567f01c44a806bf9b30a21599,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47b1272567f01c44a806bf9b30a21599, type: 3}

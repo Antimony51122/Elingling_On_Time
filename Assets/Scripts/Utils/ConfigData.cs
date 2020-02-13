@@ -66,7 +66,7 @@ public class ConfigData {
         //    }
         //}
 
-        // direct setting without stream reading, for phone builds
+        // direct value setting without stream reading, for phone builds
         SetDefaultValues();
     }
 

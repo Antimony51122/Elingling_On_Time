@@ -9,6 +9,7 @@ public class Vehicle : SpawnedObj {
 
     // --------------- Fields to be attached Component Instances ---------------
 
+    private Rigidbody2D    _rb2D;
     private SpriteRenderer _spriteRenderer;
 
     // --------------- Config Params ---------------
@@ -34,6 +35,7 @@ public class Vehicle : SpawnedObj {
 
         _speed = 5;
 
+        _rb2D           = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
         SetLaneAndDirection();
@@ -41,13 +43,15 @@ public class Vehicle : SpawnedObj {
 
     protected override void Update() {
         // vehicle on top lane moving towards left, bot towards right
-        if (_vehicleLane == VehicleLane.Top) {
-            transform.Translate(
-                Vector2.left * _speed * Time.deltaTime, Space.World);
-        } else {
-            transform.Translate(
-                Vector2.right * _speed * Time.deltaTime, Space.World);
-        }
+        // this method is very computational consuming,
+        // instead, set vehicle object to dynamic and set gravity to 0 to avoid falling
+        //if (_vehicleLane == VehicleLane.Top) {
+        //    transform.Translate(
+        //        Vector2.left * _speed * Time.deltaTime, Space.World);
+        //} else {
+        //    transform.Translate(
+        //        Vector2.right * _speed * Time.deltaTime, Space.World);
+        //}
 
         base.Update();
     }
@@ -74,6 +78,9 @@ public class Vehicle : SpawnedObj {
                 Random.Range(_topLaneBot, _topLaneTop),
                 transform.position.z);
 
+            // add force to initialise the vehicle movement
+            _rb2D.AddForce(new Vector2(-150, 0));
+
             // don't flip the sprite horizontally to so the vehicle faces left
             _spriteRenderer.flipX = false;
         } else {
@@ -81,6 +88,8 @@ public class Vehicle : SpawnedObj {
                 transform.position.x,
                 Random.Range(_botLaneBot, _botLaneTop),
                 transform.position.z);
+
+            _rb2D.AddForce(new Vector2(150, 0));
 
             // flip the sprite horizontally to make the vehicle face right
             _spriteRenderer.flipX = true;

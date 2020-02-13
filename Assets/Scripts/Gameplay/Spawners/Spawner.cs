@@ -31,13 +31,11 @@ public class Spawner : MonoBehaviour {
     // ======================================================================
 
     protected virtual void SpawnNewObj(GameObject obj) {
-        // the object will always spawn 4 * half screen width away from the player position
+        // the object will always spawn 2.5 * half screen width away from the player position
         if (PlayerControl.PlayerTransform != null) {
-            SpawnXPos = PlayerControl.PlayerTransform.position.x + 4 * ScreenUtils.ScreenRight;
+            SpawnXPos = PlayerControl.PlayerTransform.position.x + 2.5f * ScreenUtils.ScreenRight;
         }
-
         SpawnLocation = new Vector3(SpawnXPos, SpawnYPos, SpawnZPos);
-
         Instantiate(obj, SpawnLocation, Quaternion.identity);
     }
 }

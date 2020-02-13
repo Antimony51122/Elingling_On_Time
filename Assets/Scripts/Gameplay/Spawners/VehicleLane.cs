@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class TimeFinishedEvent : UnityEvent<float> { }
+public enum VehicleLane {
+    Top,
+    Bottom
+}

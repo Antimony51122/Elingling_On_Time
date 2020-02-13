@@ -74,7 +74,7 @@ public class ConfigData {
         _values.Add(ConfigDataValueName.BuffFactor,               3.0f);
         _values.Add(ConfigDataValueName.MinSpawnIntervalBuff,     4.0f);
         _values.Add(ConfigDataValueName.MaxSpawnIntervalBuff,     8.0f);
-        _values.Add(ConfigDataValueName.MinSpawnIntervalObstacle, 1.0f);
+        _values.Add(ConfigDataValueName.MinSpawnIntervalObstacle, 0.75f);
         _values.Add(ConfigDataValueName.MaxSpawnIntervalObstacle, 1.5f);
     }
 }

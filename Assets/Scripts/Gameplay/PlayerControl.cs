@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour {
-    // ==============================================================
+    // ======================================================================
     // Field Variables
-    // ==============================================================
+    // ======================================================================
 
     // --------------- Fields to be attached Component Instances ---------------
 
@@ -27,9 +27,9 @@ public class PlayerControl : MonoBehaviour {
     private float _playerMvtUpperLimit;
     private float _playerMvtLowerLimit;
 
-    // ==============================================================
+    // ======================================================================
     // MonoBehaviour Methods
-    // ==============================================================
+    // ======================================================================
 
     void Start() {
         PlayerTransform = GetComponent<Transform>();
@@ -66,9 +66,9 @@ public class PlayerControl : MonoBehaviour {
         CalculateClampedY();
     }
 
-    // ==============================================================
+    // ======================================================================
     // Customised Methods
-    // ==============================================================
+    // ======================================================================
 
     // ----- Phone Sensor Control -----
     private void PhoneSensorControl() {

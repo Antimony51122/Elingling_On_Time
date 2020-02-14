@@ -24,7 +24,7 @@ public class Vehicle : SpawnedObj {
     private float _speed;
 
     // ======================================================================
-    // MonoBehaviour Methods
+    // Main Loop & MonoBehaviour Methods
     // ======================================================================
 
     protected override void Start() {

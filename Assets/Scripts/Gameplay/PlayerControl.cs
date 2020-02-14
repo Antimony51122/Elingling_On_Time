@@ -28,12 +28,12 @@ public class PlayerControl : MonoBehaviour {
     private float _playerMvtLowerLimit;
 
     // ======================================================================
-    // MonoBehaviour Methods
+    // Main Loop & MonoBehaviour Methods
     // ======================================================================
 
     void Start() {
         PlayerTransform = GetComponent<Transform>();
-        _rb2D     = GetComponent<Rigidbody2D>();
+        _rb2D           = GetComponent<Rigidbody2D>();
 
         // assign the speed values from configuration data
         _vertSpeed  = ConfigUtils.VertSpeed;

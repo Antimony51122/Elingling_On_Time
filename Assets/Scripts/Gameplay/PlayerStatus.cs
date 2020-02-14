@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStatus : MonoBehaviour {
+public class PlayerStatus : ZPosChangeable {
     // ==============================================================
     // Field Variables
     // ==============================================================
 
-    // --------------- Serialized Fields ---------------
+    // --------------- Serialized Cached References ---------------
 
     [SerializeField] private Animator _animator;
 
     // --------------- Fields to be attached Component Instances ---------------
 
-    private BoxCollider2D _boxColl2D;
+    private CapsuleCollider2D _capColl2D;
 
     // --------------- Config Params ---------------
 
@@ -37,7 +37,7 @@ public class PlayerStatus : MonoBehaviour {
         Invincible = false;
 
         // attach the BoxCollider2D component for later crashing bus and car effects
-        _boxColl2D = GetComponent<BoxCollider2D>();
+        _capColl2D = GetComponent<CapsuleCollider2D>();
 
         _buffTimer          = gameObject.AddComponent<CustomTimer>();
         _buffTimer.Duration = ConfigUtils.BuffDuration;
@@ -52,30 +52,6 @@ public class PlayerStatus : MonoBehaviour {
         // 5 is the initial distance the player was away from the origin
         Score = (int) transform.position.x + 5;
     }
-
-    // determine the player sprite's z-pos by comparing with the colliding vehicle objects
-    // this is to avoid the weird posture of the player sprite behind the vehicle sprite when
-    // the player looks actually closer to the Camera
-    void OnTriggerEnter2D(Collider2D coll) {
-        // when the Player's center y-pos is lower than
-        // - Bus's center y-pos by more than 1 unit
-        // - Car's center y-pos by more than 0.25 units
-        if ((coll.gameObject.name == "Bus(Clone)" &&
-             transform.position.y < coll.transform.position.y - 1.0f) ||
-            (coll.gameObject.name == "Car(Clone)" &&
-             transform.position.y < coll.transform.position.y - 0.25f)) {
-            // set z-pos of player to closer than the vehicles
-            transform.position = new Vector3(transform.position.x, transform.position.y, -3);
-        }
-    }
-
-    // set the player's z-pos back to original when exit the vehicle's collider
-    void OnTriggerExit2D(Collider2D coll) {
-        Debug.Log(coll.gameObject.name);
-        if (coll.gameObject.CompareTag("Vehicle")) {
-            transform.position = new Vector3(transform.position.x, transform.position.y, -1);
-        }
-    } 
 
     // ======================================================================
     // Customised Methods
@@ -102,7 +78,7 @@ public class PlayerStatus : MonoBehaviour {
         _animator.SetBool("OnBicycle", Invincible);
 
         // set isTrigger property to false so the player can crash away the car and bus
-        _boxColl2D.isTrigger = false;
+        _capColl2D.isTrigger = false;
 
         // start the buff timer and exit buffed mode after buff duration
         _buffTimer.Run();
@@ -116,7 +92,7 @@ public class PlayerStatus : MonoBehaviour {
         _animator.SetBool("OnBicycle", Invincible);
 
         // set isTrigger property back to true thus the player won't physically interact with vehicles
-        _boxColl2D.isTrigger = true;
+        _capColl2D.isTrigger = true;
 
         // Player movement speed set back to normal state
         PlayerControl.HoriMvtState = HoriMvtState.Normal;

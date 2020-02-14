@@ -55,8 +55,21 @@ public class PlayerStatus : MonoBehaviour {
 
     // process trigger collisions with other game objects
     void OnTriggerEnter2D(Collider2D coll) {
-        // TODO: player z-pos relative to the car
+        if ((coll.gameObject.name == "Bus(Clone)" &&
+             transform.position.y < coll.transform.position.y - 1.0f) ||
+            (coll.gameObject.name == "Car(Clone)" &&
+             transform.position.y < coll.transform.position.y - 0.25f)) {
+            
+            transform.position = new Vector3(transform.position.x, transform.position.y, -3);
+        }
     }
+
+    void OnTriggerExit2D(Collider2D coll) {
+        Debug.Log(coll.gameObject.name);
+        if (coll.gameObject.CompareTag("Vehicle")) {
+            transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+        }
+    } 
 
     // ======================================================================
     // Customised Methods
@@ -89,12 +102,6 @@ public class PlayerStatus : MonoBehaviour {
         _buffTimer.Run();
     }
 
-    // 
-    private void HandleGameOverEvent(float unused) {
-        // TODO: game over menu
-        Debug.Log("game over"); // check whether invoker is working correctly
-    }
-
     // callback this function when buff timer finished
     private void HandleBuffTimerFinishedEvent() {
         Invincible = false;
@@ -107,5 +114,11 @@ public class PlayerStatus : MonoBehaviour {
 
         // Player movement speed set back to normal state
         PlayerControl.HoriMvtState = HoriMvtState.Normal;
+    }
+
+    // 
+    private void HandleGameOverEvent(float unused) {
+        // TODO: game over menu
+        //Debug.Log("game over"); // check whether invoker is working correctly
     }
 }

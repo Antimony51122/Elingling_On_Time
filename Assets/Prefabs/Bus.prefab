@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7106387157509519332}
   m_Layer: 0
   m_Name: Bus
-  m_TagString: Untagged
+  m_TagString: Vehicle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,8 +164,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.7980036, y: -0.45842823}
-  m_Size: {x: 5.0100813, y: 2.1025188}
+  m_Offset: {x: -0.058981005, y: -0.45842832}
+  m_Size: {x: 6.4881573, y: 2.1025274}
   m_Direction: 1
 --- !u!114 &7106387157509519332
 MonoBehaviour:

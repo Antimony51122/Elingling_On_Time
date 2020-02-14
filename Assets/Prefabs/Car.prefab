@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6147177378165251747}
   m_Layer: 0
   m_Name: Car
-  m_TagString: Untagged
+  m_TagString: Vehicle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,8 +164,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 3.8181818, y: 2.4242425}
+  m_Offset: {x: 0.0450804, y: -0.23770317}
+  m_Size: {x: 3.324542, y: 1.3376175}
   m_Direction: 1
 --- !u!114 &6147177378165251747
 MonoBehaviour:

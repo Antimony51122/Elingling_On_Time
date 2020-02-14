@@ -16,8 +16,7 @@ public class BicycleBuffSpawner : Spawner {
     // ======================================================================
 
     // Update is called once per frame
-    protected override void Update()
-    {
+    protected override void Update() {
         if (CustomTimer.Finished) {
             SpawnNewObj(_prefabBicycleBuff);
 

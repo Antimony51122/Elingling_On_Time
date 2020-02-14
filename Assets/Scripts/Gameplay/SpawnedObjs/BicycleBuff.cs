@@ -2,17 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BicycleBuff : MonoBehaviour
+public class BicycleBuff : SpawnedObj
 {
-    // Start is called before the first frame update
-    void Start()
+    // ======================================================================
+    // Field Variables
+    // ======================================================================
+
+    private bool _isMissed = false;
+
+
+    // ======================================================================
+    // Main Loop & MonoBehaviour Methods
+    // ======================================================================
+
+    protected override void Start()
     {
-        
+        UnityEvents.Add(EventName.SpeedUpActivatedEvent, new SpeedUpActivatedEvent());
+        EventManager.AddFloatArgInvoker(EventName.SpeedUpActivatedEvent, this);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        
+        // TODO: count missing
+
+        base.Update();
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D coll) {
+        if (coll.gameObject.CompareTag("Player")) {
+            UnityEvents[EventName.SpeedUpActivatedEvent].Invoke(ConfigUtils.MinSpawnIntervalBuff);
+        }
+    }
+
+    protected override void OnDestroy() {
+        EventManager.RemoveFloatArgInvoker(EventName.SpeedUpActivatedEvent, this);
     }
 }

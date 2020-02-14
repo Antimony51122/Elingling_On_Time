@@ -3,7 +3,4 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class HealthChangedEvent : UnityEvent<float>
-{
-
-}
+public class HealthChangedEvent : UnityEvent<float> { }

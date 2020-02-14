@@ -44,6 +44,9 @@ public class PlayerStatus : MonoBehaviour {
     // boost the player movement speed and turn invincible
     private void HandleSpeedUpEffectEvent(float factor) {
         // TODO: change the sprite
+
+        Debug.Log("Buffed");
+        PlayerControl.HoriMvtState = HoriMvtState.Buffed;
     }
 
     //

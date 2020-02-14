@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour {
-    // health 
+    // ==============================================================
+    // Field Variables
+    // ==============================================================
+
     public static float Health;
+    public static int Score;
 
     // ======================================================================
     // Main Loop & MonoBehaviour Methods
@@ -19,7 +23,10 @@ public class PlayerStatus : MonoBehaviour {
         EventManager.AddFloatArgListener(EventName.GameOverEvent,         HandleGameOverEvent);
     }
 
-    void Update() { }
+    void Update() {
+        // 5 is the initial distance the player was away from the origin
+        Score = (int)transform.position.x + 5;
+    }
 
     // process trigger collisions with other game objects
     void OnTriggerEnter2D(Collider2D otherColl) { }

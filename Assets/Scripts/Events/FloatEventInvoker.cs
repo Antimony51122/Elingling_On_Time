@@ -12,11 +12,11 @@ public class FloatEventInvoker : MonoBehaviour {
         new Dictionary<EventName, UnityEvent<float>>();
 
     // Adds the given listener for the given event name
-    public void AddListener(EventName eventName, UnityAction<float> listener) {
+    public void AddFloatArgListener(EventName eventName, UnityAction<float> listener) {
         // only add listeners for supported events, `ContainsKey` check for the key
         if (UnityEvents.ContainsKey(eventName)) {
             // get the invoker by putting the key in between square brackets
             UnityEvents[eventName].AddListener(listener);
         }
     }
-}   
+}

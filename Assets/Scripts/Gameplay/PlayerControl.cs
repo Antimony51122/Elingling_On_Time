@@ -11,7 +11,7 @@ public class PlayerControl : MonoBehaviour {
 
     public static Transform PlayerTransform;
 
-    private Rigidbody2D _rb2dPlayer;
+    private Rigidbody2D _rb2D;
 
     // --------------- Config Params ---------------
 
@@ -33,7 +33,7 @@ public class PlayerControl : MonoBehaviour {
 
     void Start() {
         PlayerTransform = GetComponent<Transform>();
-        _rb2dPlayer     = GetComponent<Rigidbody2D>();
+        _rb2D     = GetComponent<Rigidbody2D>();
 
         // assign the speed values from configuration data
         _vertSpeed  = ConfigUtils.VertSpeed;

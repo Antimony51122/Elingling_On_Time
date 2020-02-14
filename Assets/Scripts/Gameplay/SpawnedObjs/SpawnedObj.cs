@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SpawnedObj : MonoBehaviour
+public abstract class SpawnedObj : FloatEventInvoker
 {
     // ======================================================================
     // Field Variables

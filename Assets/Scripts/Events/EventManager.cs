@@ -47,30 +47,38 @@ public static class EventManager {
         }
     }
 
-    // Adds the given invoker for the given event name
-    public static void AddInvoker(EventName eventName, FloatEventInvoker invoker) {
+    #region FloatArgHandlers
+
+    // --------------- Float Argument Handlers ---------------
+
+    // Adds the given invoker for the given event name with float argument
+    public static void AddFloatArgInvoker(EventName eventName, FloatEventInvoker invoker) {
         // add listeners to new invoker and add new invoker to dictionary
         foreach (UnityAction<float> listener in Listeners[eventName]) {
-            invoker.AddListener(eventName, listener);
+            invoker.AddFloatArgListener(eventName, listener);
         }
 
         Invokers[eventName].Add(invoker);
     }
 
-    // Adds the given listener for the given event name
-    public static void AddListener(EventName eventName, UnityAction<float> listener) {
+    // Adds the given listener for the given event name with float argument
+    public static void AddFloatArgListener(EventName eventName, UnityAction<float> listener) {
         // add as listener to all invokers and add new listener to dictionary
         foreach (FloatEventInvoker invoker in Invokers[eventName]) {
-            invoker.AddListener(eventName, listener);
+            invoker.AddFloatArgListener(eventName, listener);
         }
 
         Listeners[eventName].Add(listener);
     }
 
-    // Removes the given invoker for the given event name
+    // Removes the given invoker for the given event name with float argument
     // this increase the code efficiency when the invoker has been destroyed
-    public static void RemoveInvoker(EventName eventName, FloatEventInvoker invoker) {
+    public static void RemoveFloatArgInvoker(EventName eventName, FloatEventInvoker invoker) {
         // remove invoker from dictionary
         Invokers[eventName].Remove(invoker);
     }
+
+    #endregion
+
+
 }

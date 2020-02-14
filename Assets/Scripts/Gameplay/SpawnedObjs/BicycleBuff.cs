@@ -27,7 +27,8 @@ public class BicycleBuff : SpawnedObj {
 
     protected override void OnTriggerEnter2D(Collider2D coll) {
         if (coll.gameObject.CompareTag("Player")) {
-            UnityEvents[EventName.SpeedUpActivatedEvent].Invoke(3.0f);
+            // TODO: this float argument here is actually unused, make it useful
+            UnityEvents[EventName.SpeedUpActivatedEvent].Invoke(ConfigUtils.BuffDuration);
 
             // buff object disappears after the player collects it
             Destroy(gameObject);

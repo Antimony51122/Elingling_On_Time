@@ -7,6 +7,11 @@ public class PlayerStatus : MonoBehaviour {
     // Field Variables
     // ==============================================================
 
+    // --------------- Serialized Fields ---------------
+
+    [SerializeField] private Animator _animator;
+
+    // static fields to describe the player's current condition
     public static float Health;
     public static int   Score;
     public static bool  Invincible;
@@ -26,7 +31,7 @@ public class PlayerStatus : MonoBehaviour {
         Invincible = false;
 
         _buffTimer          = gameObject.AddComponent<CustomTimer>();
-        _buffTimer.Duration = ConfigUtils.MinSpawnIntervalBuff;
+        _buffTimer.Duration = ConfigUtils.BuffDuration;
         _buffTimer.AddTimerFinishedEventListener(HandleBuffTimerFinishedEvent);
 
         EventManager.AddFloatArgListener(EventName.HealthChangedEvent,    HandleHealthChangedEvent);
@@ -57,25 +62,30 @@ public class PlayerStatus : MonoBehaviour {
 
     // boost the player movement speed and turn invincible
     private void HandleSpeedUpEffectEvent(float factor) {
-        // TODO: change the sprite
-
         // set invincibility mode to true thus player will not deduct health during invincible mode
         Invincible = true;
 
         // Player movement speed set to buffed state
         PlayerControl.HoriMvtState = HoriMvtState.Buffed;
 
+        // change the sprite animation to riding bicycle in the animator
+        _animator.SetBool("OnBicycle", Invincible);
+
         // start the buff timer and exit buffed mode after buff duration
         _buffTimer.Run();
     }
 
-    //
+    // 
     private void HandleGameOverEvent(float unused) {
         Debug.Log("game over"); // check whether invoker is working correctly
     }
 
+    // callback this function when buff timer finished
     private void HandleBuffTimerFinishedEvent() {
         Invincible = false;
+
+        // change the sprite animation to riding bicycle in the animator
+        _animator.SetBool("OnBicycle", Invincible);
 
         // Player movement speed set back to normal state
         PlayerControl.HoriMvtState = HoriMvtState.Normal;

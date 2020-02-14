@@ -22,6 +22,7 @@ public class ConfigData {
     public float VertSpeed                => _values[ConfigDataValueName.VertSpeed];
     public float HoriSpeed                => _values[ConfigDataValueName.HoriSpeed];
     public float BuffFactor               => _values[ConfigDataValueName.BuffFactor];
+    public float BuffDuration             => _values[ConfigDataValueName.BuffDuration];
     public float MinSpawnIntervalBuff     => _values[ConfigDataValueName.MinSpawnIntervalBuff];
     public float MaxSpawnIntervalBuff     => _values[ConfigDataValueName.MaxSpawnIntervalBuff];
     public float MinSpawnIntervalObstacle => _values[ConfigDataValueName.MinSpawnIntervalObstacle];
@@ -75,8 +76,9 @@ public class ConfigData {
         _values.Add(ConfigDataValueName.VertSpeed,                10.0f);
         _values.Add(ConfigDataValueName.HoriSpeed,                0.2f);
         _values.Add(ConfigDataValueName.BuffFactor,               3.0f);
-        _values.Add(ConfigDataValueName.MinSpawnIntervalBuff,     4.0f);
-        _values.Add(ConfigDataValueName.MaxSpawnIntervalBuff,     8.0f);
+        _values.Add(ConfigDataValueName.BuffDuration,             4.0f);
+        _values.Add(ConfigDataValueName.MinSpawnIntervalBuff,     8.0f);
+        _values.Add(ConfigDataValueName.MaxSpawnIntervalBuff,     12.0f);
         _values.Add(ConfigDataValueName.MinSpawnIntervalObstacle, 1.25f);
         _values.Add(ConfigDataValueName.MaxSpawnIntervalObstacle, 1.75f);
     }

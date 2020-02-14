@@ -6,6 +6,7 @@ public enum ConfigDataValueName {
     VertSpeed,
     HoriSpeed,
     BuffFactor,
+    BuffDuration,
     MinSpawnIntervalBuff,
     MaxSpawnIntervalBuff,
     MinSpawnIntervalObstacle,

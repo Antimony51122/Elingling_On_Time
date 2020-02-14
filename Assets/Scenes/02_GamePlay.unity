@@ -132,12 +132,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 9152731989474212495}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &841098513 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 4163143583406965713, guid: 5078b9d5870d73c4dab3da28c1d4de82,
-    type: 3}
-  m_PrefabInstance: {fileID: 9152731989474212495}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &998792337
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,6 +446,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1490256735052773368, guid: 714c585616c4aa04e87a954b6eb81d26,
+        type: 3}
+      propertyPath: m_Offset.x
+      value: -0.07640342
+      objectReference: {fileID: 0}
+    - target: {fileID: 1490256735052773368, guid: 714c585616c4aa04e87a954b6eb81d26,
+        type: 3}
+      propertyPath: m_Offset.y
+      value: -0.23770316
+      objectReference: {fileID: 0}
+    - target: {fileID: 1490256735052773368, guid: 714c585616c4aa04e87a954b6eb81d26,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 3.1220655
+      objectReference: {fileID: 0}
+    - target: {fileID: 1490256735052773368, guid: 714c585616c4aa04e87a954b6eb81d26,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1.3376162
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 714c585616c4aa04e87a954b6eb81d26, type: 3}
@@ -807,21 +821,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5424168841753923972, guid: 5078b9d5870d73c4dab3da28c1d4de82,
-        type: 3}
-      propertyPath: m_Offset.x
-      value: 0.28916156
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424168841753923972, guid: 5078b9d5870d73c4dab3da28c1d4de82,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 0.8516767
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511026604070873367, guid: 5078b9d5870d73c4dab3da28c1d4de82,
-        type: 3}
-      propertyPath: _animator
-      value: 
-      objectReference: {fileID: 841098513}
     - target: {fileID: 9152731990310838145, guid: 5078b9d5870d73c4dab3da28c1d4de82,
         type: 3}
       propertyPath: m_LocalPosition.x

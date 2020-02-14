@@ -134,10 +134,7 @@ public class PlayerControl : MonoBehaviour {
     private void CalculateClampedY() {
         // remember to add z pos, if using Vector2, the z pos will go back to 0 
         // where the player will be behind the background
-        Vector3 playerPos = new Vector3(
-            transform.position.x,
-            transform.position.y,
-            transform.position.z);
+        Vector3 playerPos = transform.position;
 
         if (playerPos.y > _playerMvtUpperLimit || playerPos.y < _playerMvtLowerLimit) {
             playerPos.y = Mathf.Clamp(

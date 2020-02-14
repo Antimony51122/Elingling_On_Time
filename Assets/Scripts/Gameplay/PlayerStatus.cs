@@ -91,6 +91,7 @@ public class PlayerStatus : MonoBehaviour {
 
     // 
     private void HandleGameOverEvent(float unused) {
+        // TODO: game over menu
         Debug.Log("game over"); // check whether invoker is working correctly
     }
 

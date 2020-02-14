@@ -8,7 +8,7 @@ public class PlayerStatus : MonoBehaviour {
     // ==============================================================
 
     public static float Health;
-    public static int Score;
+    public static int   Score;
 
     // ======================================================================
     // Main Loop & MonoBehaviour Methods
@@ -25,7 +25,7 @@ public class PlayerStatus : MonoBehaviour {
 
     void Update() {
         // 5 is the initial distance the player was away from the origin
-        Score = (int)transform.position.x + 5;
+        Score = (int) transform.position.x + 5;
     }
 
     // process trigger collisions with other game objects
@@ -44,9 +44,10 @@ public class PlayerStatus : MonoBehaviour {
     // boost the player movement speed and turn invincible
     private void HandleSpeedUpEffectEvent(float factor) {
         // TODO: change the sprite
-
     }
 
     //
-    private void HandleGameOverEvent(float unused) { }
+    private void HandleGameOverEvent(float unused) {
+        Debug.Log("game over"); // check whether invoker is working correctly
+    }
 }

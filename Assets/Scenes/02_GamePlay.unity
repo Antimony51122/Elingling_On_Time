@@ -348,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1744529095
 Transform:
   m_ObjectHideFlags: 0
@@ -376,11 +376,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Car
-      objectReference: {fileID: 0}
-    - target: {fileID: 781978207769076987, guid: 714c585616c4aa04e87a954b6eb81d26,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 781978207769076989, guid: 714c585616c4aa04e87a954b6eb81d26,
         type: 3}
@@ -521,6 +516,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1744529095}
     m_Modifications:
+    - target: {fileID: 1040420860, guid: 47b1272567f01c44a806bf9b30a21599, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.87795925
+      objectReference: {fileID: 0}
+    - target: {fileID: 1040420860, guid: 47b1272567f01c44a806bf9b30a21599, type: 3}
+      propertyPath: m_Size.x
+      value: 4.578697
+      objectReference: {fileID: 0}
+    - target: {fileID: 1040420860, guid: 47b1272567f01c44a806bf9b30a21599, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.7822566
+      objectReference: {fileID: 0}
+    - target: {fileID: 1040420860, guid: 47b1272567f01c44a806bf9b30a21599, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5858755
+      objectReference: {fileID: 0}
     - target: {fileID: 6759020889492134392, guid: 47b1272567f01c44a806bf9b30a21599,
         type: 3}
       propertyPath: m_Name

@@ -63,21 +63,24 @@ public class Vehicle : SpawnedObj {
     }
 
     protected override void OnTriggerEnter2D(Collider2D coll) {
-        Debug.Log(coll.name);
+        //Debug.Log(coll.name);
 
         if (coll.gameObject.CompareTag("Player")) {
             UnityEvents[EventName.HealthChangedEvent].Invoke(1.0f);
+            //Debug.Log(PlayerStatus.Health);
 
             // check for game over
             if (PlayerStatus.Health == 0) {
                 UnityEvents[EventName.GameOverEvent].Invoke(0);
-                Debug.Log(PlayerStatus.Health);
             }
         }
+    }
 
-        
-
-
+    protected override void OnDestroy() {
+        // remove the invoker so we don't have the Vehicle script hanging around in that dictionary
+        // in the EventManager after the Vehicle game object it was attached to gets destroyed
+        EventManager.RemoveFloatArgInvoker(EventName.HealthChangedEvent, this);
+        EventManager.RemoveFloatArgInvoker(EventName.GameOverEvent, this);
     }
 
     // ======================================================================

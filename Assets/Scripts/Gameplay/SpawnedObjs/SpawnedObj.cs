@@ -23,6 +23,8 @@ public abstract class SpawnedObj : FloatEventInvoker
 
     protected abstract void OnTriggerEnter2D(Collider2D coll);
 
+    protected abstract void OnDestroy();
+
     // ======================================================================
     // Customised Methods
     // ======================================================================

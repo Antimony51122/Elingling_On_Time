@@ -9,7 +9,7 @@ public class PlayerStatus : MonoBehaviour {
 
     public static float Health;
     public static int   Score;
-
+    public static bool  Invincible;
 
     // buff timer
     private CustomTimer _buffTimer;
@@ -21,6 +21,9 @@ public class PlayerStatus : MonoBehaviour {
     void Start() {
         // initialise player health with 3 hearts
         Health = 3;
+
+        // initialise player invincibility mode with false
+        Invincible = false;
 
         _buffTimer          = gameObject.AddComponent<CustomTimer>();
         _buffTimer.Duration = ConfigUtils.MinSpawnIntervalBuff;
@@ -45,14 +48,21 @@ public class PlayerStatus : MonoBehaviour {
 
     // reduces health by the given damage
     private void HandleHealthChangedEvent(float damage) {
-        // don't go below zero in health
-        Health = Mathf.Max(0, Health - damage);
+        // only deduct health when the player is not invincible
+        if (!Invincible) {
+            // don't go below zero in health
+            Health = Mathf.Max(0, Health - damage);
+        }
     }
 
     // boost the player movement speed and turn invincible
     private void HandleSpeedUpEffectEvent(float factor) {
         // TODO: change the sprite
 
+        // set invincibility mode to true thus player will not deduct health during invincible mode
+        Invincible = true;
+
+        // Player movement speed set to buffed state
         PlayerControl.HoriMvtState = HoriMvtState.Buffed;
 
         // start the buff timer and exit buffed mode after buff duration
@@ -65,6 +75,9 @@ public class PlayerStatus : MonoBehaviour {
     }
 
     private void HandleBuffTimerFinishedEvent() {
+        Invincible = false;
+
+        // Player movement speed set back to normal state
         PlayerControl.HoriMvtState = HoriMvtState.Normal;
     }
 }

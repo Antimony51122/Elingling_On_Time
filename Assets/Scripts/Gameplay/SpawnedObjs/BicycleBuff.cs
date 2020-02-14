@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BicycleBuff : SpawnedObj
-{
+public class BicycleBuff : SpawnedObj {
     // ======================================================================
     // Field Variables
     // ======================================================================
@@ -15,14 +14,12 @@ public class BicycleBuff : SpawnedObj
     // Main Loop & MonoBehaviour Methods
     // ======================================================================
 
-    protected override void Start()
-    {
+    protected override void Start() {
         UnityEvents.Add(EventName.SpeedUpActivatedEvent, new SpeedUpActivatedEvent());
         EventManager.AddFloatArgInvoker(EventName.SpeedUpActivatedEvent, this);
     }
 
-    protected override void Update()
-    {
+    protected override void Update() {
         // TODO: count missing
 
         base.Update();

@@ -11,7 +11,10 @@ public class HUD : MonoBehaviour {
     [SerializeField] private GameObject[]    _hearts;
     [SerializeField] private TextMeshProUGUI _textMeshProScore;
 
-    // Start is called before the first frame update
+    // ======================================================================
+    // Main Loop & MonoBehaviour Methods
+    // ======================================================================
+
     void Start() {
         _textMeshProScore.text = "Distance: " + (int) PlayerStatus.Score;
     }
@@ -29,20 +32,8 @@ public class HUD : MonoBehaviour {
     // ---------- Display Health Indicators ----------
 
     private void DisplayHearts() {
-        switch (PlayerStatus.Health) {
-            case 3:
-                break;
-            case 2:
-                Destroy(_hearts[2]);
-                break;
-            case 1:
-                Destroy(_hearts[1]);
-                break;
-            case 0:
-                Destroy(_hearts[0]);
-                break;
-            default:
-                break;
+        if (PlayerStatus.Health < _hearts.Length) {
+            Destroy(_hearts[(int) PlayerStatus.Health]);
         }
     }
 

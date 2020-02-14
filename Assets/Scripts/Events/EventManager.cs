@@ -47,9 +47,9 @@ public static class EventManager {
         }
     }
 
-    #region FloatArgHandlers
-
     // --------------- Float Argument Handlers ---------------
+
+    #region FloatArgHandlers
 
     // Adds the given invoker for the given event name with float argument
     public static void AddFloatArgInvoker(EventName eventName, FloatEventInvoker invoker) {
@@ -79,4 +79,6 @@ public static class EventManager {
     }
 
     #endregion
+
+    // --------------- Int Argument Handlers ---------------
 }

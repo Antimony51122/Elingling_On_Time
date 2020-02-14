@@ -11,6 +11,12 @@ public class PlayerStatus : MonoBehaviour {
 
     [SerializeField] private Animator _animator;
 
+    // --------------- Fields to be attached Component Instances ---------------
+
+    private BoxCollider2D _boxColl2D;
+
+    // --------------- Config Params ---------------
+
     // static fields to describe the player's current condition
     public static float Health;
     public static int   Score;
@@ -30,6 +36,9 @@ public class PlayerStatus : MonoBehaviour {
         // initialise player invincibility mode with false
         Invincible = false;
 
+        // attach the BoxCollider2D component for later crashing bus and car effects
+        _boxColl2D = GetComponent<BoxCollider2D>();
+
         _buffTimer          = gameObject.AddComponent<CustomTimer>();
         _buffTimer.Duration = ConfigUtils.BuffDuration;
         _buffTimer.AddTimerFinishedEventListener(HandleBuffTimerFinishedEvent);
@@ -45,7 +54,9 @@ public class PlayerStatus : MonoBehaviour {
     }
 
     // process trigger collisions with other game objects
-    void OnTriggerEnter2D(Collider2D otherColl) { }
+    void OnTriggerEnter2D(Collider2D coll) {
+        // TODO: player z-pos relative to the car
+    }
 
     // ======================================================================
     // Customised Methods
@@ -71,6 +82,9 @@ public class PlayerStatus : MonoBehaviour {
         // change the sprite animation to riding bicycle in the animator
         _animator.SetBool("OnBicycle", Invincible);
 
+        // set isTrigger property to false so the player can crash away the car and bus
+        _boxColl2D.isTrigger = false;
+
         // start the buff timer and exit buffed mode after buff duration
         _buffTimer.Run();
     }
@@ -86,6 +100,9 @@ public class PlayerStatus : MonoBehaviour {
 
         // change the sprite animation to riding bicycle in the animator
         _animator.SetBool("OnBicycle", Invincible);
+
+        // set isTrigger property back to true thus the player won't physically interact with vehicles
+        _boxColl2D.isTrigger = true;
 
         // Player movement speed set back to normal state
         PlayerControl.HoriMvtState = HoriMvtState.Normal;

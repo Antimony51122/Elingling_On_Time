@@ -10,6 +10,10 @@ public class PlayerStatus : MonoBehaviour {
     public static float Health;
     public static int   Score;
 
+
+    // buff timer
+    private CustomTimer _buffTimer;
+
     // ======================================================================
     // Main Loop & MonoBehaviour Methods
     // ======================================================================
@@ -17,6 +21,10 @@ public class PlayerStatus : MonoBehaviour {
     void Start() {
         // initialise player health with 3 hearts
         Health = 3;
+
+        _buffTimer          = gameObject.AddComponent<CustomTimer>();
+        _buffTimer.Duration = ConfigUtils.MinSpawnIntervalBuff;
+        _buffTimer.AddTimerFinishedEventListener(HandleBuffTimerFinishedEvent);
 
         EventManager.AddFloatArgListener(EventName.HealthChangedEvent,    HandleHealthChangedEvent);
         EventManager.AddFloatArgListener(EventName.SpeedUpActivatedEvent, HandleSpeedUpEffectEvent);
@@ -45,12 +53,18 @@ public class PlayerStatus : MonoBehaviour {
     private void HandleSpeedUpEffectEvent(float factor) {
         // TODO: change the sprite
 
-        Debug.Log("Buffed");
         PlayerControl.HoriMvtState = HoriMvtState.Buffed;
+
+        // start the buff timer and exit buffed mode after buff duration
+        _buffTimer.Run();
     }
 
     //
     private void HandleGameOverEvent(float unused) {
         Debug.Log("game over"); // check whether invoker is working correctly
+    }
+
+    private void HandleBuffTimerFinishedEvent() {
+        PlayerControl.HoriMvtState = HoriMvtState.Normal;
     }
 }

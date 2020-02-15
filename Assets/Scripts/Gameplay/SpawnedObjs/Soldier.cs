@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Soldiers will change their z-pos according to y-pos relative to car as well
-public class Soldier : ZPosChangeable {
+public class Soldier : SpawnedObj {
     // ======================================================================
     // Field Variables
     // ======================================================================
@@ -25,7 +25,7 @@ public class Soldier : ZPosChangeable {
     // Main Loop & MonoBehaviour Methods
     // ======================================================================
 
-    void Start() {
+    protected override void Start() {
         // initialise soldier state with idle, thus _isRunning false
         _isRunning = false;
 
@@ -33,23 +33,30 @@ public class Soldier : ZPosChangeable {
 
         _impulseForce = 11.0f;
 
-        //
-//        UnityEvents.Add(EventName.GameOverEvent, new GameOverEvent());
-//        EventManager.AddFloatArgInvoker(EventName.GameOverEvent, this);
+        // register for GameOverEvent and invoke when colliding with the player
+        UnityEvents.Add(EventName.GameOverEvent, new GameOverEvent());
+        EventManager.AddFloatArgInvoker(EventName.GameOverEvent, this);
     }
 
-    void Update() {
+    protected override void Update() {
         StartChasing();
         Chasing();
+
+        base.Update();
     }
 
-//    protected override void OnTriggerEnter2D(Collider2D coll) {
-//        throw new System.NotImplementedException();
-//    }
-//
-//    protected override void OnDestroy() {
-//        EventManager.RemoveFloatArgInvoker(EventName.GameOverEvent, this);
-//    }
+    protected override void OnTriggerEnter2D(Collider2D coll) {
+        if (coll.gameObject.CompareTag("Player")) {
+            // directly go to game over when being caught by the soldier
+            UnityEvents[EventName.GameOverEvent].Invoke(0);
+        }
+
+        base.OnTriggerEnter2D(coll);
+    }
+
+    protected override void OnDestroy() {
+        EventManager.RemoveFloatArgInvoker(EventName.GameOverEvent, this);
+    }
 
     // ======================================================================
     // Customised Methods

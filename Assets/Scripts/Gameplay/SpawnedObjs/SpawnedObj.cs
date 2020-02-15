@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SpawnedObj : FloatEventInvoker
-{
+public abstract class SpawnedObj : ZPosChangeable {
     // ======================================================================
     // Field Variables
     // ======================================================================
@@ -20,8 +19,6 @@ public abstract class SpawnedObj : FloatEventInvoker
     protected virtual void Update() {
         DestroySelf();
     }
-
-    protected abstract void OnTriggerEnter2D(Collider2D coll);
 
     protected abstract void OnDestroy();
 

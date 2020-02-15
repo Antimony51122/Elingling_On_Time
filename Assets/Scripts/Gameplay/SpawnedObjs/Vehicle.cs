@@ -40,6 +40,7 @@ public class Vehicle : SpawnedObj {
 
         SetLaneAndDirection();
 
+        // register for HealthChangeEvent and GameOverEvent and invoke when colliding with the player
         UnityEvents.Add(EventName.HealthChangedEvent, new HealthChangedEvent());
         EventManager.AddFloatArgInvoker(EventName.HealthChangedEvent, this);
 
@@ -74,6 +75,8 @@ public class Vehicle : SpawnedObj {
                 UnityEvents[EventName.GameOverEvent].Invoke(0);
             }
         }
+
+        base.OnTriggerEnter2D(coll);
     }
 
     protected override void OnDestroy() {

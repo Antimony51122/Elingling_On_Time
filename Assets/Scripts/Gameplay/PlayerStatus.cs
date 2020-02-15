@@ -22,8 +22,15 @@ public class PlayerStatus : ZPosChangeable {
     public static int   Score;
     public static bool  Invincible;
 
+    // power buff collection and miss count
+    public static int BuffCollectedCount;
+    public static int BuffMissedCount;
+
     // buff timer
     private CustomTimer _buffTimer;
+
+    // total play time
+    public static float TotalPlayTime;
 
     // ======================================================================
     // Main Loop & MonoBehaviour Methods
@@ -35,6 +42,10 @@ public class PlayerStatus : ZPosChangeable {
 
         // initialise player invincibility mode with false
         Invincible = false;
+
+        BuffCollectedCount = 0;
+        BuffMissedCount    = 0;
+        TotalPlayTime      = 0;
 
         // attach the BoxCollider2D component for later crashing bus and car effects
         _capColl2D = GetComponent<CapsuleCollider2D>();
@@ -51,6 +62,9 @@ public class PlayerStatus : ZPosChangeable {
     void Update() {
         // 5 is the initial distance the player was away from the origin
         Score = (int) transform.position.x + 5;
+
+        // update total play time
+        TotalPlayTime += Time.deltaTime;
     }
 
     // ======================================================================
@@ -98,9 +112,15 @@ public class PlayerStatus : ZPosChangeable {
         PlayerControl.HoriMvtState = HoriMvtState.Normal;
     }
 
-    // 
+    // store the result and go to score page
     private void HandleGameOverEvent(float unused) {
-        // TODO: game over menu
-        //Debug.Log("game over"); // check whether invoker is working correctly
+        Debug.Log("game over"); // check whether invoker is working correctly
+
+        GameSession.ScoreResult         = Score;
+        GameSession.TimeResult          = (int) TotalPlayTime;
+        GameSession.BuffCollectedResult = BuffCollectedCount;
+        GameSession.BuffMissedResult    = BuffMissedCount;
+
+        MenuManager.GoToMenu(MenuName.ScorePage);
     }
 }

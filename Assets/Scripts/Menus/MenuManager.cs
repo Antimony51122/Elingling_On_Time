@@ -8,13 +8,17 @@ public static class MenuManager {
     // Goes to the menu with the given name
     public static void GoToMenu(MenuName name) {
         switch (name) {
+            case MenuName.MainMenu:
+                // go to MainMenu scene
+                SceneManager.LoadScene("01_MainMenu");
+                break;
             case MenuName.Gameplay:
                 // go to gameplay scene
                 SceneManager.LoadScene("02_GamePlay");
                 break;
-            case MenuName.MainMenu:
-                // go to MainMenu scene
-                SceneManager.LoadScene("01_MainMenu");
+            case MenuName.ScorePage:
+                // go to score page
+                SceneManager.LoadScene("03_ScorePage");
                 break;
             case MenuName.Pause:
                 // instantiate prefab

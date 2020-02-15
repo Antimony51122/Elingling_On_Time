@@ -31,7 +31,7 @@ public class Soldier : SpawnedObj {
 
         _rb2D = GetComponent<Rigidbody2D>();
 
-        _impulseForce = 11.0f;
+        _impulseForce = 11.5f;
 
         // register for GameOverEvent and invoke when colliding with the player
         UnityEvents.Add(EventName.GameOverEvent, new GameOverEvent());

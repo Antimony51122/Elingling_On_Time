@@ -33,6 +33,7 @@ public class Vehicle : SpawnedObj {
         _botLaneTop = -1;
         _botLaneBot = ScreenUtils.ScreenBottom + 3;
 
+        // use in implementation with kinematic cases
         _speed = 5;
 
         _rb2D           = GetComponent<Rigidbody2D>();

@@ -9,7 +9,6 @@ public class BicycleBuff : SpawnedObj {
 
     private bool _isMissed = false;
 
-
     // ======================================================================
     // Main Loop & MonoBehaviour Methods
     // ======================================================================
@@ -20,7 +19,13 @@ public class BicycleBuff : SpawnedObj {
     }
 
     protected override void Update() {
-        // TODO: count missing
+        if (!_isMissed && transform.position.x < PlayerControl.PlayerTransform.position.x) {
+            // add to buff missed count when the buff is behind the player
+            PlayerStatus.BuffMissedCount++;
+
+            // set isMissed to true to prevent duplications of counting
+            _isMissed = true;
+        }
 
         base.Update();
     }
@@ -29,6 +34,9 @@ public class BicycleBuff : SpawnedObj {
         if (coll.gameObject.CompareTag("Player")) {
             // TODO: this float argument here is actually unused, make it useful
             UnityEvents[EventName.SpeedUpActivatedEvent].Invoke(ConfigUtils.BuffDuration);
+
+            // add to buff collected count when the buff destroys due to being collected
+            PlayerStatus.BuffCollectedCount++;
 
             // buff object disappears after the player collects it
             Destroy(gameObject);

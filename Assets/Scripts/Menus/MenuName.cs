@@ -5,6 +5,6 @@ using UnityEngine;
 public enum MenuName {
     MainMenu,
     Gameplay,
-    MyStats,
+    ScorePage,
     Pause
 }

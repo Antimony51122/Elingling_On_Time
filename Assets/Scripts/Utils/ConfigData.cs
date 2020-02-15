@@ -27,6 +27,8 @@ public class ConfigData {
     public float MaxSpawnIntervalBuff     => _values[ConfigDataValueName.MaxSpawnIntervalBuff];
     public float MinSpawnIntervalObstacle => _values[ConfigDataValueName.MinSpawnIntervalObstacle];
     public float MaxSpawnIntervalObstacle => _values[ConfigDataValueName.MaxSpawnIntervalObstacle];
+    public float MinSpawnIntervalSoldier  => _values[ConfigDataValueName.MinSpawnIntervalSoldier];
+    public float MaxSpawnIntervalSoldier  => _values[ConfigDataValueName.MaxSpawnIntervalSoldier];
 
     // ======================================================================
     // Constructor
@@ -81,5 +83,7 @@ public class ConfigData {
         _values.Add(ConfigDataValueName.MaxSpawnIntervalBuff,     12.0f);
         _values.Add(ConfigDataValueName.MinSpawnIntervalObstacle, 1.25f);
         _values.Add(ConfigDataValueName.MaxSpawnIntervalObstacle, 1.75f);
+        _values.Add(ConfigDataValueName.MinSpawnIntervalSoldier,  12.0f);
+        _values.Add(ConfigDataValueName.MaxSpawnIntervalSoldier,  20.0f);
     }
 }

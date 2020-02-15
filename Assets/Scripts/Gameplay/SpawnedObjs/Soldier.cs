@@ -31,13 +31,25 @@ public class Soldier : ZPosChangeable {
 
         _rb2D = GetComponent<Rigidbody2D>();
 
-        _impulseForce = 8.5f;
+        _impulseForce = 11.0f;
+
+        //
+//        UnityEvents.Add(EventName.GameOverEvent, new GameOverEvent());
+//        EventManager.AddFloatArgInvoker(EventName.GameOverEvent, this);
     }
 
     void Update() {
         StartChasing();
         Chasing();
     }
+
+//    protected override void OnTriggerEnter2D(Collider2D coll) {
+//        throw new System.NotImplementedException();
+//    }
+//
+//    protected override void OnDestroy() {
+//        EventManager.RemoveFloatArgInvoker(EventName.GameOverEvent, this);
+//    }
 
     // ======================================================================
     // Customised Methods

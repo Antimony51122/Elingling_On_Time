@@ -10,5 +10,7 @@ public enum ConfigDataValueName {
     MinSpawnIntervalBuff,
     MaxSpawnIntervalBuff,
     MinSpawnIntervalObstacle,
-    MaxSpawnIntervalObstacle
+    MaxSpawnIntervalObstacle,
+    MinSpawnIntervalSoldier,
+    MaxSpawnIntervalSoldier
 }

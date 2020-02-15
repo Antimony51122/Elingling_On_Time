@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 998792341}
   - component: {fileID: 998792343}
   - component: {fileID: 998792344}
+  - component: {fileID: 998792345}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -281,6 +282,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefabBicycleBuff: {fileID: 4150792852271804566, guid: b10d634e7873cd946afc269228c377c8,
+    type: 3}
+--- !u!114 &998792345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998792337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acaa99c63e34bde4fbc2b5990c22ba0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefabSoldier: {fileID: 2662134522177629591, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
     type: 3}
 --- !u!4 &1040420864 stripped
 Transform:
@@ -471,7 +486,7 @@ PrefabInstance:
     - target: {fileID: 1700997973276956502, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 5.2
       objectReference: {fileID: 0}
     - target: {fileID: 1700997973276956502, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
         type: 3}
@@ -481,17 +496,17 @@ PrefabInstance:
     - target: {fileID: 1700997973276956502, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1700997973276956502, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1700997973276956502, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1700997973276956502, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
         type: 3}
@@ -522,6 +537,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Soldier
+      objectReference: {fileID: 0}
+    - target: {fileID: 2662134522177629591, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c79ba59c8125ff44c92bd1bf0e3dc4a3, type: 3}

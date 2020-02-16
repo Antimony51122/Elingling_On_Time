@@ -59,8 +59,25 @@ public class PlayerControl : MonoBehaviour {
     }
 
     void Update() {
-        //PhoneSensorControl();
-        KeyboardControl(); // remember to comment out this line when building on android
+        Debug.Log(Application.platform);
+        
+        // `RuntimePlatform.WebGLPlayer`   -> WebGL 
+        // `RuntimePlatform.WindowsPlayer` -> Windows executable
+        // `RuntimePlatform.WindowsEditor` -> Windows unity editor Game interface
+        // `RuntimePlatform.OSXPlayer`     -> MacOS executable
+        // `RuntimePlatform.OSXEditor`     -> MacOS unity editor Game interface
+        // `RuntimePlatform.LinuxPlayer`   -> Linux executable
+        // `RuntimePlatform.LinuxEditor`   -> Linux unity editor Game interface
+
+        // using phone gyroscope & accelerometer input when running as phone apps
+        if (Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer) {
+            PhoneSensorControl();
+        } else {
+            // using keyboard vertical input axis when running on any other platform
+            KeyboardControl();
+        }
+
         VertMvtHandler();
         HoriMvtHandler();
         CalculateClampedY();
@@ -123,10 +140,13 @@ public class PlayerControl : MonoBehaviour {
     }
 
     private void HoriMvtHandler() {
-        if (HoriMvtState == HoriMvtState.Normal) {
-            transform.Translate(Vector3.right * _horiSpeed);
-        } else if (HoriMvtState == HoriMvtState.Buffed) {
-            transform.Translate(Vector3.right * _horiSpeed * _buffFactor);
+        switch (HoriMvtState) {
+            case HoriMvtState.Normal:
+                transform.Translate(Vector3.right * _horiSpeed);
+                break;
+            case HoriMvtState.Buffed:
+                transform.Translate(Vector3.right * _horiSpeed * _buffFactor);
+                break;
         }
     }
 

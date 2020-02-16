@@ -12,6 +12,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+
+# heroku deployment repository
 /Elingling_On_Time_Build
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored

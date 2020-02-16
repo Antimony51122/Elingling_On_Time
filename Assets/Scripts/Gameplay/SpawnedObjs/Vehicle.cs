@@ -21,7 +21,7 @@ public class Vehicle : SpawnedObj {
 
     private VehicleLane _vehicleLane;
 
-    private float _speed;
+    private float _speed; // used when rigidbody 2D in dynamic mode
 
     // ======================================================================
     // Main Loop & MonoBehaviour Methods
@@ -39,6 +39,7 @@ public class Vehicle : SpawnedObj {
         _rb2D           = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
+        // determine which lane the car is starting at
         SetLaneAndDirection();
 
         // register for HealthChangeEvent and GameOverEvent and invoke when colliding with the player
@@ -99,10 +100,21 @@ public class Vehicle : SpawnedObj {
 
         // if VehicleLane is top, spawn on top lane range, otherwise on bot lane range
         // place the vehicle to corresponding initial position and add force to make it move
+        // top lane's towards right, bot lanes towards left since in UK, vehicles keep left
         if (_vehicleLane == VehicleLane.Top) {
             transform.position = new Vector3(
                 transform.position.x,
                 Random.Range(_topLaneBot, _topLaneTop),
+                transform.position.z);
+
+            _rb2D.AddForce(new Vector2(100, 0)); // moving towards right
+
+            // flip the sprite horizontally to make the vehicle face right
+            _spriteRenderer.flipX = true;
+        } else {
+            transform.position = new Vector3(
+                transform.position.x,
+                Random.Range(_botLaneBot, _botLaneTop),
                 transform.position.z);
 
             // add force to initialise the vehicle movement
@@ -110,16 +122,6 @@ public class Vehicle : SpawnedObj {
 
             // don't flip the sprite horizontally to so the vehicle faces left
             _spriteRenderer.flipX = false;
-        } else {
-            transform.position = new Vector3(
-                transform.position.x,
-                Random.Range(_botLaneBot, _botLaneTop),
-                transform.position.z);
-
-            _rb2D.AddForce(new Vector2(100, 0)); // moving towards right
-
-            // flip the sprite horizontally to make the vehicle face right
-            _spriteRenderer.flipX = true;
         }
     }
 }

@@ -56,11 +56,12 @@ public class PlayerControl : MonoBehaviour {
         // assign the player movement upper lower limits
         _playerMvtUpperLimit = ScreenUtils.ScreenTop    - 1.5f;
         _playerMvtLowerLimit = ScreenUtils.ScreenBottom + 2.0f;
+
+        // for determining the 
+        Debug.Log(Application.platform);
     }
 
     void Update() {
-        Debug.Log(Application.platform);
-        
         // `RuntimePlatform.WebGLPlayer`   -> WebGL 
         // `RuntimePlatform.WindowsPlayer` -> Windows executable
         // `RuntimePlatform.WindowsEditor` -> Windows unity editor Game interface

@@ -4,7 +4,7 @@
 Event Handling Pattern
 ======================
 
-The game design utilises 
+The game design follows a simple observer pattern where event handlers responds when an event occurs. Unity Event Handling system has been based on the delegate type which specifies a method signature and allow us to pass references to methods. The design pattern are shown in the system diagram below.
 
 .. figure:: ../_static/system_diagrams/event_handling_system_diagram.png
     :align: center

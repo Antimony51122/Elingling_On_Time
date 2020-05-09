@@ -9,7 +9,7 @@ The game design follows a simple observer pattern where event handlers responds 
 .. figure:: ../_static/system_diagrams/event_handling_system_diagram.png
     :align: center
 
-    System Diagram of Event Handling Design Pattern
+    System Diagram of Event Handling Design Pattern (``ctrl`` + ``+`` to zoom in)
 
 
 

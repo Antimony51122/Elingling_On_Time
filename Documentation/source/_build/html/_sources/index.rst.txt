@@ -28,14 +28,23 @@ Game Features
 Basic Control
 ~~~~~~~~~~~~~
 
-- The WebGL version of the game follows the most basic simple control of using ``w`` and ``s`` to control the avatar to move up and down.
-- The Phone version of the game utilise
+:WebGl:
+    The WebGL version of the game follows the most basic simple control of using ``w`` and ``s`` to control the avatar to move up and down.
 
-Game Mechanics
+:Phone:
+    The Phone version of the game utilise the accelerometer of the phone, when the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa.
+
+Game Elements
 ~~~~~~~~~~~~~~
 
 :Vehicle:
-    Two kinds of vehcles are on the road in the game
+    Two kinds of vehcles are on the road in the game, the beetles and the double decker bus. When the player avatar crash with the vehicle, one health point will be deducted.
+
+:Soldier:
+    Due that Elinging violate the traffic rules, soldiers and on the road will start chasing down Elinging during the running, the speed of soldier has been set to slightly faster than the running speed of Elingling thus Elingling need to ride a bicycle in order to escape away from the soldiers.
+
+:Bicycle:
+    The Santander bicycle grants Elinging 3 seconds of speed buff. In addition, Elinging enters the invincible mode when riding the bicycle where she can bascially knock away the vehcles on the road.
 
 ********
 Contents

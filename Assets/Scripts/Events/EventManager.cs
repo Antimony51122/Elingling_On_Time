@@ -27,7 +27,7 @@ public static class EventManager {
     // Initializes the event manager
     public static void Initialize() {
         // create empty lists for all the dictionary entries
-        // foreach goes through each of those five values in EventName enumeration
+        // foreach goes through each of those four values in EventName enumeration
         foreach (EventName name in Enum.GetValues(typeof(EventName))) {
             // if the dictionary doesn't have that name already
             // creates new lists for the invokers and listeners
@@ -63,7 +63,7 @@ public static class EventManager {
 
     // Adds the given listener for the given event name with float argument
     public static void AddFloatArgListener(EventName eventName, UnityAction<float> listener) {
-        // add as listener to all invokers and add new listener to dictionary
+        // add a listener to all invokers and add new listener to dictionary
         foreach (FloatEventInvoker invoker in Invokers[eventName]) {
             invoker.AddFloatArgListener(eventName, listener);
         }

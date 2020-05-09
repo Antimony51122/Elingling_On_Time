@@ -28,7 +28,7 @@ Game Features
 Basic Control
 ~~~~~~~~~~~~~
 
-:WebGl:
+:WebGL:
     The WebGL version of the game follows the most basic simple control of using ``w`` and ``s`` to control the avatar to move up and down.
 
 :Phone:

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="config_data.html" />
+    <link rel="next" title="Configuration Data Utilities &amp; Game Initialisation" href="config_data.html" />
     <link rel="prev" title="Elinging on Time Documentation" href="../index.html" /> 
 </head>
 
@@ -82,11 +82,19 @@
             
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Event Handling Pattern</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Event Handling Pattern</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#event-manager">Event Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#invoker">Invoker</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menu.html">Menu &amp; Scene Management</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Functionality Implementation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../func/player.html">Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/env_loop.html">Background Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/spawn_obj.html">Game Elements &amp; Spawning</a></li>
 </ul>
 
             
@@ -151,8 +159,92 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="event-handling-pattern">
+  <div class="figure align-center">
+<img alt="../_images/cover1.png" src="../_images/cover1.png" />
+</div>
+<div class="section" id="event-handling-pattern">
 <h1>Event Handling Pattern<a class="headerlink" href="#event-handling-pattern" title="Permalink to this headline">¶</a></h1>
+<p>The game design utilises</p>
+<div class="figure align-center" id="id1">
+<img alt="../_images/event_handling_system_diagram.png" src="../_images/event_handling_system_diagram.png" />
+<p class="caption"><span class="caption-text">System Diagram of Event Handling Design Pattern</span></p>
+</div>
+<div class="section" id="event-manager">
+<h2>Event Manager<a class="headerlink" href="#event-manager" title="Permalink to this headline">¶</a></h2>
+<p>The purpose of a centralised event manager script is to manage connections between event listeners and event invokers, therefore objects can interact without creating instances for the them to know about each other.</p>
+<p>Rather than defining each invoker and corresponding listener, an <code class="docutils literal notranslate"><span class="pre">enum</span></code> of event names has been declared in a separate file to extract all the events and actions of the same data type:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">EventName</span> <span class="p">{</span>
+    <span class="n">HealthChangedEvent</span><span class="p">,</span>
+    <span class="n">SpeedUpActivatedEvent</span><span class="p">,</span>
+    <span class="n">GameOverEvent</span><span class="p">,</span>
+    <span class="n">TimerChangedEvent</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then corresponding classes of events have been declared in separate files such as <code class="docutils literal notranslate"><span class="pre">HealthChangedEvent</span></code>:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">HealthChangedEvent</span> <span class="p">:</span> <span class="n">UnityEvent</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="p">{</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For the ease of implementation, I declare all the event as one <code class="docutils literal notranslate"><span class="pre">float</span></code> argument event.</p>
+</div>
+<p>Then, in the <code class="docutils literal notranslate"><span class="pre">EventManager.cs</span></code>, lists of invokers and listeners have been declared because we might have multiple invokers for a particular event:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">FloatEventInvoker</span><span class="p">&gt;&gt;</span> <span class="n">Invokers</span> <span class="p">=</span>
+    <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">FloatEventInvoker</span><span class="p">&gt;&gt;();</span>
+
+<span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnityAction</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;&gt;</span> <span class="n">Listeners</span> <span class="p">=</span>
+    <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnityAction</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;&gt;();</span>
+</pre></div>
+</div>
+<p>Then we declare the <code class="docutils literal notranslate"><span class="pre">Initalize()</span></code> method to be called elsewhere when initalising the game session.</p>
+<p>We create empty lists for all the dictionary entries, <code class="docutils literal notranslate"><span class="pre">foreach</span></code> goes through each of those four values in <code class="docutils literal notranslate"><span class="pre">EventName</span></code> enumeration. If the dictionary doesn’t have that name already, we create new lists for the invokers and listeners. If it alreayd has the name, we clear the list because <code class="docutils literal notranslate"><span class="pre">Initalize()</span></code> method might be called multiple times as we play the game. We don’t want to try to add a new list if the dictionary already does contain a particular name, because it throws an exception when trying to add something with the same key as the dictionary already has.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Initialize</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="n">EventName</span> <span class="n">name</span> <span class="k">in</span> <span class="n">Enum</span><span class="p">.</span><span class="n">GetValues</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">EventName</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">Invokers</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">Invokers</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">FloatEventInvoker</span><span class="p">&gt;());</span>
+            <span class="n">Listeners</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnityAction</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;());</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">Invokers</span><span class="p">[</span><span class="n">name</span><span class="p">].</span><span class="n">Clear</span><span class="p">();</span>
+            <span class="n">Listeners</span><span class="p">[</span><span class="n">name</span><span class="p">].</span><span class="n">Clear</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After that, we declare the float argument handlers to be called in listeners and invokers:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Adds the given invoker for the given event name with float argument</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">AddFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span> <span class="n">eventName</span><span class="p">,</span> <span class="n">FloatEventInvoker</span> <span class="n">invoker</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// add listeners to new invoker and add new invoker to dictionary</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="n">UnityAction</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">listener</span> <span class="k">in</span> <span class="n">Listeners</span><span class="p">[</span><span class="n">eventName</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">invoker</span><span class="p">.</span><span class="n">AddFloatArgListener</span><span class="p">(</span><span class="n">eventName</span><span class="p">,</span> <span class="n">listener</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">Invokers</span><span class="p">[</span><span class="n">eventName</span><span class="p">].</span><span class="n">Add</span><span class="p">(</span><span class="n">invoker</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Adds the given listener for the given event name with float argument</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">AddFloatArgListener</span><span class="p">(</span><span class="n">EventName</span> <span class="n">eventName</span><span class="p">,</span> <span class="n">UnityAction</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">listener</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// add a listener to all invokers and add new listener to dictionary</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="n">FloatEventInvoker</span> <span class="n">invoker</span> <span class="k">in</span> <span class="n">Invokers</span><span class="p">[</span><span class="n">eventName</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">invoker</span><span class="p">.</span><span class="n">AddFloatArgListener</span><span class="p">(</span><span class="n">eventName</span><span class="p">,</span> <span class="n">listener</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">Listeners</span><span class="p">[</span><span class="n">eventName</span><span class="p">].</span><span class="n">Add</span><span class="p">(</span><span class="n">listener</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Don’t forget to add removal functionality of the invoker when the invoker has been destroyed or no longer interacts with and scene objects to increase the code efficiency.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">RemoveFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span> <span class="n">eventName</span><span class="p">,</span> <span class="n">FloatEventInvoker</span> <span class="n">invoker</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// remove invoker from dictionary</span>
+    <span class="n">Invokers</span><span class="p">[</span><span class="n">eventName</span><span class="p">].</span><span class="n">Remove</span><span class="p">(</span><span class="n">invoker</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="invoker">
+<h2>Invoker<a class="headerlink" href="#invoker" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -163,7 +255,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="config_data.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="config_data.html" class="btn btn-neutral float-right" title="Configuration Data Utilities &amp; Game Initialisation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral float-left" title="Elinging on Time Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

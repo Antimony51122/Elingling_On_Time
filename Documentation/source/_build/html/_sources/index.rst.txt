@@ -52,9 +52,19 @@ Contents
 
 .. toctree::
     :maxdepth: 2
-    :caption: Player:
+    :caption: Game Architecture:
 
-    player.rst
+    arch/event_handling.rst
+    arch/config_data.rst
+    arch/menu.rst
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Functionality Implementation:
+
+    func/player.rst
+    func/env_loop.rst
+    func/spawn_obj.rst
 
 
 

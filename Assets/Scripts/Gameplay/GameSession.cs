@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameSession : MonoBehaviour
-{
+public class GameSession : MonoBehaviour {
     // ==============================================================
     // Field Variables
     // ==============================================================
@@ -17,8 +16,8 @@ public class GameSession : MonoBehaviour
     // Main Loop & MonoBehaviour Methods
     // ==============================================================
     void Awake() {
-        // Storing how many Game Status Objects are there
-        // Beware this time using plural FindObjectsOfType<>() because there are multiple
+        // Find how many Game Status Objects are there
+        // Beware this time using plural FindObjectsOfType<>() because there might be multiple
         int gameSessionsCount = FindObjectsOfType<GameSession>().Length;
 
         // gameSessionsCount more than one means this is the second game session

@@ -81,11 +81,14 @@ After that, we define the main functionality of stream reading. The function sho
                 input.Close();
             }
         }
+    }
 
 .. warning:: Beware that the ``Application.streamingAssetsPath`` variable corresponds to a certain directory :guilabel:`StreamingAssets` for the convenience to deduct redundant hard-coding. However, the :guilabel:`.cvs` file has to be in this directory or otherwise will trigger the exception. 
 
 .. figure:: ../_static/screenshots_unity/streaming_assets.png
     :align: center
+
+    screenshots of streaming assets path in unity 
 
 As a fallback plan if the stream reading fails, we should always declare default values:
 

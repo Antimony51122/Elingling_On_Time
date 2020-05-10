@@ -226,14 +226,16 @@
             <span class="n">input</span><span class="p">.</span><span class="n">Close</span><span class="p">();</span>
         <span class="p">}</span>
     <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Beware that the <code class="docutils literal notranslate"><span class="pre">Application.streamingAssetsPath</span></code> variable corresponds to a certain directory <span class="guilabel">StreamingAssets</span> for the convenience to deduct redundant hard-coding. However, the <span class="guilabel">.cvs</span> file has to be in this directory or otherwise will trigger the exception.</p>
 </div>
-<div class="figure align-center">
+<div class="figure align-center" id="id1">
 <img alt="../_images/streaming_assets.png" src="../_images/streaming_assets.png" />
+<p class="caption"><span class="caption-text">screenshots of streaming assets path in unity</span></p>
 </div>
 <p>As a fallback plan if the stream reading fails, we should always declare default values:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">SetDefaultValues</span><span class="p">()</span> <span class="p">{</span>

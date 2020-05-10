@@ -61,11 +61,11 @@ Contents
 
 .. toctree::
     :maxdepth: 2
-    :caption: Functionality Implementation:
+    :caption: Gameplay Functionality Implementation:
 
     func/player.rst
+    func/interactive_objects.rst
     func/env_loop.rst
-    func/spawn_obj.rst
 
 
 

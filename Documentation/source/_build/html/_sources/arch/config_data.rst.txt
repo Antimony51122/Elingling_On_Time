@@ -2,8 +2,8 @@
     :align: center
     :width: 100%
 
-Configuration Data Utilities & Game Initialisation
-==================================================
+Configuration Utilities & Game Initialisation
+=============================================
 
 As a professional practise of game development, we tends to separate all the configuration parameters used in the game in a centralise data management file, usually in :guilabel:`.csv` file thus we can tune the game directly in the separate data file.
 

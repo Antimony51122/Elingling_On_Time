@@ -83,7 +83,7 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../arch/event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utilities &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
@@ -100,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#horizontal-movement">Horizontal Movement</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#z-position-of-the-sprites">Z-Position of the Sprites</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
@@ -505,6 +506,39 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="z-position-of-the-sprites">
+<h2>Z-Position of the Sprites<a class="headerlink" href="#z-position-of-the-sprites" title="Permalink to this headline">¶</a></h2>
+<p>A weird scenario of smaller objects (player and soldier) run on top of the larger objects (vehicles) arises when the objects run into each other. In this case, the smaller object should be behind the larger object, however it runs on top since the z-position of the smaller object is closer to the camera than the larger one. In order to tackle this problem, we add one child class in between the <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code> and the <code class="docutils literal notranslate"><span class="pre">SpawnObj</span></code> -&gt; the <code class="docutils literal notranslate"><span class="pre">ZPosChangeable</span></code> class.</p>
+<p>In this class, we set all vehicles spawned to be originally at the same level of z-position and determine the player and soldier sprite’s z-pos by comparing with the colliding vehicle objects, and if its position should look closer to the camera, we set its z-position closer to the camera than the vehicles.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">virtual</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// only affect the player and the soldiers</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Player&quot;</span> <span class="p">||</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Soldier(Clone)&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// when the Player&#39;s or Soldier&#39;s center y-pos is lower than</span>
+        <span class="c1">// - Bus&#39;s center y-pos by more than 1 unit</span>
+        <span class="c1">// - Car&#39;s center y-pos by more than 0.25 units</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Bus(Clone)&quot;</span> <span class="p">&amp;&amp;</span>
+             <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="n">coll</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">-</span> <span class="m">1.0f</span><span class="p">)</span> <span class="p">||</span>
+            <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Car(Clone)&quot;</span> <span class="p">&amp;&amp;</span>
+             <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="n">coll</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">-</span> <span class="m">0.25f</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">// set z-pos of player to closer than the vehicles</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="p">-</span><span class="m">3</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When the smaller object’s collider leave the larger object’s collider, we set its z-position back to original:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">OnTriggerExit2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// only affect the player and the soldiers</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Player&quot;</span> <span class="p">||</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Soldier(Clone)&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Vehicle&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="p">-</span><span class="m">1</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </div>
 </div>

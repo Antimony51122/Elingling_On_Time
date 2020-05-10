@@ -138,7 +138,6 @@ For the children and grandchildren classes of invokers, we use ``Vehicle`` class
 .. code-block:: C#
 
     protected override void Start() {
-        
         ...
 
         UnityEvents.Add(EventName.HealthChangedEvent, new HealthChangedEvent());
@@ -208,7 +207,6 @@ Then in the ``Start`` method, we register the event handling functions to the ce
 .. code-block:: C#
 
     void Start() {
-        
         ...
         
         EventManager.AddFloatArgListener(EventName.HealthChangedEvent,    HandleHealthChangedEvent);

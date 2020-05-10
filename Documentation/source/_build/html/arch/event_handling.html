@@ -92,7 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="menu.html">Menu &amp; Scene Management</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Gameplay Functionality Implementation:</span></p>
+<p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../func/player.html">Player</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
@@ -274,7 +274,6 @@
 </div>
 <p>For the children and grandchildren classes of invokers, we use <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> class as an example, register for <code class="docutils literal notranslate"><span class="pre">HealthChangeEvent</span></code> and <code class="docutils literal notranslate"><span class="pre">GameOverEvent</span></code> in the <code class="docutils literal notranslate"><span class="pre">Start</span></code> method:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
-
     <span class="p">...</span>
 
     <span class="n">UnityEvents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">,</span> <span class="k">new</span> <span class="n">HealthChangedEvent</span><span class="p">());</span>
@@ -334,7 +333,6 @@
 </div>
 <p>Then in the <code class="docutils literal notranslate"><span class="pre">Start</span></code> method, we register the event handling functions to the central event manager (the timer event handling follows a different pattern that would be describe in below section):</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
-
     <span class="p">...</span>
 
     <span class="n">EventManager</span><span class="p">.</span><span class="n">AddFloatArgListener</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">,</span>    <span class="n">HandleHealthChangedEvent</span><span class="p">);</span>

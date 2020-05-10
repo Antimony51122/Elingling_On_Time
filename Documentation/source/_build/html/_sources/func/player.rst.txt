@@ -376,3 +376,41 @@ The movement function has not much to discuss, what interesting is if the player
 
         ...
     }
+
+Z-Position of the Sprites
+-------------------------
+
+A weird scenario of smaller objects (player and soldier) run on top of the larger objects (vehicles) arises when the objects run into each other. In this case, the smaller object should be behind the larger object, however it runs on top since the z-position of the smaller object is closer to the camera than the larger one. In order to tackle this problem, we add one child class in between the ``FloatEventInvoker`` and the ``SpawnObj`` -> the ``ZPosChangeable`` class.
+
+In this class, we set all vehicles spawned to be originally at the same level of z-position and determine the player and soldier sprite's z-pos by comparing with the colliding vehicle objects, and if its position should look closer to the camera, we set its z-position closer to the camera than the vehicles.
+
+.. code-block:: C#
+
+    protected virtual void OnTriggerEnter2D(Collider2D coll) {
+        // only affect the player and the soldiers
+        if (gameObject.name == "Player" || gameObject.name == "Soldier(Clone)") {
+            // when the Player's or Soldier's center y-pos is lower than
+            // - Bus's center y-pos by more than 1 unit
+            // - Car's center y-pos by more than 0.25 units
+            if ((coll.gameObject.name == "Bus(Clone)" &&
+                 transform.position.y < coll.transform.position.y - 1.0f) ||
+                (coll.gameObject.name == "Car(Clone)" &&
+                 transform.position.y < coll.transform.position.y - 0.25f)) {
+                // set z-pos of player to closer than the vehicles
+                transform.position = new Vector3(transform.position.x, transform.position.y, -3);
+            }
+        }
+    }
+
+When the smaller object's collider leave the larger object's collider, we set its z-position back to original:
+
+.. code-block:: C#
+
+    void OnTriggerExit2D(Collider2D coll) {
+        // only affect the player and the soldiers
+        if (gameObject.name == "Player" || gameObject.name == "Soldier(Clone)") {
+            if (coll.gameObject.CompareTag("Vehicle")) {
+                transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+            }
+        }
+    }

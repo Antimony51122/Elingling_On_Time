@@ -61,11 +61,32 @@ Game Elements
     :align: middle
     :width: 100%
 
-+--------------------------------------------------------------------+--------------------------------------------------------------------+
-| Soldier getting alerted and start chasing Elingling                | Elingling turned invincible after collecting the santander bicycle |
-+--------------------------------------------------------------------+--------------------------------------------------------------------+
-| |soldier_chasing|                                                  | |elingling_invisible|                                              |
-+--------------------------------------------------------------------+--------------------------------------------------------------------+
++--------------------------------------------------+--------------------------------------------------+
+| Soldiers get alerted and start chasing Elingling | Turning invincible after collecting the bicycle  |
++--------------------------------------------------+--------------------------------------------------+
+| |soldier_chasing|                                | |elingling_invisible|                            |
++--------------------------------------------------+--------------------------------------------------+
+
+Scene Flow
+~~~~~~~~~~
+
+The Game starts with a typical simple starting menu, and the player can check for the statistic after completing each set of the game. 
+
+.. |menu| image:: _static/index/screenshot_main_menu.jpg
+    :align: middle
+    :width: 100%
+
+.. |score_page| image:: _static/index/screenshot_score_page.jpg
+    :align: middle
+    :width: 100%
+
++--------------+--------------+
+| Start Menu   | Score Page   |
++--------------+--------------+
+| |menu|       | |score_page| |
++--------------+--------------+
+
+
 
 ********
 Contents

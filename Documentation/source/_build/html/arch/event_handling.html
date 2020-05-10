@@ -85,6 +85,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Event Handling Pattern</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#event-manager">Event Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#invokers">Invokers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listeners">Listeners</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
@@ -198,7 +199,7 @@
 </pre></div>
 </div>
 <p>Then we declare the <code class="docutils literal notranslate"><span class="pre">Initalize()</span></code> method to be called elsewhere when initalising the game session.</p>
-<p>We create empty lists for all the dictionary entries, <code class="docutils literal notranslate"><span class="pre">foreach</span></code> goes through each of those four values in <code class="docutils literal notranslate"><span class="pre">EventName</span></code> enumeration. If the dictionary doesn’t have that name already, we create new lists for the invokers and listeners. If it alreayd has the name, we clear the list because <code class="docutils literal notranslate"><span class="pre">Initalize()</span></code> method might be called multiple times as we play the game. We don’t want to try to add a new list if the dictionary already does contain a particular name, because it throws an exception when trying to add something with the same key as the dictionary already has.</p>
+<p>We create empty lists for all the dictionary entries, <code class="docutils literal notranslate"><span class="pre">foreach</span></code> goes through each of those four values in <code class="docutils literal notranslate"><span class="pre">EventName</span></code> enumeration. If the dictionary doesn’t have that name already, we create new lists for the invokers and listeners. If it already has the name, we clear the list because <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> method might be called multiple times as we play the game. We don’t want to try to add a new list if the dictionary already does contain a particular name, because it throws an exception when trying to add something with the same key as the dictionary already has.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Initialize</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">foreach</span> <span class="p">(</span><span class="n">EventName</span> <span class="n">name</span> <span class="k">in</span> <span class="n">Enum</span><span class="p">.</span><span class="n">GetValues</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">EventName</span><span class="p">)))</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(!</span><span class="n">Invokers</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="p">{</span>
@@ -244,7 +245,7 @@
 </div>
 <div class="section" id="invokers">
 <h2>Invokers<a class="headerlink" href="#invokers" title="Permalink to this headline">¶</a></h2>
-<p>Instead of defining the invokers’ properties separately, we firstly define a parent class of invokers <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code>. Dictionary once again has been utilised to enable us to inoke more than one event. The keys don’t have to be strings but any data type, in this case, kyes are enumerations and values are float unity events.</p>
+<p>Instead of defining the invokers’ properties separately, we firstly define a parent class of invokers <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code>. Dictionary once again has been utilised to enable us to invoke more than one event. The keys don’t have to be strings but any data type, in this case, keys are enumerations and values are float unity events.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FloatEventInvoker</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
     <span class="k">protected</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">UnityEvent</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="n">UnityEvents</span> <span class="p">=</span>
         <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">UnityEvent</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;();</span>
@@ -280,7 +281,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>These events have been triggered when collideing with the player, each time colliding with the player, deduct one health point, and when the health point equals 0, trigger the game over event:</p>
+<p>These events have been triggered when colliding with the player, each time colliding with the player, deduct one health point, and when the health point equals 0, trigger the game over event:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Player&quot;</span><span class="p">))</span> <span class="p">{</span>
         <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="m">1.0f</span><span class="p">);</span>
@@ -295,13 +296,16 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Finally, don’t forget to unregister the invoker since we don’t want the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script hanging around in that dictionary in the <code class="docutils literal notranslate"><span class="pre">EventManager</span></code> after the <code class="docutils literal notranslate"><span class="pre">Vehcile</span></code> game object itself was attached to gets destoryed.</p>
+<p>Finally, don’t forget to unregister the invoker using the <code class="docutils literal notranslate"><span class="pre">RemoveFloatArgInvoker</span></code> static method we have talked above, since we don’t want the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script hanging around in that dictionary in the <code class="docutils literal notranslate"><span class="pre">EventManager</span></code> after the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> game object itself was attached to gets destroyed.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnDestroy</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">EventManager</span><span class="p">.</span><span class="n">RemoveFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
     <span class="n">EventManager</span><span class="p">.</span><span class="n">RemoveFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="listeners">
+<h2>Listeners<a class="headerlink" href="#listeners" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

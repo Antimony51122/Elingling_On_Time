@@ -49,7 +49,7 @@ Then, in the ``EventManager.cs``, lists of invokers and listeners have been decl
 
 Then we declare the ``Initalize()`` method to be called elsewhere when initalising the game session. 
 
-We create empty lists for all the dictionary entries, ``foreach`` goes through each of those four values in ``EventName`` enumeration. If the dictionary doesn't have that name already, we create new lists for the invokers and listeners. If it alreayd has the name, we clear the list because ``Initalize()`` method might be called multiple times as we play the game. We don't want to try to add a new list if the dictionary already does contain a particular name, because it throws an exception when trying to add something with the same key as the dictionary already has.
+We create empty lists for all the dictionary entries, ``foreach`` goes through each of those four values in ``EventName`` enumeration. If the dictionary doesn't have that name already, we create new lists for the invokers and listeners. If it already has the name, we clear the list because ``Initialize()`` method might be called multiple times as we play the game. We don't want to try to add a new list if the dictionary already does contain a particular name, because it throws an exception when trying to add something with the same key as the dictionary already has.
 
 .. code-block:: C#
 
@@ -103,7 +103,7 @@ Don't forget to add removal functionality of the invoker when the invoker has be
 Invokers
 --------
 
-Instead of defining the invokers' properties separately, we firstly define a parent class of invokers ``FloatEventInvoker``. Dictionary once again has been utilised to enable us to inoke more than one event. The keys don't have to be strings but any data type, in this case, kyes are enumerations and values are float unity events.
+Instead of defining the invokers' properties separately, we firstly define a parent class of invokers ``FloatEventInvoker``. Dictionary once again has been utilised to enable us to invoke more than one event. The keys don't have to be strings but any data type, in this case, keys are enumerations and values are float unity events.
 
 .. code-block:: C#
 
@@ -143,7 +143,7 @@ For the children and grandchildren classes of invokers, we use ``Vehicle`` class
         EventManager.AddFloatArgInvoker(EventName.GameOverEvent, this);
     }
 
-These events have been triggered when collideing with the player, each time colliding with the player, deduct one health point, and when the health point equals 0, trigger the game over event:
+These events have been triggered when colliding with the player, each time colliding with the player, deduct one health point, and when the health point equals 0, trigger the game over event:
 
 .. code-block:: C#
 
@@ -160,7 +160,7 @@ These events have been triggered when collideing with the player, each time coll
         base.OnTriggerEnter2D(coll);
     }
 
-Finally, don't forget to unregister the invoker since we don't want the ``Vehicle`` script hanging around in that dictionary in the ``EventManager`` after the ``Vehcile`` game object itself was attached to gets destoryed.
+Finally, don't forget to unregister the invoker using the ``RemoveFloatArgInvoker`` static method we have talked above, since we don't want the ``Vehicle`` script hanging around in that dictionary in the ``EventManager`` after the ``Vehicle`` game object itself was attached to gets destroyed.
 
 .. code-block:: C#
 
@@ -168,3 +168,9 @@ Finally, don't forget to unregister the invoker since we don't want the ``Vehicl
         EventManager.RemoveFloatArgInvoker(EventName.HealthChangedEvent, this);
         EventManager.RemoveFloatArgInvoker(EventName.GameOverEvent, this);
     }
+
+
+
+Listeners
+---------
+

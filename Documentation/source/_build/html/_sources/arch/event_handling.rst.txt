@@ -17,7 +17,11 @@ The game design follows a simple observer pattern where event handlers responds 
 Event Manager
 -------------
 
-The purpose of a centralised event manager script is to manage connections between event listeners and event invokers, therefore objects can interact without creating instances for the them to know about each other.
+The centralised event manager script aims to manage connections between event listeners and event invokers, therefore objects can interact without creating instances for the them to know about each other. The core purpose of the event manager is to reduce the complexity inflation as the program expands where more and more scripts need to know each other via instances. This idea can be shown in the plot below:
+
+.. figure:: ../_static/plots/event_managing_complexity.png
+    :align: center
+    :width: 300
 
 Rather than defining each invoker and corresponding listener, an ``enum`` of event names has been declared in a separate file to extract all the events and actions of the same data type:
 
@@ -216,4 +220,48 @@ Then in the ``Start`` method, we register the event handling functions to the ce
 Timer Event Handling
 --------------------
 
-The event handling pattern in the Customer Timer has been separated from the centralised event manager workflow. 
+The event handling pattern for the Customised Timer has been separated from the centralised event manager workflow. Logically the timer is a separate process thus in a parallel system make it more modular and easier to debug. On the other hand, unlike the ``FloatEventInvoker`` where one or more float argument unity events could be triggered simultaneously, there should be only one kind of time pattern :guilabel:`time starts` > :guilabel:`time changes` > :guilabel:`time flows` > :guilabel:`time finishes` (as long as we are still in 3-dimensional world without applying Einstein's relativity) thus no need for going through a central event manager as no various kinds of time events need to be flexibly manipulated. In this scenario, back to the plot in previous event manager session above, going through the event manager is actually more complex than just using timer instances.
+
+In this case, the ``CutomTimer`` acts as the invoker, we first declare the instance of events in teh script without using dictionaries and enumerations:
+
+.. code-block:: C#
+
+    private readonly TimerChangedEvent _timerChangedEvent = new TimerChangedEvent();
+    private readonly TimerFinishedEvent _timerFinishedEvent = new TimerFinishedEvent();
+
+Then we define the function that adds the given listener for the given event name:
+
+.. code-block:: C#
+
+    // Adds the given event handler as a listener
+    public void AddTimerChangedEventListener(UnityAction<float> handler) {
+        _timerChangedEvent.AddListener(handler);
+    }
+
+    // Adds the given event handler as a listener
+    public void AddTimerFinishedEventListener(UnityAction handler) {
+        _timerFinishedEvent.AddListener(handler);
+    }
+
+In the listener which is also the ``PlayerStatus`` class, we first declare the timer instance and access to the invoker class by getting the ``CustomerTimer`` component from the game object, we declare the callback event handler in the bottom and add listener for no argument event in the Start method:
+
+.. code-block:: C#
+
+    private CustomTimer _buffTimer;
+
+    ...
+
+    void Start() {
+        _buffTimer = gameObject.AddComponent<CustomTimer>();
+        _buffTimer.Duration = ConfigUtils.BuffDuration;
+        _buffTimer.AddTimerFinishedEventListener(HandleBuffTimerFinishedEvent);
+
+        ...
+    }
+
+    ...
+
+    // callback this function when buff timer finished
+    private void HandleBuffTimerFinishedEvent() {
+        ...
+    }

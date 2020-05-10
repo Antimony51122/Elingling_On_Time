@@ -50,7 +50,8 @@ public class PlayerStatus : ZPosChangeable {
         // attach the BoxCollider2D component for later crashing bus and car effects
         _capColl2D = GetComponent<CapsuleCollider2D>();
 
-        _buffTimer          = gameObject.AddComponent<CustomTimer>();
+        // access to the invoker class by getting the CustomerTimer component from the game object
+        _buffTimer = gameObject.AddComponent<CustomTimer>();
         _buffTimer.Duration = ConfigUtils.BuffDuration;
         _buffTimer.AddTimerFinishedEventListener(HandleBuffTimerFinishedEvent);
 

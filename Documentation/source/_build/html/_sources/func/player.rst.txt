@@ -205,3 +205,174 @@ Then the sprites can swtich between the following two animations correspondingly
 Player Control
 --------------
 
+The impelementation of player control starts with defining enumerations of horizontal and vertical states in separate files:
+
+.. code-block:: C#
+
+    // An enumeration of the horizontal movement states
+    public enum HoriMvtState {
+        Normal,
+        Buffed
+    }
+
+    // An enumeration of the vertical movement states
+    public enum VertMvtState {
+        MovingDown,
+        MovingUp,
+        Still
+    }
+
+Then we initialise the vertical movement states of the player as ``Still`` and horizontal movement state as ``Normal`` respectively.
+
+.. code-block:: C#
+
+    public static VertMvtState VertMvtState;
+    public static HoriMvtState HoriMvtState;
+
+    ...
+
+    void Start() {
+        ...
+
+        // initialise the vertical movement state with still where the player keeps the altitude
+        VertMvtState = new VertMvtState();
+        VertMvtState = VertMvtState.Still;
+
+        // initialise the horizontal movement state with normal where the player keeps steady speed
+        HoriMvtState = new HoriMvtState();
+        HoriMvtState = HoriMvtState.Normal;
+
+        ...
+    }
+
+Vertical Movement
+~~~~~~~~~~~~~~~~~
+
+The actual effect of swtiching between vertical movement states has been handled by ``VertMvtHandler`` function utilising the unity ``transform.Translate()`` built in function
+
+.. code-block:: C#
+
+    private void VertMvtHandler() {
+        switch (VertMvtState) {
+            case VertMvtState.MovingDown:
+                transform.Translate(
+                    -Vector3.up * _vertSpeed * Time.deltaTime,
+                    Space.World);
+                break;
+            case VertMvtState.MovingUp:
+                transform.Translate(
+                    Vector3.up * _vertSpeed * Time.deltaTime,
+                    Space.World);
+                break;
+            case VertMvtState.Still:
+                // stop only the vertical speed by setting the vertical component to 0
+                transform.Translate(
+                    Vector3.up * 0,
+                    Space.World);
+                break;
+            default:
+                //transform.position = gameObject.transform.position;
+                transform.Translate(
+                    Vector3.up * 0,
+                    Space.World);
+                break;
+        }
+    }
+
+In order to prevent the player to move outside the screen boundaries, we introduce a clamping position function:
+
+.. code-block:: C#
+
+    private void CalculateClampedY() {
+        // remember to add z pos, if using Vector2, the z pos will go back to 0 
+        // where the player will be behind the background
+        Vector3 playerPos = transform.position;
+
+        if (playerPos.y > _playerMvtUpperLimit || playerPos.y < _playerMvtLowerLimit) {
+            playerPos.y = Mathf.Clamp(
+                playerPos.y,
+                _playerMvtLowerLimit,
+                _playerMvtUpperLimit);
+
+            transform.position = playerPos;
+
+The actual player control follows two discipline. Keyboard control or phone controls. The program will detect first which platform the game is currently running on. The Phone version of the game utilise the accelerometer of the phone, when the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa while the keyboard verison follows the most basic simple control of using :guilabel:`w` and :guilabel:`s` to control the avatar to move up and down.
+
+.. code-block:: C#
+
+    void Update() {
+        // using phone gyroscope & accelerometer input when running as phone apps
+        if (Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer) {
+            PhoneSensorControl();
+        } else {
+            // using keyboard vertical input axis when running on any other platform
+            KeyboardControl();
+        }
+
+        VertMvtHandler();
+        HoriMvtHandler();
+        CalculateClampedY();
+    }
+
+    // ----- Phone Sensor Control -----
+    private void PhoneSensorControl() {
+        if (Input.acceleration.y < -0.60) {
+            VertMvtState = VertMvtState.MovingDown;
+        } else if (Input.acceleration.y > -0.25) {
+            VertMvtState = VertMvtState.MovingUp;
+        } else {
+            VertMvtState = VertMvtState.Still;
+        }
+    }
+
+    // ----- Keyboard Control -----
+    private void KeyboardControl() {
+        if (Input.GetKey(KeyCode.S)) {
+            VertMvtState = VertMvtState.MovingDown;
+        } else if (Input.GetKey(KeyCode.W)) {
+            VertMvtState = VertMvtState.MovingUp;
+        } else {
+            VertMvtState = VertMvtState.Still;
+        }
+    }
+
+Horizontal Movement
+~~~~~~~~~~~~~~~~~~~
+
+The horizontal movement simply utilises the unity ``transform.Translate()`` built in function:
+
+.. code-block:: C#
+
+    private void HoriMvtHandler() {
+        switch (HoriMvtState) {
+            case HoriMvtState.Normal:
+                transform.Translate(Vector3.right * _horiSpeed);
+                break;
+            case HoriMvtState.Buffed:
+                transform.Translate(Vector3.right * _horiSpeed * _buffFactor);
+                break;
+        }
+    }
+
+The movement function has not much to discuss, what interesting is if the player runs towards the right of the screen, how to keep it always in the screen. This functionality has been accomplished in ``EnvObjLoop`` script which has been attached to the main camera. We create an instance of the player in the script and let the camera keep tracking of the player's position:
+
+.. code-block:: C#
+
+    public class EnvObjLoop : MonoBehaviour {
+        ...
+
+        [SerializeField] private GameObject _player;
+
+        ...
+
+        void Update() {
+            // let the camera follow the player and locate the player at x = -5 of the screen
+            transform.position = new Vector3(
+                _player.transform.position.x + 5,
+                transform.position.y,
+                transform.position.z);
+        }
+
+        ...
+    }

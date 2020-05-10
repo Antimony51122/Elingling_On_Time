@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnvObjLoop : MonoBehaviour
-{
+public class EnvObjLoop : MonoBehaviour {
     // ==============================================================
     // Field Variables
     // ==============================================================

@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#sprites-manipulation">Sprites Manipulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#player-control">Player Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#player-control">Player Control</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vertical-movement">Vertical Movement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#horizontal-movement">Horizontal Movement</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
@@ -344,6 +348,164 @@
 </div>
 <div class="section" id="player-control">
 <h2>Player Control<a class="headerlink" href="#player-control" title="Permalink to this headline">¶</a></h2>
+<p>The impelementation of player control starts with defining enumerations of horizontal and vertical states in separate files:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// An enumeration of the horizontal movement states</span>
+<span class="k">public</span> <span class="k">enum</span> <span class="n">HoriMvtState</span> <span class="p">{</span>
+    <span class="n">Normal</span><span class="p">,</span>
+    <span class="n">Buffed</span>
+<span class="p">}</span>
+
+<span class="c1">// An enumeration of the vertical movement states</span>
+<span class="k">public</span> <span class="k">enum</span> <span class="n">VertMvtState</span> <span class="p">{</span>
+    <span class="n">MovingDown</span><span class="p">,</span>
+    <span class="n">MovingUp</span><span class="p">,</span>
+    <span class="n">Still</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then we initialise the vertical movement states of the player as <code class="docutils literal notranslate"><span class="pre">Still</span></code> and horizontal movement state as <code class="docutils literal notranslate"><span class="pre">Normal</span></code> respectively.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="n">VertMvtState</span> <span class="n">VertMvtState</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="n">HoriMvtState</span> <span class="n">HoriMvtState</span><span class="p">;</span>
+
+<span class="p">...</span>
+
+<span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="c1">// initialise the vertical movement state with still where the player keeps the altitude</span>
+    <span class="n">VertMvtState</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VertMvtState</span><span class="p">();</span>
+    <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">;</span>
+
+    <span class="c1">// initialise the horizontal movement state with normal where the player keeps steady speed</span>
+    <span class="n">HoriMvtState</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HoriMvtState</span><span class="p">();</span>
+    <span class="n">HoriMvtState</span> <span class="p">=</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Normal</span><span class="p">;</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="vertical-movement">
+<h3>Vertical Movement<a class="headerlink" href="#vertical-movement" title="Permalink to this headline">¶</a></h3>
+<p>The actual effect of swtiching between vertical movement states has been handled by <code class="docutils literal notranslate"><span class="pre">VertMvtHandler</span></code> function utilising the unity <code class="docutils literal notranslate"><span class="pre">transform.Translate()</span></code> built in function</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">VertMvtHandler</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">VertMvtState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingDown</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="p">-</span><span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="n">_vertSpeed</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingUp</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="n">_vertSpeed</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">:</span>
+            <span class="c1">// stop only the vertical speed by setting the vertical component to 0</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="c1">//transform.position = gameObject.transform.position;</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In order to prevent the player to move outside the screen boundaries, we introduce a clamping position function:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">CalculateClampedY</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// remember to add z pos, if using Vector2, the z pos will go back to 0</span>
+    <span class="c1">// where the player will be behind the background</span>
+    <span class="n">Vector3</span> <span class="n">playerPos</span> <span class="p">=</span> <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">playerPos</span><span class="p">.</span><span class="n">y</span> <span class="p">&gt;</span> <span class="n">_playerMvtUpperLimit</span> <span class="p">||</span> <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="n">_playerMvtLowerLimit</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span> <span class="p">=</span> <span class="n">Mathf</span><span class="p">.</span><span class="n">Clamp</span><span class="p">(</span>
+            <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">_playerMvtLowerLimit</span><span class="p">,</span>
+            <span class="n">_playerMvtUpperLimit</span><span class="p">);</span>
+
+        <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="n">playerPos</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The actual player control follows two discipline. Keyboard control or phone controls. The program will detect first which platform the game is currently running on. The Phone version of the game utilise the accelerometer of the phone, when the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa while the keyboard verison follows the most basic simple control of using <span class="guilabel">w</span> and <span class="guilabel">s</span> to control the avatar to move up and down.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// using phone gyroscope &amp; accelerometer input when running as phone apps</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="n">platform</span> <span class="p">==</span> <span class="n">RuntimePlatform</span><span class="p">.</span><span class="n">Android</span> <span class="p">||</span>
+        <span class="n">Application</span><span class="p">.</span><span class="n">platform</span> <span class="p">==</span> <span class="n">RuntimePlatform</span><span class="p">.</span><span class="n">IPhonePlayer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">PhoneSensorControl</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// using keyboard vertical input axis when running on any other platform</span>
+        <span class="n">KeyboardControl</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">VertMvtHandler</span><span class="p">();</span>
+    <span class="n">HoriMvtHandler</span><span class="p">();</span>
+    <span class="n">CalculateClampedY</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// ----- Phone Sensor Control -----</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">PhoneSensorControl</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">acceleration</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="p">-</span><span class="m">0.60</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingDown</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">acceleration</span><span class="p">.</span><span class="n">y</span> <span class="p">&gt;</span> <span class="p">-</span><span class="m">0.25</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingUp</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// ----- Keyboard Control -----</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">KeyboardControl</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">S</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingDown</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">W</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingUp</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="horizontal-movement">
+<h3>Horizontal Movement<a class="headerlink" href="#horizontal-movement" title="Permalink to this headline">¶</a></h3>
+<p>The horizontal movement simply utilises the unity <code class="docutils literal notranslate"><span class="pre">transform.Translate()</span></code> built in function:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HoriMvtHandler</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">HoriMvtState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Normal</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span><span class="n">Vector3</span><span class="p">.</span><span class="n">right</span> <span class="p">*</span> <span class="n">_horiSpeed</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Buffed</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span><span class="n">Vector3</span><span class="p">.</span><span class="n">right</span> <span class="p">*</span> <span class="n">_horiSpeed</span> <span class="p">*</span> <span class="n">_buffFactor</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The movement function has not much to discuss, what interesting is if the player runs towards the right of the screen, how to keep it always in the screen. This functionality has been accomplished in <code class="docutils literal notranslate"><span class="pre">EnvObjLoop</span></code> script which has been attached to the main camera. We create an instance of the player in the script and let the camera keep tracking of the player’s position:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EnvObjLoop</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
+    <span class="p">...</span>
+
+<span class="na">    [SerializeField]</span> <span class="k">private</span> <span class="n">GameObject</span> <span class="n">_player</span><span class="p">;</span>
+
+    <span class="p">...</span>
+
+    <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// let the camera follow the player and locate the player at x = -5 of the screen</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span>
+            <span class="n">_player</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 

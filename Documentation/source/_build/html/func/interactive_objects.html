@@ -89,8 +89,20 @@
 <p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="player.html">Player</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Interactive Game Elements &amp; Spawning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interactive Game Elements &amp; Spawning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#spawners">Spawners</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vehicles">Vehicles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environmental-objects">Environmental Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#spawned-objects">Spawned Objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Vehicles</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="env_loop.html">Background Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Classes</a></li>
 </ul>
 
             
@@ -160,13 +172,112 @@
 </div>
 <div class="section" id="interactive-game-elements-spawning">
 <h1>Interactive Game Elements &amp; Spawning<a class="headerlink" href="#interactive-game-elements-spawning" title="Permalink to this headline">¶</a></h1>
-<p>We have four kinds of elements that need to be spawned: the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code>, the <code class="docutils literal notranslate"><span class="pre">Soldier</span></code>, the <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> and <code class="docutils literal notranslate"><span class="pre">EnvObj</span></code> each has a corresponding spawning class. The</p>
-<div class="figure align-center" id="id1">
+<p>We have four kinds of elements that need to be spawned: the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code>, the <code class="docutils literal notranslate"><span class="pre">Soldier</span></code>, the <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> and <code class="docutils literal notranslate"><span class="pre">EnvObj</span></code> each has a corresponding spawning class. The spawners and spawned objects inheritance hierarchy can be shown in the system diagram below, in each hierarchy the class has declared some <code class="docutils literal notranslate"><span class="pre">protected</span></code> method that defined essential functionality patterns that to be utilised and modified by the child classes:</p>
+<div class="figure align-center" id="id2">
 <img alt="../_images/spawning_inheritance_hierarchy_system_diagram.png" src="../_images/spawning_inheritance_hierarchy_system_diagram.png" />
 <p class="caption"><span class="caption-text">System Diagram of Spawning Inheritance Hierarchy (<span class="guilabel">ctrl</span> + <span class="guilabel">+</span> to zoom in)</span></p>
 </div>
+<div class="section" id="spawners">
+<h2>Spawners<a class="headerlink" href="#spawners" title="Permalink to this headline">¶</a></h2>
+<p>The essence of the inheritance shown above is to maximise the re-usability of functionalities of the same patterns. In the case of the spawners, all four end-user spawners are attached to the <code class="xref any docutils literal notranslate"><span class="pre">Main</span> <span class="pre">Camera</span></code> which can be shown in the below screenshot:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../_images/spawner_attach.png"><img alt="../_images/spawner_attach.png" src="../_images/spawner_attach.png" style="width: 100%;" /></a>
+</div>
+<p>They are inherit from the sanme parent spawner class where the xyz spawning positions and the interval for custom timer to renew has been defined. These functionalities will be modified and reused in all four end-user spawners. The <code class="docutils literal notranslate"><span class="pre">Soldier</span></code> and <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> class have just made modifcations on the prefab to instantiate, timer interval and spawn position without changing the functionality pattern thus doesn’t need to be discussed. Here we will only discuss the new things child classes have added when inheriting.</p>
+<div class="section" id="vehicles">
+<h3>Vehicles<a class="headerlink" href="#vehicles" title="Permalink to this headline">¶</a></h3>
+<p>There are two kinds of vehicles but they behave in the same way thus we only change the sprite rather than changing the properties of the game object thus we start with declaring the field variable:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="na">[SerializeField]</span> <span class="k">private</span> <span class="n">GameObject</span><span class="p">[]</span> <span class="n">_prefabVehicles</span> <span class="p">=</span> <span class="k">default</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Then we modify the original <code class="docutils literal notranslate"><span class="pre">Update</span></code> function to randomly choose which object to spawn. We also need to modify the timer since when the player are in buffed state, she’s runnign 3 times faster, thus vehicles need to be generated 3 times faster:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">CustomTimer</span><span class="p">.</span><span class="n">Finished</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">SpawnNewObj</span><span class="p">(</span><span class="n">_prefabVehicles</span><span class="p">[</span><span class="n">Random</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">_prefabVehicles</span><span class="p">.</span><span class="n">Length</span><span class="p">)]);</span>
+
+        <span class="c1">// when in buffed state, spawn the obj at 3 times frequency</span>
+        <span class="n">CustomTimer</span><span class="p">.</span><span class="n">Duration</span> <span class="p">=</span> <span class="n">PlayerControl</span><span class="p">.</span><span class="n">HoriMvtState</span> <span class="p">==</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Buffed</span>
+            <span class="p">?</span> <span class="n">Random</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span>
+                <span class="n">ConfigUtils</span><span class="p">.</span><span class="n">MinSpawnIntervalObstacle</span> <span class="p">/</span> <span class="m">3</span><span class="p">,</span>
+                <span class="n">ConfigUtils</span><span class="p">.</span><span class="n">MaxSpawnIntervalObstacle</span> <span class="p">/</span> <span class="m">3</span><span class="p">)</span>
+            <span class="p">:</span> <span class="n">Random</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span>
+                <span class="n">ConfigUtils</span><span class="p">.</span><span class="n">MinSpawnIntervalObstacle</span><span class="p">,</span>
+                <span class="n">ConfigUtils</span><span class="p">.</span><span class="n">MaxSpawnIntervalObstacle</span><span class="p">);</span>
+        <span class="n">CustomTimer</span><span class="p">.</span><span class="n">Run</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The vehicles will encouter another issue of whether generating in the top lane or bottom lane, this will be handled in the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script that will be discussed down below.</p>
+</div>
+<div class="section" id="environmental-objects">
+<h3>Environmental Objects<a class="headerlink" href="#environmental-objects" title="Permalink to this headline">¶</a></h3>
+<p>The environmental objects will face the same issue of lane choice as the vehicle does. Since environmental objects are not interacting with the player, we turn to simplify the <code class="docutils literal notranslate"><span class="pre">EnvObj</span></code> class and squeeze all the functionalities in the environmental objects spawner script.</p>
+<p>Same as the vehicle spawner, we declare a list of game objects as prefab pool, but this time we create two key value pairs to store the random environmental object and lane choices:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// --------------- Serialized Cached References ---------------</span>
+
+<span class="na">[SerializeField]</span> <span class="k">private</span> <span class="n">GameObject</span><span class="p">[]</span> <span class="n">_prefabEnvObjs</span> <span class="p">=</span> <span class="k">default</span><span class="p">;</span>
+
+<span class="c1">// --------------- Config Params ---------------</span>
+
+<span class="k">private</span> <span class="n">VehicleLane</span> <span class="n">_vehicleLane</span><span class="p">;</span>
+
+<span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="n">_envObjs</span> <span class="p">=</span>
+    <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;();</span>
+
+<span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">VehicleLane</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="n">_laneChoices</span> <span class="p">=</span>
+    <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">VehicleLane</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;();</span>
+</pre></div>
+</div>
+<p>In the <code class="xref any docutils literal notranslate"><span class="pre">Start</span></code> method we assign each environmental object and lane choices with a certain probability of occuring. This has been actualised using the custom  <code class="xref any docutils literal notranslate"><span class="pre">Probability.RandomEventsWithProb</span></code> method which will be discussed in later sections:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_envObjs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="p">{</span>
+        <span class="k">new</span> <span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;(</span><span class="n">_prefabEnvObjs</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="m">60</span><span class="p">),</span>
+        <span class="k">new</span> <span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;(</span><span class="n">_prefabEnvObjs</span><span class="p">[</span><span class="m">1</span><span class="p">],</span> <span class="m">20</span><span class="p">),</span>
+        <span class="k">new</span> <span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;(</span><span class="n">_prefabEnvObjs</span><span class="p">[</span><span class="m">2</span><span class="p">],</span> <span class="m">20</span><span class="p">),</span>
+    <span class="p">};</span>
+
+    <span class="n">_laneChoices</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">VehicleLane</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="p">{</span>
+        <span class="k">new</span> <span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">VehicleLane</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;(</span><span class="n">VehicleLane</span><span class="p">.</span><span class="n">Top</span><span class="p">,</span> <span class="m">20</span><span class="p">),</span>
+        <span class="k">new</span> <span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">VehicleLane</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;(</span><span class="n">VehicleLane</span><span class="p">.</span><span class="n">Bottom</span><span class="p">,</span> <span class="m">80</span><span class="p">),</span>
+    <span class="p">};</span>
+
+    <span class="k">base</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">CustomTimer</span><span class="p">.</span><span class="n">Finished</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// using reusable separate function from Probability Utility class</span>
+        <span class="n">SpawnNewObj</span><span class="p">(</span><span class="n">Probability</span><span class="p">.</span><span class="n">RandomEventsWithProb</span><span class="p">(</span><span class="n">_envObjs</span><span class="p">,</span> <span class="m">100</span><span class="p">));</span>
+
+        <span class="c1">// when in buffed state, spawn the obj at 3 times frequency</span>
+        <span class="n">CustomTimer</span><span class="p">.</span><span class="n">Duration</span> <span class="p">=</span> <span class="m">2</span><span class="p">;</span>
+        <span class="n">CustomTimer</span><span class="p">.</span><span class="n">Run</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="spawned-objects">
+<h2>Spawned Objects<a class="headerlink" href="#spawned-objects" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code> and <code class="docutils literal notranslate"><span class="pre">ZPosChangeable</span></code> classes have been discussed in previous sections. The most important functionality the <code class="docutils literal notranslate"><span class="pre">SpawnedObj</span></code> class has declared and can be applied to all children spawned objects is the self destroy functionality where spawned ojbects destroy themselves when they are too far away from the left boundary of the screen. They will no longer be able to interact with any of the existing game objects in the screen but they still occupy memory spaces thus needs to be eliminated:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// when the obstacle is 1.5 screen width behind the player, destroy itself</span>
+<span class="c1">// setting to 1.5 screen width to avoid bugs caused when deploying on phones</span>
+<span class="k">protected</span> <span class="k">virtual</span> <span class="k">void</span> <span class="nf">DestroySelf</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">xPosSelf</span>   <span class="p">=</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">xPosPlayer</span> <span class="p">=</span> <span class="n">PlayerControl</span><span class="p">.</span><span class="n">PlayerTransform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+    <span class="c1">// calculate the x distance between position of obstacle itself and the player</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">xPosSelf</span> <span class="p">-</span> <span class="n">xPosPlayer</span> <span class="p">&lt;</span> <span class="m">3</span> <span class="p">*</span> <span class="n">ScreenUtils</span><span class="p">.</span><span class="n">ScreenLeft</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Destroy</span><span class="p">(</span><span class="n">gameObject</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h3>Vehicles<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 

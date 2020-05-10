@@ -107,6 +107,7 @@ Contents
     func/player.rst
     func/interactive_objects.rst
     func/env_loop.rst
+    func/utils.rst
 
 
 

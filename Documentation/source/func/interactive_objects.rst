@@ -2,5 +2,6 @@
     :align: center
     :width: 100%
 
-Game Elements & Spawning
-========================
+Interactive Game Elements & Spawning
+====================================
+

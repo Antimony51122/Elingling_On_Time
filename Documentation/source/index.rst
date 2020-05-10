@@ -38,6 +38,12 @@ Basic Control
 Game Elements
 ~~~~~~~~~~~~~~
 
+.. figure:: _static/index/screenshot_all_element.png
+    :align: center
+    :width: 100%
+
+    All game elements
+
 :Vehicle:
     Two kinds of vehcles are on the road in the game, the beetles and the double decker bus. When the player avatar crash with the vehicle, one health point will be deducted.
 
@@ -46,6 +52,18 @@ Game Elements
 
 :Bicycle:
     The Santander bicycle grants Elinging 3 seconds of speed buff. In addition, Elinging enters the invincible mode when riding the bicycle where she can bascially knock away the vehcles on the road.
+
+.. |soldier_chasing| image:: _static/index/screenshot_soldier_chasing.png
+    :align: middle
+
+.. |elingling_invisible| image:: _static/index/screenshot_elingling_invisible.png
+    :align: middle
+
++--------------------------------------------------------------------+--------------------------------------------------------------------+
+| Soldier getting alerted and start chasing Elingling                | Elingling turned invincible after collecting the santander bicycle |
++--------------------------------------------------------------------+--------------------------------------------------------------------+
+| |soldier_chasing|                                                  | |elingling_invisible|                                              |
++--------------------------------------------------------------------+--------------------------------------------------------------------+
 
 ********
 Contents

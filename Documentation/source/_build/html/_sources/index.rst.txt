@@ -55,9 +55,11 @@ Game Elements
 
 .. |soldier_chasing| image:: _static/index/screenshot_soldier_chasing.png
     :align: middle
+    :width: 100%
 
 .. |elingling_invisible| image:: _static/index/screenshot_elingling_invisible.png
     :align: middle
+    :width: 100%
 
 +--------------------------------------------------------------------+--------------------------------------------------------------------+
 | Soldier getting alerted and start chasing Elingling                | Elingling turned invincible after collecting the santander bicycle |

@@ -1,5 +1,6 @@
-.. figure:: ../_static/index/cover.png
+.. figure:: ../_static/index/cover.gif
     :align: center
+    :width: 100%
 
 Event Handling Pattern
 ======================
@@ -9,7 +10,7 @@ The game design follows a simple observer pattern where event handlers responds 
 .. figure:: ../_static/system_diagrams/event_handling_system_diagram.png
     :align: center
 
-    System Diagram of Event Handling Design Pattern (``ctrl`` + ``+`` to zoom in)
+    System Diagram of Event Handling Design Pattern (:guilabel:`ctrl` + :guilabel:`+` to zoom in)
 
 
 
@@ -37,7 +38,7 @@ Then corresponding classes of events have been declared in separate files such a
 
 .. note:: For the ease of implementation, I declare all the event as one ``float`` argument event.
 
-Then, in the ``EventManager.cs``, lists of invokers and listeners have been declared because we might have multiple invokers for a particular event:
+Then, in the ``EventManager`` class, lists of invokers and listeners have been declared because we might have multiple invokers for a particular event:
 
 .. code-block:: C#
 
@@ -103,7 +104,7 @@ Don't forget to add removal functionality of the invoker when the invoker has be
 Invokers
 --------
 
-Instead of defining the invokers' properties separately, we firstly define a parent class of invokers ``FloatEventInvoker``. Dictionary once again has been utilised to enable us to invoke more than one event. The keys don't have to be strings but any data type, in this case, keys are enumerations and values are float unity events.
+Instead of defining the invokers' properties separately, we firstly define a parent class of invokers ``FloatEventInvoker``. Dictionary once again has been utilised to enable us to invoke more than one event. We couldn't just have a field for the ``UnityEvent<float>``. We needed to have a dictionary fo ``UnityEvents`` so that classes can invoke multiple float events.The keys don't have to be strings but any data type, in this case, keys are enumerations and values are float unity events.
 
 .. code-block:: C#
 
@@ -174,3 +175,45 @@ Finally, don't forget to unregister the invoker using the ``RemoveFloatArgInvoke
 Listeners
 ---------
 
+In this game, there is only one current listener listening to all the events which is the ``PlayerStatus`` class. The listener is where we define the actual functionalities as event handler, here we define the four event handling functions (the detailed functionality implementation will be discussed in separate sections):
+
+.. code-block:: C#
+
+    // reduces health by the given damage
+    private void HandleHealthChangedEvent(float damage) {
+        ...
+    }
+
+    // boost the player movement speed and turn invincible
+    private void HandleSpeedUpEffectEvent(float factor) {
+        ...
+    }
+
+    // callback this function when buff timer finished
+    private void HandleBuffTimerFinishedEvent() {
+        ...
+    }
+
+    // store the result and go to score page
+    private void HandleGameOverEvent(float unused) {
+        ...
+    }
+
+Then in the ``Start`` method, we register the event handling functions to the central event manager (the timer event handling follows a different pattern that would be describe in below section):
+
+.. code-block:: C#
+
+    void Start() {
+        
+        ...
+        
+        EventManager.AddFloatArgListener(EventName.HealthChangedEvent,    HandleHealthChangedEvent);
+        EventManager.AddFloatArgListener(EventName.SpeedUpActivatedEvent, HandleSpeedUpEffectEvent);
+        EventManager.AddFloatArgListener(EventName.GameOverEvent,         HandleGameOverEvent);
+    }
+
+
+Timer Event Handling
+--------------------
+
+The event handling pattern in the Customer Timer has been separated from the centralised event manager workflow. 

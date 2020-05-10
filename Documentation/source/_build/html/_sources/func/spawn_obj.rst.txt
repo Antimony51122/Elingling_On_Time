@@ -1,5 +1,6 @@
-.. figure:: ../_static/index/cover.png
+.. figure:: ../_static/index/cover.gif
     :align: center
+    :width: 100%
 
 Game Elements & Spawning
 ========================

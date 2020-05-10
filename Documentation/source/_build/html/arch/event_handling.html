@@ -86,6 +86,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#event-manager">Event Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#invokers">Invokers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#listeners">Listeners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#timer-event-handling">Timer Event Handling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
@@ -161,14 +162,14 @@
            <div itemprop="articleBody">
             
   <div class="figure align-center">
-<img alt="../_images/cover.png" src="../_images/cover.png" />
+<a class="reference internal image-reference" href="../_images/cover.gif"><img alt="../_images/cover.gif" src="../_images/cover.gif" style="width: 100%;" /></a>
 </div>
 <div class="section" id="event-handling-pattern">
 <h1>Event Handling Pattern<a class="headerlink" href="#event-handling-pattern" title="Permalink to this headline">¶</a></h1>
 <p>The game design follows a simple observer pattern where event handlers responds when an event occurs. Unity Event Handling system has been based on the delegate type which specifies a method signature and allow us to pass references to methods. The design pattern are shown in the system diagram below.</p>
 <div class="figure align-center" id="id1">
 <img alt="../_images/event_handling_system_diagram.png" src="../_images/event_handling_system_diagram.png" />
-<p class="caption"><span class="caption-text">System Diagram of Event Handling Design Pattern (<code class="docutils literal notranslate"><span class="pre">ctrl</span></code> + <code class="docutils literal notranslate"><span class="pre">+</span></code> to zoom in)</span></p>
+<p class="caption"><span class="caption-text">System Diagram of Event Handling Design Pattern (<span class="guilabel">ctrl</span> + <span class="guilabel">+</span> to zoom in)</span></p>
 </div>
 <div class="section" id="event-manager">
 <h2>Event Manager<a class="headerlink" href="#event-manager" title="Permalink to this headline">¶</a></h2>
@@ -190,7 +191,7 @@
 <p class="first admonition-title">Note</p>
 <p class="last">For the ease of implementation, I declare all the event as one <code class="docutils literal notranslate"><span class="pre">float</span></code> argument event.</p>
 </div>
-<p>Then, in the <code class="docutils literal notranslate"><span class="pre">EventManager.cs</span></code>, lists of invokers and listeners have been declared because we might have multiple invokers for a particular event:</p>
+<p>Then, in the <code class="docutils literal notranslate"><span class="pre">EventManager</span></code> class, lists of invokers and listeners have been declared because we might have multiple invokers for a particular event:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">FloatEventInvoker</span><span class="p">&gt;&gt;</span> <span class="n">Invokers</span> <span class="p">=</span>
     <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">FloatEventInvoker</span><span class="p">&gt;&gt;();</span>
 
@@ -245,7 +246,7 @@
 </div>
 <div class="section" id="invokers">
 <h2>Invokers<a class="headerlink" href="#invokers" title="Permalink to this headline">¶</a></h2>
-<p>Instead of defining the invokers’ properties separately, we firstly define a parent class of invokers <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code>. Dictionary once again has been utilised to enable us to invoke more than one event. The keys don’t have to be strings but any data type, in this case, keys are enumerations and values are float unity events.</p>
+<p>Instead of defining the invokers’ properties separately, we firstly define a parent class of invokers <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code>. Dictionary once again has been utilised to enable us to invoke more than one event. We couldn’t just have a field for the <code class="docutils literal notranslate"><span class="pre">UnityEvent&lt;float&gt;</span></code>. We needed to have a dictionary fo <code class="docutils literal notranslate"><span class="pre">UnityEvents</span></code> so that classes can invoke multiple float events.The keys don’t have to be strings but any data type, in this case, keys are enumerations and values are float unity events.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FloatEventInvoker</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
     <span class="k">protected</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">UnityEvent</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="n">UnityEvents</span> <span class="p">=</span>
         <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">UnityEvent</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;();</span>
@@ -306,6 +307,43 @@
 </div>
 <div class="section" id="listeners">
 <h2>Listeners<a class="headerlink" href="#listeners" title="Permalink to this headline">¶</a></h2>
+<p>In this game, there is only one current listener listening to all the events which is the <code class="docutils literal notranslate"><span class="pre">PlayerStatus</span></code> class. The listener is where we define the actual functionalities as event handler, here we define the four event handling functions (the detailed functionality implementation will be discussed in separate sections):</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// reduces health by the given damage</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">HandleHealthChangedEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">damage</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="c1">// boost the player movement speed and turn invincible</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">HandleSpeedUpEffectEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="c1">// callback this function when buff timer finished</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">HandleBuffTimerFinishedEvent</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="c1">// store the result and go to score page</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">HandleGameOverEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">unused</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then in the <code class="docutils literal notranslate"><span class="pre">Start</span></code> method, we register the event handling functions to the central event manager (the timer event handling follows a different pattern that would be describe in below section):</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="p">...</span>
+
+    <span class="n">EventManager</span><span class="p">.</span><span class="n">AddFloatArgListener</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">,</span>    <span class="n">HandleHealthChangedEvent</span><span class="p">);</span>
+    <span class="n">EventManager</span><span class="p">.</span><span class="n">AddFloatArgListener</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">SpeedUpActivatedEvent</span><span class="p">,</span> <span class="n">HandleSpeedUpEffectEvent</span><span class="p">);</span>
+    <span class="n">EventManager</span><span class="p">.</span><span class="n">AddFloatArgListener</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">,</span>         <span class="n">HandleGameOverEvent</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="timer-event-handling">
+<h2>Timer Event Handling<a class="headerlink" href="#timer-event-handling" title="Permalink to this headline">¶</a></h2>
+<p>The event handling pattern in the Customer Timer has been separated from the centralised event manager workflow.</p>
 </div>
 </div>
 

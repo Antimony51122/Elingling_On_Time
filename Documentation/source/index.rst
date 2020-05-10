@@ -1,5 +1,6 @@
-.. figure:: _static/index/cover.png
+.. figure:: _static/index/cover.gif
     :align: center
+    :width: 100%
 
 ******************************
 Elinging on Time Documentation
@@ -29,7 +30,7 @@ Basic Control
 ~~~~~~~~~~~~~
 
 :WebGL:
-    The WebGL version of the game follows the most basic simple control of using ``w`` and ``s`` to control the avatar to move up and down.
+    The WebGL version of the game follows the most basic simple control of using :guilabel:`w` and :guilabel:`s` to control the avatar to move up and down.
 
 :Phone:
     The Phone version of the game utilise the accelerometer of the phone, when the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa.

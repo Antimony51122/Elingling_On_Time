@@ -84,7 +84,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Event Handling Pattern</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#event-manager">Event Manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#invoker">Invoker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#invokers">Invokers</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
@@ -242,8 +242,66 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="invoker">
-<h2>Invoker<a class="headerlink" href="#invoker" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="invokers">
+<h2>Invokers<a class="headerlink" href="#invokers" title="Permalink to this headline">¶</a></h2>
+<p>Instead of defining the invokers’ properties separately, we firstly define a parent class of invokers <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code>. Dictionary once again has been utilised to enable us to inoke more than one event. The keys don’t have to be strings but any data type, in this case, kyes are enumerations and values are float unity events.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FloatEventInvoker</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
+    <span class="k">protected</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">UnityEvent</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="n">UnityEvents</span> <span class="p">=</span>
+        <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">EventName</span><span class="p">,</span> <span class="n">UnityEvent</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;&gt;();</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then we define the function that adds the given listener for the given event name:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">AddFloatArgListener</span><span class="p">(</span><span class="n">EventName</span> <span class="n">eventName</span><span class="p">,</span> <span class="n">UnityAction</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">listener</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// only add listeners for supported events, `ContainsKey` check for the key</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">UnityEvents</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="n">eventName</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1">// get the invoker by putting the key in between square brackets</span>
+        <span class="n">UnityEvents</span><span class="p">[</span><span class="n">eventName</span><span class="p">].</span><span class="n">AddListener</span><span class="p">(</span><span class="n">listener</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method has been called in <code class="docutils literal notranslate"><span class="pre">EventManager</span></code> class when we we declare the float argument handlers to be called in listeners and invokers.</p>
+</div>
+<p>For the children and grandchildren classes of invokers, we use <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> class as an example, register for <code class="docutils literal notranslate"><span class="pre">HealthChangeEvent</span></code> and <code class="docutils literal notranslate"><span class="pre">GameOverEvent</span></code> in the <code class="docutils literal notranslate"><span class="pre">Start</span></code> method:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="p">...</span>
+
+    <span class="n">UnityEvents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">,</span> <span class="k">new</span> <span class="n">HealthChangedEvent</span><span class="p">());</span>
+    <span class="n">EventManager</span><span class="p">.</span><span class="n">AddFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+
+    <span class="n">UnityEvents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">,</span> <span class="k">new</span> <span class="n">GameOverEvent</span><span class="p">());</span>
+    <span class="n">EventManager</span><span class="p">.</span><span class="n">AddFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>These events have been triggered when collideing with the player, each time colliding with the player, deduct one health point, and when the health point equals 0, trigger the game over event:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Player&quot;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="m">1.0f</span><span class="p">);</span>
+
+        <span class="c1">// check for game over</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">PlayerStatus</span><span class="p">.</span><span class="n">Health</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">base</span><span class="p">.</span><span class="n">OnTriggerEnter2D</span><span class="p">(</span><span class="n">coll</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Finally, don’t forget to unregister the invoker since we don’t want the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script hanging around in that dictionary in the <code class="docutils literal notranslate"><span class="pre">EventManager</span></code> after the <code class="docutils literal notranslate"><span class="pre">Vehcile</span></code> game object itself was attached to gets destoryed.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnDestroy</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">EventManager</span><span class="p">.</span><span class="n">RemoveFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+    <span class="n">EventManager</span><span class="p">.</span><span class="n">RemoveFloatArgInvoker</span><span class="p">(</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 

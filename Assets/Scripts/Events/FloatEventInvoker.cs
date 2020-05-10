@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-// Extends MonoBehaviour to support one or more invoking one integer argument UnityEvents
+// Extends MonoBehaviour to support one or more invoking one float argument UnityEvents
 public class FloatEventInvoker : MonoBehaviour {
     // look up values by using keys, the keys don't have to be strings but any data type
-    // in this case, keys are enumerations and values int unity events
+    // in this case, keys are enumerations and values are float unity events
     // dictionary enables us to invoke more than one event
     protected Dictionary<EventName, UnityEvent<float>> UnityEvents =
         new Dictionary<EventName, UnityEvent<float>>();

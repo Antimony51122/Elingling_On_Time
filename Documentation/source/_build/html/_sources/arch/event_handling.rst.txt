@@ -100,5 +100,71 @@ Don't forget to add removal functionality of the invoker when the invoker has be
 
 
 
-Invoker
--------
+Invokers
+--------
+
+Instead of defining the invokers' properties separately, we firstly define a parent class of invokers ``FloatEventInvoker``. Dictionary once again has been utilised to enable us to inoke more than one event. The keys don't have to be strings but any data type, in this case, kyes are enumerations and values are float unity events.
+
+.. code-block:: C#
+
+    public class FloatEventInvoker : MonoBehaviour {
+        protected Dictionary<EventName, UnityEvent<float>> UnityEvents =
+            new Dictionary<EventName, UnityEvent<float>>();
+
+        ...
+    }
+
+Then we define the function that adds the given listener for the given event name:
+
+.. code-block:: C#
+
+        public void AddFloatArgListener(EventName eventName, UnityAction<float> listener) {
+            // only add listeners for supported events, `ContainsKey` check for the key
+            if (UnityEvents.ContainsKey(eventName)) {
+                // get the invoker by putting the key in between square brackets
+                UnityEvents[eventName].AddListener(listener);
+            }
+        }
+
+.. note:: This method has been called in ``EventManager`` class when we we declare the float argument handlers to be called in listeners and invokers.
+
+For the children and grandchildren classes of invokers, we use ``Vehicle`` class as an example, register for ``HealthChangeEvent`` and ``GameOverEvent`` in the ``Start`` method:
+
+.. code-block:: C#
+
+    protected override void Start() {
+        
+        ...
+
+        UnityEvents.Add(EventName.HealthChangedEvent, new HealthChangedEvent());
+        EventManager.AddFloatArgInvoker(EventName.HealthChangedEvent, this);
+
+        UnityEvents.Add(EventName.GameOverEvent, new GameOverEvent());
+        EventManager.AddFloatArgInvoker(EventName.GameOverEvent, this);
+    }
+
+These events have been triggered when collideing with the player, each time colliding with the player, deduct one health point, and when the health point equals 0, trigger the game over event:
+
+.. code-block:: C#
+
+    protected override void OnTriggerEnter2D(Collider2D coll) {
+        if (coll.gameObject.CompareTag("Player")) {
+            UnityEvents[EventName.HealthChangedEvent].Invoke(1.0f);
+
+            // check for game over
+            if (PlayerStatus.Health == 0) {
+                UnityEvents[EventName.GameOverEvent].Invoke(0);
+            }
+        }
+
+        base.OnTriggerEnter2D(coll);
+    }
+
+Finally, don't forget to unregister the invoker since we don't want the ``Vehicle`` script hanging around in that dictionary in the ``EventManager`` after the ``Vehcile`` game object itself was attached to gets destoryed.
+
+.. code-block:: C#
+
+    protected override void OnDestroy() {
+        EventManager.RemoveFloatArgInvoker(EventName.HealthChangedEvent, this);
+        EventManager.RemoveFloatArgInvoker(EventName.GameOverEvent, this);
+    }

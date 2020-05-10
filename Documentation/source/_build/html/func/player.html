@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Background Environment" href="env_loop.html" />
+    <link rel="next" title="Interactive Game Elements &amp; Spawning" href="interactive_objects.html" />
     <link rel="prev" title="Menu &amp; Scene Management" href="../arch/menu.html" /> 
 </head>
 
@@ -86,15 +86,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Functionality Implementation:</span></p>
+<p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Player</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#playerstatus">PlayerStatus</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#health-death">Health &amp; Death</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#speed-up-timer">Speed Up &amp; Timer</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#sprites-manipulation">Sprites Manipulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#player-control">Player Control</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="env_loop.html">Background Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spawn_obj.html">Game Elements &amp; Spawning</a></li>
 </ul>
 
             
@@ -164,12 +169,178 @@
 </div>
 <div class="section" id="player">
 <h1>Player<a class="headerlink" href="#player" title="Permalink to this headline">¶</a></h1>
+<p>For the purpose of easier modular approach. The Player’s impelementation has been divided into two scripts:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">PlayerControl</span></code> which solely handling player’s horizontal and vertical movements.</li>
+<li><code class="docutils literal notranslate"><span class="pre">PlayerStatus</span></code> which handling the player’s properties including health, running distance score, invincibility and amount of buffs collected.</li>
+</ul>
+<div class="section" id="playerstatus">
+<h2>PlayerStatus<a class="headerlink" href="#playerstatus" title="Permalink to this headline">¶</a></h2>
+<p>The manipulation of the status has primarily based on the event handling system which has been discussed in previous section. In this section we focus more on the actual handler functions.</p>
+<p>All player status properties have been declared as static field variable at the top and initialised in the <code class="docutils literal notranslate"><span class="pre">Start()</span></code> method:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// static fields to describe the player&#39;s current condition</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">Health</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">int</span>   <span class="n">Score</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span>  <span class="n">Invincible</span><span class="p">;</span>
+
+<span class="c1">// power buff collection and miss count</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">BuffCollectedCount</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">BuffMissedCount</span><span class="p">;</span>
+
+<span class="p">...</span>
+
+<span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// initialise player health with 3 hearts</span>
+    <span class="n">Health</span> <span class="p">=</span> <span class="m">3</span><span class="p">;</span>
+
+    <span class="c1">// initialise player invincibility mode with false</span>
+    <span class="n">Invincible</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+    <span class="n">BuffCollectedCount</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="n">BuffMissedCount</span>    <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="n">TotalPlayTime</span>      <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="health-death">
+<h3>Health &amp; Death<a class="headerlink" href="#health-death" title="Permalink to this headline">¶</a></h3>
+<p>After subscribing to the listening to the <code class="docutils literal notranslate"><span class="pre">HealthChangedEvent</span></code>, we define the actual health handler, the deduction will only trigger when the player is not in <code class="docutils literal notranslate"><span class="pre">Invincible</span></code> mode:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleHealthChangedEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">damage</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// only deduct health when the player is not invincible</span>
+    <span class="k">if</span> <span class="p">(!</span><span class="n">Invincible</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// don&#39;t go below zero in health</span>
+        <span class="n">Health</span> <span class="p">=</span> <span class="n">Mathf</span><span class="p">.</span><span class="n">Max</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">Health</span> <span class="p">-</span> <span class="n">damage</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As you can see the function is taking in a float argument which is the health point deducted when triggering the event. This number will be passed in the invoker when the event happens.</p>
+</div>
+<p>We also define the game over handler which stores the result and go to score page:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleGameOverEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">unused</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">ScoreResult</span>         <span class="p">=</span> <span class="n">Score</span><span class="p">;</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">TimeResult</span>          <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">TotalPlayTime</span><span class="p">;</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">BuffCollectedResult</span> <span class="p">=</span> <span class="n">BuffCollectedCount</span><span class="p">;</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">BuffMissedResult</span>    <span class="p">=</span> <span class="n">BuffMissedCount</span><span class="p">;</span>
+
+    <span class="n">MenuManager</span><span class="p">.</span><span class="n">GoToMenu</span><span class="p">(</span><span class="n">MenuName</span><span class="p">.</span><span class="n">ScorePage</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The event triggers when colliding with a <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> object. In the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script we define the <code class="docutils literal notranslate"><span class="pre">OnTriggerEnter2D</span></code> function as follow. 1 health point will be deducted as the event fires, if the health point reaches 0, trigger the game over event. As you can see that the event invoking requires a float argument passing in which is corresponding to the float argument of <code class="docutils literal notranslate"><span class="pre">HandleHealthChangedEvent</span></code> function above:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Player&quot;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1">// deduct the health by 1</span>
+        <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="m">1.0f</span><span class="p">);</span>
+
+        <span class="c1">// check for game over</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">PlayerStatus</span><span class="p">.</span><span class="n">Health</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">base</span><span class="p">.</span><span class="n">OnTriggerEnter2D</span><span class="p">(</span><span class="n">coll</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="speed-up-timer">
+<h3>Speed Up &amp; Timer<a class="headerlink" href="#speed-up-timer" title="Permalink to this headline">¶</a></h3>
+<p>The speed up event triggers when colliding with the bicycle object. The impelementation requires two functionalities: the speed up and timer to calculate whether the buff time has expired. These has been done by the following two handlers. The <code class="docutils literal notranslate"><span class="pre">HandleSpeedUpEffectEvent</span></code> handler boosts the player movement speed, turn the player into invincible mode, change the sprite of the player to bicycle riding mode and switch the 2D collider’s <code class="docutils literal notranslate"><span class="pre">isTrigger</span></code> property to false thus the player has a real collider volume to crash the vehicles away.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleSpeedUpEffectEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// set invincibility mode to true thus player will not deduct health during invincible mode</span>
+    <span class="n">Invincible</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+    <span class="c1">// Player movement speed set to buffed state</span>
+    <span class="n">PlayerControl</span><span class="p">.</span><span class="n">HoriMvtState</span> <span class="p">=</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Buffed</span><span class="p">;</span>
+
+    <span class="c1">// change the sprite animation to riding bicycle in the animator</span>
+    <span class="n">_animator</span><span class="p">.</span><span class="n">SetBool</span><span class="p">(</span><span class="s">&quot;OnBicycle&quot;</span><span class="p">,</span> <span class="n">Invincible</span><span class="p">);</span>
+
+    <span class="c1">// set isTrigger property to false so the player can crash away the car and bus</span>
+    <span class="n">_capColl2D</span><span class="p">.</span><span class="n">isTrigger</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+    <span class="c1">// start the buff timer and exit buffed mode after buff duration</span>
+    <span class="n">_buffTimer</span><span class="p">.</span><span class="n">Run</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>At the end of the function, we start the timer running and after a buffer duration, we shut it down. We actualise this by subscribing to the timer invoker, and let the buff timer instance listen to the <code class="docutils literal notranslate"><span class="pre">HandleBuffTimerFinishedEvent</span></code> handler after the buff time has finished:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="c1">// access to the invoker class by getting the CustomerTimer component from the game object</span>
+    <span class="n">_buffTimer</span> <span class="p">=</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">AddComponent</span><span class="p">&lt;</span><span class="n">CustomTimer</span><span class="p">&gt;();</span>
+    <span class="n">_buffTimer</span><span class="p">.</span><span class="n">Duration</span> <span class="p">=</span> <span class="n">ConfigUtils</span><span class="p">.</span><span class="n">BuffDuration</span><span class="p">;</span>
+    <span class="n">_buffTimer</span><span class="p">.</span><span class="n">AddTimerFinishedEventListener</span><span class="p">(</span><span class="n">HandleBuffTimerFinishedEvent</span><span class="p">);</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The actual timer finish handler has been declared as follow, the player exit the invincible mode, the sprite has been changed back to running, the 2D collider’s <code class="docutils literal notranslate"><span class="pre">isTrigger</span></code> property switches back to true thus the player will no longer has a volume, and will go through other objects when colliding and lastly change the horizontal moving state back norma</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleBuffTimerFinishedEvent</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Invincible</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+    <span class="c1">// change the sprite animation to riding bicycle in the animator</span>
+    <span class="n">_animator</span><span class="p">.</span><span class="n">SetBool</span><span class="p">(</span><span class="s">&quot;OnBicycle&quot;</span><span class="p">,</span> <span class="n">Invincible</span><span class="p">);</span>
+
+    <span class="c1">// set isTrigger property back to true thus the player won&#39;t physically interact with vehicles</span>
+    <span class="n">_capColl2D</span><span class="p">.</span><span class="n">isTrigger</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+    <span class="c1">// Player movement speed set back to normal state</span>
+    <span class="n">PlayerControl</span><span class="p">.</span><span class="n">HoriMvtState</span> <span class="p">=</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Normal</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The event triggers when colliding with a <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> object. In the <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> script we define the <code class="docutils literal notranslate"><span class="pre">OnTriggerEnter2D</span></code> function as follow. We trigger the event by invoking the <code class="docutils literal notranslate"><span class="pre">SpeedUpActivatedEvent``and</span> <span class="pre">increment</span> <span class="pre">the</span> <span class="pre">``BuffCollectedCount</span></code> property of the <code class="docutils literal notranslate"><span class="pre">PlayerStatus</span></code> class.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Player&quot;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1">// TODO: this float argument here is actually unused, make it useful</span>
+        <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">SpeedUpActivatedEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="n">ConfigUtils</span><span class="p">.</span><span class="n">BuffDuration</span><span class="p">);</span>
+
+        <span class="c1">// add to buff collected count when the buff destroys due to being collected</span>
+        <span class="n">PlayerStatus</span><span class="p">.</span><span class="n">BuffCollectedCount</span><span class="p">++;</span>
+
+        <span class="c1">// buff object disappears after the player collects it</span>
+        <span class="n">Destroy</span><span class="p">(</span><span class="n">gameObject</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="sprites-manipulation">
 <h2>Sprites Manipulation<a class="headerlink" href="#sprites-manipulation" title="Permalink to this headline">¶</a></h2>
+<p>The pixel art style Elingling avatar extracted the most significant features from Elina’s portrait, the glasses, the hair style and the overall cute looking.</p>
 <div class="figure align-center" id="id1">
 <img alt="../_images/elingling_elina.png" src="../_images/elingling_elina.png" />
 <p class="caption"><span class="caption-text">Elingling vs Elina</span></p>
 </div>
+<p>When switching horizontal movement state, the sprite has to switch to corresponding ones. This has been accomplished using the Unity Animator. The transition logic between animations is simply actualised by manipulating the <code class="docutils literal notranslate"><span class="pre">OnBicycle</span></code> boolean variable which has been shown in above functions.</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/animator.png"><img alt="../_images/animator.png" src="../_images/animator.png" style="width: 100%;" /></a>
+<p class="caption"><span class="caption-text">Unity Animator</span></p>
+</div>
+<p>Then the sprites can swtich between the following two animations correspondingly:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Running</td>
+<td>Cycling</td>
+</tr>
+<tr class="row-even"><td><img alt="running" class="align-middle" src="../_images/running.gif" /></td>
+<td><img alt="cycling" class="align-middle" src="../_images/cycling.gif" /></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="player-control">
 <h2>Player Control<a class="headerlink" href="#player-control" title="Permalink to this headline">¶</a></h2>
@@ -184,7 +355,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="env_loop.html" class="btn btn-neutral float-right" title="Background Environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="interactive_objects.html" class="btn btn-neutral float-right" title="Interactive Game Elements &amp; Spawning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../arch/menu.html" class="btn btn-neutral float-left" title="Menu &amp; Scene Management" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

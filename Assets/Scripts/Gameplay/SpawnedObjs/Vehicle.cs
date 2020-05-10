@@ -69,6 +69,7 @@ public class Vehicle : SpawnedObj {
         //Debug.Log(coll.name);
 
         if (coll.gameObject.CompareTag("Player")) {
+            // deduct the health by 1
             UnityEvents[EventName.HealthChangedEvent].Invoke(1.0f);
             //Debug.Log(PlayerStatus.Health);
 

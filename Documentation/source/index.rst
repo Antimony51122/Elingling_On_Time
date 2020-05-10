@@ -102,7 +102,7 @@ Contents
 
 .. toctree::
     :maxdepth: 2
-    :caption: Gameplay Functionality Implementation:
+    :caption: Gameplay Implementation:
 
     func/player.rst
     func/interactive_objects.rst

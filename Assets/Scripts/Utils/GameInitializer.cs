@@ -10,7 +10,7 @@ public class GameInitializer : MonoBehaviour {
         ScreenUtils.Initialize();
 
         // initialise the config utils
-        // Beware: Android device has problem reading streaming assets
+        // Beware: build on phone device has problem reading streaming assets
         ConfigUtils.Initialize();
 
         // initialise all event handling functionality

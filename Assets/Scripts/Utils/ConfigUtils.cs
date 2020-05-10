@@ -25,8 +25,8 @@ public class ConfigUtils {
     public static float MaxSpawnIntervalBuff     => _configData.MaxSpawnIntervalBuff;
     public static float MinSpawnIntervalObstacle => _configData.MinSpawnIntervalObstacle;
     public static float MaxSpawnIntervalObstacle => _configData.MaxSpawnIntervalObstacle;
-    public static float MinSpawnIntervalSoldier => _configData.MinSpawnIntervalSoldier;
-    public static float MaxSpawnIntervalSoldier => _configData.MaxSpawnIntervalSoldier;
+    public static float MinSpawnIntervalSoldier  => _configData.MinSpawnIntervalSoldier;
+    public static float MaxSpawnIntervalSoldier  => _configData.MaxSpawnIntervalSoldier;
 
     // Initialise the config utils, run the initialisation in GameInitializer.cs
     public static void Initialize() {

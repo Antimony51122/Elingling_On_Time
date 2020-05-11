@@ -240,3 +240,12 @@ The actual chasing involves the calculating the direction from the soldier towar
         }
     }
 
+.. |soldier_chasing_elingling| image:: ../_static/sprites/soldier/soldier_chasing_elingling.gif
+    :align: middle
+    :width: 700
+
++-----------------------------+
+|  Soldier Chasing Elinging   |
++-----------------------------+
+| |soldier_chasing_elingling| | 
++-----------------------------+

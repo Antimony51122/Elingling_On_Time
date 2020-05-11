@@ -5,7 +5,7 @@
 Event Handling Pattern
 ======================
 
-The game design follows a simple observer pattern where event handlers responds when an event occurs. Unity Event Handling system has been based on the delegate type which specifies a method signature and allow us to pass references to methods. The design pattern are shown in the system diagram below:
+The game design follows a simple observer pattern where event handlers respond when an event occurs. Unity Event Handling system has been based on the delegate type, which specifies a method signature and allows us to pass references to methods. The design pattern is shown in the system diagram below:
 
 .. figure:: ../_static/system_diagrams/event_handling_system_diagram.png
     :align: center
@@ -17,7 +17,7 @@ The game design follows a simple observer pattern where event handlers responds 
 Event Manager
 -------------
 
-The centralised event manager script aims to manage connections between event listeners and event invokers, therefore objects can interact without creating instances for the them to know about each other. The core purpose of the event manager is to reduce the complexity inflation as the program expands where more and more scripts need to know each other via instances. This idea can be shown in the plot below:
+The centralised event manager script aims to manage connections between event listeners and event invokers. Therefore objects can interact without creating instances for them to know about each other. The core purpose of the event manager is to reduce the complexity of inflation as the program expands where more and more scripts need to know each other via instances. This idea can be shown in the plot below:
 
 .. figure:: ../_static/plots/event_managing_complexity.png
     :align: center
@@ -178,7 +178,7 @@ Finally, don't forget to unregister the invoker using the ``RemoveFloatArgInvoke
 Listeners
 ---------
 
-In this game, there is only one current listener listening to all the events which is the ``PlayerStatus`` class. The listener is where we define the actual functionalities as event handler, here we define the four event handling functions (the detailed functionality implementation will be discussed in separate sections):
+In this game, there is only one current listener listening to all the events which are the ``PlayerStatus`` class. The listener is where we define the actual functionalities as an event handler, here we define the four event handling functions (the detailed functionality implementation will be discussed in separate sections):
 
 .. code-block:: C#
 
@@ -202,7 +202,7 @@ In this game, there is only one current listener listening to all the events whi
         ...
     }
 
-Then in the ``Start`` method, we register the event handling functions to the central event manager (the timer event handling follows a different pattern that would be describe in below section):
+Then in the ``Start`` method, we register the event handling functions to the central event manager (the timer event handling follows a different pattern that would be described in below section):
 
 .. code-block:: C#
 
@@ -218,9 +218,9 @@ Then in the ``Start`` method, we register the event handling functions to the ce
 Timer Event Handling
 --------------------
 
-The event handling pattern for the Customised Timer has been separated from the centralised event manager workflow. Logically the timer is a separate process thus in a parallel system make it more modular and easier to debug. On the other hand, unlike the ``FloatEventInvoker`` where one or more float argument unity events could be triggered simultaneously, there should be only one kind of time pattern :guilabel:`time starts` > :guilabel:`time changes` > :guilabel:`time flows` > :guilabel:`time finishes` (as long as we are still in 3-dimensional world without applying Einstein's relativity) thus no need for going through a central event manager as no various kinds of time events need to be flexibly manipulated. In this scenario, back to the plot in previous event manager session above, going through the event manager is actually more complex than just using timer instances.
+The event handling pattern for the Customised Timer has been separated from the centralised event manager workflow. Logically the timer is a separate process, thus in a parallel system make it more modular and easier to debug. On the other hand, unlike the ``FloatEventInvoker`` where one or more float argument unity events could be triggered simultaneously, there should be only one kind of time pattern :guilabel:`time starts` > :guilabel:`time changes` > :guilabel:`time flows` > :guilabel:`time finishes` (as long as we are still in 3-dimensional world without applying Einstein's relativity) thus no need for going through a central event manager as no various kinds of time events need to be flexibly manipulated. In this scenario, back to the plot in the previous event manager session above, going through the event manager is actually more complex than just using timer instances.
 
-In this case, the ``CutomTimer`` acts as the invoker, we first declare the instance of events in teh script without using dictionaries and enumerations:
+In this case, the ``CutomTimer`` acts as the invoker, we first declare the instance of events in the script without using dictionaries and enumerations:
 
 .. code-block:: C#
 

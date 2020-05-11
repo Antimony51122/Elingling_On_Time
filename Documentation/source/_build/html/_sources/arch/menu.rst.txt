@@ -5,7 +5,7 @@
 Menu & Scene Management
 =======================
 
-The game consists of 4 occasions in 3 scenes: a main menu, the gameplay scene, the score page after that and a pause scene which is contained in the gameplay scene. As usual, we start the implementation with an ``enum`` stating all the cases we are caring:
+The game consists of 4 occasions in 3 scenes: the main menu, the gameplay scene, the score page after that and a pause scene which is contained in the gameplay scene. As usual, we start the implementation with an ``enum`` stating all the cases we are caring:
 
 .. code-block:: C#
 
@@ -76,7 +76,7 @@ In the scene, create the button gameobject and attache the function in the :guil
 Score Page
 ----------
 
-The score page inherit score data from previous gameplay session. We first create a ``GameSession`` class to declare the static variables we are going to show in the score page:
+The score page inherits score data from previous gameplay session. We first create a ``GameSession`` class to declare the static variables we are going to show in the score page:
 
 .. code-block:: C#
 
@@ -89,7 +89,7 @@ The score page inherit score data from previous gameplay session. We first creat
         ...
     }
 
-In order to let the ``GameSession`` object get inherited towards the score page, we have to untilise the ``DontDestroyOnLoad`` method. In addition, We should keep only one single ``GameSession`` object throughout the game, thus we need to detect and destroy extra ``GameSession`` object, we find the length of list of ``GameSession`` objects and if it's bigger than 1, that means the current one is the second thus we detroy it. Otherwise, we maintain it towards the next session.
+In order to let the ``GameSession`` object get inherited towards the score page, we have to utilise the ``DontDestroyOnLoad`` method. In addition, We should keep only one single ``GameSession`` object throughout the game, thus we need to detect and destroy extra ``GameSession`` object, we find the length of the list of ``GameSession`` objects, and if it's bigger than 1, that means the current one is the second thus we destroy it. Otherwise, we maintain it towards the next session.
 
 .. code-block:: C#
 
@@ -188,7 +188,7 @@ Then we assign handler functions to button listening for the ``OnClick`` events 
 | |score_btn1|      | |score_btn2|      |
 +-------------------+-------------------+
 
-Lastly, always remember to destory the current game session when restarting the game to avoid conflicts in next loop of game-flow.
+Lastly, always remember to destroy the current game session when restarting the game to avoid conflicts in the next loop of game-flow.
 
 .. code-block:: C#
 

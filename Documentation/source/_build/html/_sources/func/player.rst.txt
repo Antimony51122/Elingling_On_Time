@@ -2,10 +2,10 @@
     :align: center
     :width: 100%
 
-Player
-======
+The Player
+==========
 
-For the purpose of easier modular approach. The Player's impelementation has been divided into two scripts: 
+For the purpose of an easier modular approach. The Player's implementation has been divided into two scripts: 
 
 * ``PlayerControl`` which solely handling player's horizontal and vertical movements.
 * ``PlayerStatus`` which handling the player's properties including health, running distance score, invincibility and amount of buffs collected.
@@ -13,7 +13,7 @@ For the purpose of easier modular approach. The Player's impelementation has bee
 PlayerStatus
 ------------
 
-The manipulation of the status has primarily based on the event handling system which has been discussed in previous section. In this section we focus more on the actual handler functions.
+The manipulation of the status has primarily based on the event handling system, which has been discussed in the previous section. In this section, we focus more on the actual handler functions.
 
 All player status properties have been declared as static field variable at the top and initialised in the ``Start()`` method:
 
@@ -59,9 +59,9 @@ After subscribing to the listening to the ``HealthChangedEvent``, we define the 
         }
     }
 
-.. note:: As you can see the function is taking in a float argument which is the health point deducted when triggering the event. This number will be passed in the invoker when the event happens.
+.. note:: As you can see, the function is taking in a float argument which is the health point deducted when triggering the event. This number will be passed in the invoker when the event happens.
 
-We also define the game over handler which stores the result and go to score page:
+We also define the game over handler, which stores the result and go to score page:
 
 .. code-block:: C#
 
@@ -96,7 +96,7 @@ The event triggers when colliding with a ``Vehicle`` object. In the ``Vehicle`` 
 Speed Up & Timer
 ~~~~~~~~~~~~~~~~
 
-The speed up event triggers when colliding with the bicycle object. The impelementation requires two functionalities: the speed up and timer to calculate whether the buff time has expired. These has been done by the following two handlers. The ``HandleSpeedUpEffectEvent`` handler boosts the player movement speed, turn the player into invincible mode, change the sprite of the player to bicycle riding mode and switch the 2D collider's ``isTrigger`` property to false thus the player has a real collider volume to crash the vehicles away.
+The speed-up event triggers when colliding with the bicycle object. The implementation requires two functionalities: the speed up and timer to calculate whether the buff time has expired. These have been done by the following two handlers. The ``HandleSpeedUpEffectEvent`` handler boosts the player movement speed, turn the player into an invincible mode, change the sprite of the player to bicycle riding mode and switch the 2D collider's ``isTrigger`` property to false thus the player has a real collider volume to crash the vehicles away.
 
 .. code-block:: C#
 
@@ -117,7 +117,7 @@ The speed up event triggers when colliding with the bicycle object. The impeleme
         _buffTimer.Run();
     }
 
-At the end of the function, we start the timer running and after a buffer duration, we shut it down. We actualise this by subscribing to the timer invoker, and let the buff timer instance listen to the ``HandleBuffTimerFinishedEvent`` handler after the buff time has finished:
+At the end of the function, we start the timer running, and after a buffer duration, we shut it down. We actualise this by subscribing to the timer invoker, and let the buff timer instance listen to the ``HandleBuffTimerFinishedEvent`` handler after the buff time has finished:
 
 .. code-block:: C#
 
@@ -132,7 +132,7 @@ At the end of the function, we start the timer running and after a buffer durati
         ...
     }
 
-The actual timer finish handler has been declared as follow, the player exit the invincible mode, the sprite has been changed back to running, the 2D collider's ``isTrigger`` property switches back to true thus the player will no longer has a volume, and will go through other objects when colliding and lastly change the horizontal moving state back norma
+The actual timer finish handler has been declared as follow, the player exit the invincible mode, the sprite has been changed back to running, the 2D collider's ``isTrigger`` property switches back to true thus the player will no longer have a collision volume, and will go through other objects when colliding and lastly change the horizontal moving state back to normal.
 
 .. code-block:: C#
 
@@ -171,14 +171,14 @@ The event triggers when colliding with a ``BicycleBuff`` object. In the ``Bicycl
 Sprites Manipulation
 --------------------
 
-The pixel art style Elingling avatar extracted the most significant features from Elina's portrait, the glasses, the hair style and the overall cute looking.
+The pixel art style Elingling avatar extracted the most significant features from Elina's portrait, the glasses, the hairstyle and the overall cute looking.
 
 .. figure:: ../_static/sprites/player/elingling_elina.png
     :align: center
 
     Elingling vs Elina
 
-When switching horizontal movement state, the sprite has to switch to corresponding ones. This has been accomplished using the Unity Animator. The transition logic between animations is simply actualised by manipulating the :any:`OnBicycle` boolean variable which has been shown in above functions.
+When switching horizontal movement state, the sprite has to switch to corresponding ones. This has been accomplished using the Unity Animator. The transition logic between animations is simply actualised by manipulating the :any:`OnBicycle` boolean variable which has been shown in the above functions.
 
 .. figure:: ../_static/screenshots_unity/animator.png
     :align: center
@@ -205,7 +205,7 @@ Then the sprites can swtich between the following two animations correspondingly
 Player Control
 --------------
 
-The impelementation of player control starts with defining enumerations of horizontal and vertical states in separate files:
+The implementation of player control starts with defining enumerations of horizontal and vertical states in separate files:
 
 .. code-block:: C#
 
@@ -248,7 +248,7 @@ Then we initialise the vertical movement states of the player as ``Still`` and h
 Vertical Movement
 ~~~~~~~~~~~~~~~~~
 
-The actual effect of swtiching between vertical movement states has been handled by ``VertMvtHandler`` function utilising the unity ``transform.Translate()`` built in function
+The actual effect of switching between vertical movement states has been handled by ``VertMvtHandler`` function utilising the unity ``transform.Translate()`` built-in function
 
 .. code-block:: C#
 
@@ -279,7 +279,7 @@ The actual effect of swtiching between vertical movement states has been handled
         }
     }
 
-In order to prevent the player to move outside the screen boundaries, we introduce a clamping position function:
+In order to prevent the player from moving outside the screen boundaries, we introduce a clamping position function:
 
 .. code-block:: C#
 
@@ -296,7 +296,7 @@ In order to prevent the player to move outside the screen boundaries, we introdu
 
             transform.position = playerPos;
 
-The actual player control follows two discipline. Keyboard control or phone controls. The program will detect first which platform the game is currently running on. The Phone version of the game utilise the accelerometer of the phone, when the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa while the keyboard verison follows the most basic simple control of using :guilabel:`w` and :guilabel:`s` to control the avatar to move up and down.
+The actual player control follows two discipline: keyboard control or phone controls. The program will detect first which platform the game is currently running on. The Phone version of the game utilises the accelerometer of the phone. When the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa while the keyboard version follows the most basic simple control of using :guilabel:`w` and :guilabel:`s` to control the avatar to move up and down.
 
 .. code-block:: C#
 
@@ -355,7 +355,7 @@ The horizontal movement simply utilises the unity ``transform.Translate()`` buil
         }
     }
 
-The movement function has not much to discuss, what interesting is if the player runs towards the right of the screen, how to keep it always in the screen. This functionality has been accomplished in ``EnvObjLoop`` script which has been attached to the main camera. We create an instance of the player in the script and let the camera keep tracking of the player's position:
+The movement function has not much to discuss, what interesting is if the player runs towards the right of the screen, how to keep it always on the screen. This functionality has been accomplished in ``EnvObjLoop`` script which has been attached to the main camera. We create an instance of the player in the script and let the camera keep tracking of the player's position:
 
 .. code-block:: C#
 
@@ -380,7 +380,7 @@ The movement function has not much to discuss, what interesting is if the player
 Z-Position of the Sprites
 -------------------------
 
-A weird scenario of smaller objects (player and soldier) run on top of the larger objects (vehicles) arises when the objects run into each other. In this case, the smaller object should be behind the larger object, however it runs on top since the z-position of the smaller object is closer to the camera than the larger one. In order to tackle this problem, we add one child class in between the ``FloatEventInvoker`` and the ``SpawnObj`` -> the ``ZPosChangeable`` class.
+A weird scenario of smaller objects (player and soldier) run on top of the larger objects (vehicles) arises when the objects run into each other. In this case, the smaller object should be behind the larger object, however, it runs on top since the z-position of the smaller object is closer to the camera than the larger one. In order to tackle this problem, we add one child class in between the ``FloatEventInvoker`` and the ``SpawnObj`` -> the ``ZPosChangeable`` class.
 
 In this class, we set all vehicles spawned to be originally at the same level of z-position and determine the player and soldier sprite's z-pos by comparing with the colliding vehicle objects, and if its position should look closer to the camera, we set its z-position closer to the camera than the vehicles.
 

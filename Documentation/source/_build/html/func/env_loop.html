@@ -83,7 +83,7 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../arch/event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
@@ -161,7 +161,7 @@
 </div>
 <div class="section" id="background-environment">
 <h1>Background Environment<a class="headerlink" href="#background-environment" title="Permalink to this headline">¶</a></h1>
-<p>Since the game is potentially a endless running game, it’s important to provide a endless running pattern. It’s not possible to pre-create the entire map which is long enough and let the player running on since this essentially is not endless and will also occupy huge memory spaces. In order to create smooth endless transitioning, we need to have a set of the same background element that the left side of it can connect with the right side and reuse this background element repeatly when the player is running towards the right.</p>
+<p>Since the game is potentially an endless running game, it’s crucial to provide an endless running pattern. It’s not possible to pre-create the entire map which is long enough and let the player running on since this essentially is not endless and will also occupy huge memory spaces. In order to create smooth endless transitioning, we need to have a set of the same background element that the left side of it can connect with the right side and reuse this background element repeatedly when the player is running towards the right.</p>
 <div class="figure align-center" id="id1">
 <a class="reference internal image-reference" href="../_images/background_repetition.png"><img alt="../_images/background_repetition.png" src="../_images/background_repetition.png" style="width: 100%;" /></a>
 <p class="caption"><span class="caption-text">Background Repetition</span></p>
@@ -180,7 +180,7 @@
 <span class="k">private</span> <span class="n">Vector2</span> <span class="n">_screenBounds</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>Then we create a function to load all the objects we want to loop to fill the screen. We firstly figure out the width of the current spirte, ten we calculate how many of the clones wee need to fill the width of the screen, after that we start instantiating the clones and add it as the child:</p>
+<p>Then we create a function to load all the objects we want to loop to fill the screen. We firstly figure out the width of the current sprite, ten we calculate how many of the clones wee need to fill the width of the screen, after that we start instantiating the clones and add it as the child:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">LoadChildObjects</span><span class="p">(</span><span class="n">GameObject</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// figure out the width of the current sprite by</span>
     <span class="c1">// fetching the horizontal value of the boundary box of the sprite</span>
@@ -217,10 +217,10 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>After the step of creating and fulfilling, we need tackle the re-positioning. We first check if the camera has passed the edge of either the left-most child or the right-most child and re-position the children object accordingly.</p>
+<p>After the step of creating and fulfilling, we need to tackle the re-positioning. We first check if the camera has passed the edge of either the left-most child or the right-most child and re-position the children object accordingly.</p>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
-<p class="last">Beware that since the position of each child has been specified using the center of the object, when performing the calculations, we need to deduct or add half object with to reach the left-most or right-most boundary.</p>
+<p class="last">Beware that since the position of each child has been specified using the centre of the object when performing the calculations, we need to deduct or add half object with to reach the left-most or right-most boundary.</p>
 </div>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">RepositionChildObjects</span><span class="p">(</span><span class="n">GameObject</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// be careful with `GetComponentsInChildren` rather than `GetComponentInChildren`</span>

@@ -5,7 +5,7 @@
 Background Environment
 ======================
 
-Since the game is potentially a endless running game, it's important to provide a endless running pattern. It's not possible to pre-create the entire map which is long enough and let the player running on since this essentially is not endless and will also occupy huge memory spaces. In order to create smooth endless transitioning, we need to have a set of the same background element that the left side of it can connect with the right side and reuse this background element repeatly when the player is running towards the right.
+Since the game is potentially an endless running game, it's crucial to provide an endless running pattern. It's not possible to pre-create the entire map which is long enough and let the player running on since this essentially is not endless and will also occupy huge memory spaces. In order to create smooth endless transitioning, we need to have a set of the same background element that the left side of it can connect with the right side and reuse this background element repeatedly when the player is running towards the right.
 
 .. figure:: ../_static/screenshots_unity/background_repetition.png
     :align: center
@@ -33,7 +33,7 @@ All of the above logic has been singly implemented in one file :file:`EnvObjLoop
 
     private Vector2 _screenBounds;
 
-Then we create a function to load all the objects we want to loop to fill the screen. We firstly figure out the width of the current spirte, ten we calculate how many of the clones wee need to fill the width of the screen, after that we start instantiating the clones and add it as the child:
+Then we create a function to load all the objects we want to loop to fill the screen. We firstly figure out the width of the current sprite, ten we calculate how many of the clones wee need to fill the width of the screen, after that we start instantiating the clones and add it as the child:
 
 .. code-block:: C#
 
@@ -72,9 +72,9 @@ Then we create a function to load all the objects we want to loop to fill the sc
         Destroy(obj.GetComponent<SpriteRenderer>());
     }
 
-After the step of creating and fulfilling, we need tackle the re-positioning. We first check if the camera has passed the edge of either the left-most child or the right-most child and re-position the children object accordingly. 
+After the step of creating and fulfilling, we need to tackle the re-positioning. We first check if the camera has passed the edge of either the left-most child or the right-most child and re-position the children object accordingly. 
 
-.. important:: Beware that since the position of each child has been specified using the center of the object, when performing the calculations, we need to deduct or add half object with to reach the left-most or right-most boundary.
+.. important:: Beware that since the position of each child has been specified using the centre of the object when performing the calculations, we need to deduct or add half object with to reach the left-most or right-most boundary.
 
 .. code-block:: C#
 

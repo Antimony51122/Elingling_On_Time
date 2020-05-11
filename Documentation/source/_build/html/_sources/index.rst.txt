@@ -6,13 +6,13 @@
 Elinging on Time Documentation
 ******************************
 
-Elinging On Time was the birthday gift I have prepared for my girlfriend Elina Liu, the name Elinging is a nickname I created for her avatar in the game. The game is based on an occusion where Elinging has an important seminar in the morning, however she got up late, thus needed to run like hell in order to catch up with the meeting. Since Elina and I were both Imperial College students, the game has been taken place in London as you will soon spot that there are many iconic elements in the game such as the double decker bus and red telephone booth.
+Elinging On Time was the birthday gift I have prepared for my girlfriend Elina Liu, and the name Elinging is a nickname I created for her avatar in the game. The game is based on an occasion where Elinging has an important seminar in the morning. However she got up late, thus needed to run like hell in order to catch up with the meeting. Since Elina and I were both Imperial College students, the game has been taken place in London as you will soon spot that there are many iconic elements in the game such as the double-decker bus and red telephone booth.
 
 .. figure:: _static/index/elina.png
     :width: 300
     :align: center
 
-    The lovely girlfreind Elina Liu
+    The lovely girlfriend, Elina Liu
 
 Game Features
 -------------
@@ -33,7 +33,7 @@ Basic Control
     The WebGL version of the game follows the most basic simple control of using :guilabel:`w` and :guilabel:`s` to control the avatar to move up and down.
 
 :Phone:
-    The Phone version of the game utilise the accelerometer of the phone, when the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa.
+    The Phone version of the game utilises the accelerometer of the phone, when the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa.
 
 Game Elements
 ~~~~~~~~~~~~~~
@@ -45,13 +45,13 @@ Game Elements
     All game elements
 
 :Vehicle:
-    Two kinds of vehcles are on the road in the game, the beetles and the double decker bus. When the player avatar crash with the vehicle, one health point will be deducted.
+    Two kinds of vehicles are on the road in the game, the beetles and the double-decker bus. When the player avatar crash with the vehicle, one health point will be deducted.
 
 :Soldier:
-    Due that Elinging violate the traffic rules, soldiers and on the road will start chasing down Elinging during the running, the speed of soldier has been set to slightly faster than the running speed of Elingling thus Elingling need to ride a bicycle in order to escape away from the soldiers.
+    Due that Elinging violates the traffic rules, soldiers and on the road will start chasing down Elinging during the running, the speed of soldier has been set to slightly faster than the running speed of Elingling thus Elingling need to ride a bicycle in order to escape away from the soldiers.
 
 :Bicycle:
-    The Santander bicycle grants Elinging 3 seconds of speed buff. In addition, Elinging enters the invincible mode when riding the bicycle where she can bascially knock away the vehcles on the road.
+    The Santander bicycle grants Elinging 3 seconds of speed buff. In addition, Elinging enters the invincible mode when riding the bicycle where she can basically knock away the vehicles on the road.
 
 .. |soldier_chasing| image:: _static/index/screenshot_soldier_chasing.png
     :align: middle
@@ -70,7 +70,7 @@ Game Elements
 Scene Flow
 ~~~~~~~~~~
 
-The Game starts with a typical simple starting menu, and the player can check for the statistic after completing each set of the game. 
+The game starts with a typical simple starting menu, and the player can check for the statistic after completing each set of the game. 
 
 .. |menu| image:: _static/index/screenshot_main_menu.jpg
     :align: middle

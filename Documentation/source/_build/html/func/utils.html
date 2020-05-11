@@ -82,7 +82,7 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../arch/event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
@@ -160,7 +160,7 @@
 </div>
 <div class="section" id="utility-classes">
 <h1>Utility Classes<a class="headerlink" href="#utility-classes" title="Permalink to this headline">¶</a></h1>
-<p>As a professional practice of software engineering, we tends to extract all utility classes which are not inheriting from the Unity <code class="xref any docutils literal notranslate"><span class="pre">MonoBehaviour</span></code> and contain functionalities that could be repeatly used in separate files. Then the scripts handling gameply implementations could just import and use these files like external packages. In this game, apart from the <code class="file docutils literal notranslate"><span class="pre">CustomTimer</span></code> class, we have another two utility classes serving these purposes in a similar pattern. Since these are just utility classes with static methods that we can directly utilise, I won’t go into details how these functionalities have been implementated.</p>
+<p>As a professional practice of software engineering, we tend to extract all utility classes which are not inheriting from the Unity <code class="xref any docutils literal notranslate"><span class="pre">MonoBehaviour</span></code> and contain functionalities that could be repeatedly used in separate files. Then the scripts handling gameplay implementations could just import and use these files like external packages. In this game, apart from the <code class="file docutils literal notranslate"><span class="pre">CustomTimer</span></code> class, we have another two utility classes serving these purposes in a similar pattern. Since these are just utility classes with static methods that we can directly utilise, I won’t go into details how these functionalities have been implemented.</p>
 <p>The first one is the <code class="file docutils literal notranslate"><span class="pre">ScreenUtils</span></code> class which contains static properties of the coordinates of the 4 edges of the screen:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
@@ -224,7 +224,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Another one is the <code class="xref any docutils literal notranslate"><span class="pre">Probability</span></code> class which helps handling a set of events and assign a set of probabilities to each of them and let them randomly happen:</p>
+<p>Another one is the <code class="xref any docutils literal notranslate"><span class="pre">Probability</span></code> class which helps to handle a set of events and assign a set of probabilities to each of them and let them randomly happen:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>

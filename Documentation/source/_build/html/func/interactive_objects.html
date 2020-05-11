@@ -83,7 +83,7 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../arch/event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
@@ -180,18 +180,18 @@
 </div>
 <div class="section" id="spawners">
 <h2>Spawners<a class="headerlink" href="#spawners" title="Permalink to this headline">¶</a></h2>
-<p>The essence of the inheritance shown above is to maximise the re-usability of functionalities of the same patterns. In the case of the spawners, all four end-user spawners are attached to the <code class="xref any docutils literal notranslate"><span class="pre">Main</span> <span class="pre">Camera</span></code> which can be shown in the below screenshot:</p>
+<p>The essence of the inheritance shown above is to maximise the reusability of functionalities of the same patterns. In the case of the spawners, all four end-user spawners are attached to the <code class="xref any docutils literal notranslate"><span class="pre">Main</span> <span class="pre">Camera</span></code> which can be shown in the below screenshot:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../_images/spawner_attach.png"><img alt="../_images/spawner_attach.png" src="../_images/spawner_attach.png" style="width: 100%;" /></a>
 </div>
-<p>They are inherit from the sanme parent spawner class where the xyz spawning positions and the interval for custom timer to renew has been defined. These functionalities will be modified and reused in all four end-user spawners. The <code class="docutils literal notranslate"><span class="pre">Soldier</span></code> and <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> class have just made modifcations on the prefab to instantiate, timer interval and spawn position without changing the functionality pattern thus doesn’t need to be discussed. Here we will only discuss the new things child classes have added when inheriting.</p>
+<p>They are inherited from the same parent spawner class where the xyz spawning positions and the interval for a custom timer to renew has been defined. These functionalities will be modified and reused in all four end-user spawners. The <code class="docutils literal notranslate"><span class="pre">Soldier</span></code> and <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> class have just made modifications on the prefab to instantiate, timer interval and spawn position without changing the functionality pattern thus doesn’t need to be discussed. Here we will only discuss the new things child classes have added when inheriting.</p>
 <div class="section" id="vehicles">
 <h3>Vehicles<a class="headerlink" href="#vehicles" title="Permalink to this headline">¶</a></h3>
-<p>There are two kinds of vehicles but they behave in the same way thus we only change the sprite rather than changing the properties of the game object thus we start with declaring the field variable:</p>
+<p>There are two kinds of vehicles, but they behave in the same way, thus we only change the sprite rather than changing the properties of the game object, thus we start with declaring the field variable:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="na">[SerializeField]</span> <span class="k">private</span> <span class="n">GameObject</span><span class="p">[]</span> <span class="n">_prefabVehicles</span> <span class="p">=</span> <span class="k">default</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>Then we modify the original <code class="docutils literal notranslate"><span class="pre">Update</span></code> function to randomly choose which object to spawn. We also need to modify the timer since when the player are in buffed state, she’s runnign 3 times faster, thus vehicles need to be generated 3 times faster:</p>
+<p>Then we modify the original <code class="docutils literal notranslate"><span class="pre">Update</span></code> function to randomly choose which object to spawn. We also need to modify the timer since when the player is in a buffed state, she’s running 3 times faster, thus vehicles need to be generated 3 times faster:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">CustomTimer</span><span class="p">.</span><span class="n">Finished</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">SpawnNewObj</span><span class="p">(</span><span class="n">_prefabVehicles</span><span class="p">[</span><span class="n">Random</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">_prefabVehicles</span><span class="p">.</span><span class="n">Length</span><span class="p">)]);</span>
@@ -209,12 +209,12 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The vehicles will encouter another issue of whether generating in the top lane or bottom lane, this will be handled in the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script that will be discussed down below.</p>
+<p>The vehicles will encounter another issue of whether generating in the top lane or bottom lane, this will be handled in the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script that will be discussed down below.</p>
 </div>
 <div class="section" id="environmental-objects">
 <h3>Environmental Objects<a class="headerlink" href="#environmental-objects" title="Permalink to this headline">¶</a></h3>
 <p>The environmental objects will face the same issue of lane choice as the vehicle does. Since environmental objects are not interacting with the player, we turn to simplify the <code class="docutils literal notranslate"><span class="pre">EnvObj</span></code> class and squeeze all the functionalities in the environmental objects spawner script.</p>
-<p>Same as the vehicle spawner, we declare a list of game objects as prefab pool, but this time we create two key value pairs to store the random environmental object and lane choices:</p>
+<p>Same as the vehicle spawner, we declare a list of game objects as prefab pool, but this time we create two key-value pairs to store the random environmental object and lane choices:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// --------------- Serialized Cached References ---------------</span>
 
 <span class="na">[SerializeField]</span> <span class="k">private</span> <span class="n">GameObject</span><span class="p">[]</span> <span class="n">_prefabEnvObjs</span> <span class="p">=</span> <span class="k">default</span><span class="p">;</span>
@@ -230,7 +230,7 @@
     <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">VehicleLane</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;();</span>
 </pre></div>
 </div>
-<p>In the <code class="xref any docutils literal notranslate"><span class="pre">Start</span></code> method we assign each environmental object and lane choices with a certain probability of occuring. This has been actualised using the custom  <code class="xref any docutils literal notranslate"><span class="pre">Probability.RandomEventsWithProb</span></code> method which will be discussed in later sections:</p>
+<p>In the <code class="xref any docutils literal notranslate"><span class="pre">Start</span></code> method, we assign each environmental object and lane choices with a certain probability of occurring. This has been actualised using the custom  <code class="xref any docutils literal notranslate"><span class="pre">Probability.RandomEventsWithProb</span></code> method which will be discussed in later sections:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">_envObjs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="p">{</span>
         <span class="k">new</span> <span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">GameObject</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;(</span><span class="n">_prefabEnvObjs</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="m">60</span><span class="p">),</span>
@@ -262,7 +262,7 @@
 </div>
 <div class="section" id="spawned-objects">
 <h2>Spawned Objects<a class="headerlink" href="#spawned-objects" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code> and <code class="docutils literal notranslate"><span class="pre">ZPosChangeable</span></code> classes have been discussed in previous sections. The most important functionality the <code class="docutils literal notranslate"><span class="pre">SpawnedObj</span></code> class has declared and can be applied to all children spawned objects is the self destroy functionality where spawned ojbects destroy themselves when they are too far away from the left boundary of the screen. They will no longer be able to interact with any of the existing game objects in the screen but they still occupy memory spaces thus needs to be eliminated:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code> and <code class="docutils literal notranslate"><span class="pre">ZPosChangeable</span></code> classes have been discussed in previous sections. The most important functionality the <code class="docutils literal notranslate"><span class="pre">SpawnedObj</span></code> class has declared and can be applied to all children spawned objects is the self destroy functionality where spawned objects destroy themselves when they are too far away from the left boundary of the screen. They will no longer be able to interact with any of the existing game objects in the screen, but they still occupy memory spaces, thus needs to be eliminated:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// when the obstacle is 1.5 screen width behind the player, destroy itself</span>
 <span class="c1">// setting to 1.5 screen width to avoid bugs caused when deploying on phones</span>
 <span class="k">protected</span> <span class="k">virtual</span> <span class="k">void</span> <span class="nf">DestroySelf</span><span class="p">()</span> <span class="p">{</span>
@@ -294,8 +294,8 @@
     <span class="k">private</span> <span class="n">VehicleLane</span> <span class="n">_vehicleLane</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>The event trigger and self-destroy invoker removal functionalities have been discussed in previous sections, in this section we only discuss about the setting direction according to lane choice functionality.</p>
-<p>We first choose the lane by utilising the built in <code class="docutils literal notranslate"><span class="pre">Random.Range</span></code> function. Then if the lane choic is top, spawn on top lane range, otherwise spawn on bottom lane range. We place the vehicle to corresponding initial position and make the vehicle start moving by adding force onto the <code class="xref any docutils literal notranslate"><span class="pre">rigidbody2D</span></code> component. Finally we decide the sprite direction.</p>
+<p>The event trigger and self-destroy invoker removal functionalities have been discussed in previous sections, in this section, we only discuss the setting direction according to lane choice functionality.</p>
+<p>We first choose the lane by utilising the built-in <code class="docutils literal notranslate"><span class="pre">Random.Range</span></code> function. Then if the lane choice is top, spawn on top lane range, otherwise, spawn on bottom lane range. We place the vehicle to the corresponding initial position and make the vehicle start moving by adding force onto the <code class="xref any docutils literal notranslate"><span class="pre">rigidbody2D</span></code> component. Finally, we decide on the sprite direction.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">SetLaneAndDirection</span><span class="p">()</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">enumLen</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Enum</span><span class="p">.</span><span class="n">GetNames</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">VehicleLane</span><span class="p">)).</span><span class="n">Length</span><span class="p">;</span>
     <span class="n">_vehicleLane</span> <span class="p">=</span> <span class="p">(</span><span class="n">VehicleLane</span><span class="p">)</span> <span class="n">Random</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">enumLen</span><span class="p">);</span>
@@ -343,8 +343,8 @@
 </div>
 <div class="section" id="soldier">
 <h3>Soldier<a class="headerlink" href="#soldier" title="Permalink to this headline">¶</a></h3>
-<p>Apart from event handling functionalities we have discussed in previous sections, the interesting part about <code class="docutils literal notranslate"><span class="pre">Soldier</span></code> class is the chasing functionality.</p>
-<p>Initially the soldier is standing still, as long as the x-position of the main chrarcter is bigger than that of the <code class="docutils literal notranslate"><span class="pre">Soldier</span></code> which means it’s on the right of the <code class="docutils literal notranslate"><span class="pre">Soldier</span></code>, it will start the chasing:</p>
+<p>Apart from event handling functionalities, we have discussed in previous sections, the interesting part about <code class="docutils literal notranslate"><span class="pre">Soldier</span></code> class is the chasing functionality.</p>
+<p>Initially, the soldier is standing still, as long as the x-position of the main character is bigger than that of the <code class="docutils literal notranslate"><span class="pre">Soldier</span></code> which means it’s on the right of the <code class="docutils literal notranslate"><span class="pre">Soldier</span></code>, it will start the chasing:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">StartChasing</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(!</span><span class="n">_isRunning</span> <span class="p">&amp;&amp;</span> <span class="n">PlayerControl</span><span class="p">.</span><span class="n">PlayerTransform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">&gt;</span> <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">_isRunning</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
@@ -353,7 +353,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The actual chasing involves the calculating the direction from the soldier towards the main character and normalise it. Then adding the force towards the normalised direction to consistently chasing down the player:</p>
+<p>The actual chasing involves calculating the direction from the soldier towards the main character and normalise it. Then adding the force towards the normalised direction to consistently chasing down the player:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">Chasing</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">_isRunning</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">_rb2D</span><span class="p">.</span><span class="n">velocity</span> <span class="p">=</span> <span class="n">Vector2</span><span class="p">.</span><span class="n">zero</span><span class="p">;</span>
@@ -372,7 +372,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Analogous to the player animation switch, he sprite switching of the solider has been accomplished using the Unity Animator as well. The transition logic between animations is simply actualised by manipulating the <code class="xref any docutils literal notranslate"><span class="pre">IsRunning</span></code> boolean variable which has been shown in above functions.</p>
+<p>Analogous to the player animation switch, he sprite switching of the solider has been accomplished using the Unity Animator as well. The transition logic between animations is simply actualised by manipulating the <code class="xref any docutils literal notranslate"><span class="pre">IsRunning</span></code> boolean variable which has been shown in the above functions.</p>
 <div class="figure align-center" id="id3">
 <a class="reference internal image-reference" href="../_images/animator_soldier.png"><img alt="../_images/animator_soldier.png" src="../_images/animator_soldier.png" style="width: 100%;" /></a>
 <p class="caption"><span class="caption-text">Unity Animator</span></p>

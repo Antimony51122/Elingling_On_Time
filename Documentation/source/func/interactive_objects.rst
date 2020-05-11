@@ -16,24 +16,24 @@ We have four kinds of elements that need to be spawned: the ``Vehicle``, the ``S
 Spawners
 --------
 
-The essence of the inheritance shown above is to maximise the re-usability of functionalities of the same patterns. In the case of the spawners, all four end-user spawners are attached to the :any:`Main Camera` which can be shown in the below screenshot:
+The essence of the inheritance shown above is to maximise the reusability of functionalities of the same patterns. In the case of the spawners, all four end-user spawners are attached to the :any:`Main Camera` which can be shown in the below screenshot:
 
 .. figure:: ../_static/screenshots_unity/spawner_attach.png
     :align: center
     :width: 100%
 
-They are inherit from the sanme parent spawner class where the xyz spawning positions and the interval for custom timer to renew has been defined. These functionalities will be modified and reused in all four end-user spawners. The ``Soldier`` and ``BicycleBuff`` class have just made modifcations on the prefab to instantiate, timer interval and spawn position without changing the functionality pattern thus doesn't need to be discussed. Here we will only discuss the new things child classes have added when inheriting.
+They are inherited from the same parent spawner class where the xyz spawning positions and the interval for a custom timer to renew has been defined. These functionalities will be modified and reused in all four end-user spawners. The ``Soldier`` and ``BicycleBuff`` class have just made modifications on the prefab to instantiate, timer interval and spawn position without changing the functionality pattern thus doesn't need to be discussed. Here we will only discuss the new things child classes have added when inheriting.
 
 Vehicles
 ~~~~~~~~
 
-There are two kinds of vehicles but they behave in the same way thus we only change the sprite rather than changing the properties of the game object thus we start with declaring the field variable:
+There are two kinds of vehicles, but they behave in the same way, thus we only change the sprite rather than changing the properties of the game object, thus we start with declaring the field variable:
 
 .. code-block:: C#
 
     [SerializeField] private GameObject[] _prefabVehicles = default;
 
-Then we modify the original ``Update`` function to randomly choose which object to spawn. We also need to modify the timer since when the player are in buffed state, she's runnign 3 times faster, thus vehicles need to be generated 3 times faster:
+Then we modify the original ``Update`` function to randomly choose which object to spawn. We also need to modify the timer since when the player is in a buffed state, she's running 3 times faster, thus vehicles need to be generated 3 times faster:
 
 .. code-block:: C#
 
@@ -53,14 +53,14 @@ Then we modify the original ``Update`` function to randomly choose which object 
         }
     }
 
-The vehicles will encouter another issue of whether generating in the top lane or bottom lane, this will be handled in the ``Vehicle`` script that will be discussed down below.
+The vehicles will encounter another issue of whether generating in the top lane or bottom lane, this will be handled in the ``Vehicle`` script that will be discussed down below.
 
 Environmental Objects
 ~~~~~~~~~~~~~~~~~~~~~
 
 The environmental objects will face the same issue of lane choice as the vehicle does. Since environmental objects are not interacting with the player, we turn to simplify the ``EnvObj`` class and squeeze all the functionalities in the environmental objects spawner script.
 
-Same as the vehicle spawner, we declare a list of game objects as prefab pool, but this time we create two key value pairs to store the random environmental object and lane choices:
+Same as the vehicle spawner, we declare a list of game objects as prefab pool, but this time we create two key-value pairs to store the random environmental object and lane choices:
 
 .. code-block:: C#
 
@@ -78,7 +78,7 @@ Same as the vehicle spawner, we declare a list of game objects as prefab pool, b
     private List<KeyValuePair<VehicleLane, float>> _laneChoices =
         new List<KeyValuePair<VehicleLane, float>>();
 
-In the :any:`Start` method we assign each environmental object and lane choices with a certain probability of occuring. This has been actualised using the custom  :any:`Probability.RandomEventsWithProb` method which will be discussed in later sections:
+In the :any:`Start` method, we assign each environmental object and lane choices with a certain probability of occurring. This has been actualised using the custom  :any:`Probability.RandomEventsWithProb` method which will be discussed in later sections:
 
 .. code-block:: C#
 
@@ -113,7 +113,7 @@ In the :any:`Start` method we assign each environmental object and lane choices 
 Spawned Objects
 ---------------
 
-The ``FloatEventInvoker`` and ``ZPosChangeable`` classes have been discussed in previous sections. The most important functionality the ``SpawnedObj`` class has declared and can be applied to all children spawned objects is the self destroy functionality where spawned ojbects destroy themselves when they are too far away from the left boundary of the screen. They will no longer be able to interact with any of the existing game objects in the screen but they still occupy memory spaces thus needs to be eliminated:
+The ``FloatEventInvoker`` and ``ZPosChangeable`` classes have been discussed in previous sections. The most important functionality the ``SpawnedObj`` class has declared and can be applied to all children spawned objects is the self destroy functionality where spawned objects destroy themselves when they are too far away from the left boundary of the screen. They will no longer be able to interact with any of the existing game objects in the screen, but they still occupy memory spaces, thus needs to be eliminated:
 
 .. code-block:: C#
 
@@ -151,9 +151,9 @@ The implementation of the ``Vehicle`` class starts with the lane choice:
 
         private VehicleLane _vehicleLane;
 
-The event trigger and self-destroy invoker removal functionalities have been discussed in previous sections, in this section we only discuss about the setting direction according to lane choice functionality. 
+The event trigger and self-destroy invoker removal functionalities have been discussed in previous sections, in this section, we only discuss the setting direction according to lane choice functionality. 
 
-We first choose the lane by utilising the built in ``Random.Range`` function. Then if the lane choic is top, spawn on top lane range, otherwise spawn on bottom lane range. We place the vehicle to corresponding initial position and make the vehicle start moving by adding force onto the :any:`rigidbody2D` component. Finally we decide the sprite direction.
+We first choose the lane by utilising the built-in ``Random.Range`` function. Then if the lane choice is top, spawn on top lane range, otherwise, spawn on bottom lane range. We place the vehicle to the corresponding initial position and make the vehicle start moving by adding force onto the :any:`rigidbody2D` component. Finally, we decide on the sprite direction.
 
 .. code-block:: C#
 
@@ -206,9 +206,9 @@ We first choose the lane by utilising the built in ``Random.Range`` function. Th
 Soldier
 ~~~~~~~
 
-Apart from event handling functionalities we have discussed in previous sections, the interesting part about ``Soldier`` class is the chasing functionality. 
+Apart from event handling functionalities, we have discussed in previous sections, the interesting part about ``Soldier`` class is the chasing functionality. 
 
-Initially the soldier is standing still, as long as the x-position of the main chrarcter is bigger than that of the ``Soldier`` which means it's on the right of the ``Soldier``, it will start the chasing: 
+Initially, the soldier is standing still, as long as the x-position of the main character is bigger than that of the ``Soldier`` which means it's on the right of the ``Soldier``, it will start the chasing: 
 
 .. code-block:: C#
 
@@ -219,7 +219,7 @@ Initially the soldier is standing still, as long as the x-position of the main c
         }
     }
 
-The actual chasing involves the calculating the direction from the soldier towards the main character and normalise it. Then adding the force towards the normalised direction to consistently chasing down the player:
+The actual chasing involves calculating the direction from the soldier towards the main character and normalise it. Then adding the force towards the normalised direction to consistently chasing down the player:
 
 .. code-block:: C#
 
@@ -240,7 +240,7 @@ The actual chasing involves the calculating the direction from the soldier towar
         }
     }
 
-Analogous to the player animation switch, he sprite switching of the solider has been accomplished using the Unity Animator as well. The transition logic between animations is simply actualised by manipulating the :any:`IsRunning` boolean variable which has been shown in above functions.
+Analogous to the player animation switch, he sprite switching of the solider has been accomplished using the Unity Animator as well. The transition logic between animations is simply actualised by manipulating the :any:`IsRunning` boolean variable which has been shown in the above functions.
 
 .. figure:: ../_static/screenshots_unity/animator_soldier.png
     :align: center

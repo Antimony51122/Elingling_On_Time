@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Configuration Utilities &amp; Game Initialisation" href="config_data.html" />
+    <link rel="next" title="Configuration Utils &amp; Game Initialisation" href="config_data.html" />
     <link rel="prev" title="Elinging on Time Documentation" href="../index.html" /> 
 </head>
 
@@ -89,7 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#timer-event-handling">Timer Event Handling</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="menu.html">Menu &amp; Scene Management</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
@@ -97,6 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../func/player.html">Player</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/env_loop.html">Background Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/utils.html">Utility Classes</a></li>
 </ul>
 
             
@@ -166,14 +167,14 @@
 </div>
 <div class="section" id="event-handling-pattern">
 <h1>Event Handling Pattern<a class="headerlink" href="#event-handling-pattern" title="Permalink to this headline">¶</a></h1>
-<p>The game design follows a simple observer pattern where event handlers responds when an event occurs. Unity Event Handling system has been based on the delegate type which specifies a method signature and allow us to pass references to methods. The design pattern are shown in the system diagram below:</p>
+<p>The game design follows a simple observer pattern where event handlers respond when an event occurs. Unity Event Handling system has been based on the delegate type, which specifies a method signature and allows us to pass references to methods. The design pattern is shown in the system diagram below:</p>
 <div class="figure align-center" id="id1">
 <img alt="../_images/event_handling_system_diagram.png" src="../_images/event_handling_system_diagram.png" />
 <p class="caption"><span class="caption-text">System Diagram of Event Handling Design Pattern (<span class="guilabel">ctrl</span> + <span class="guilabel">+</span> to zoom in)</span></p>
 </div>
 <div class="section" id="event-manager">
 <h2>Event Manager<a class="headerlink" href="#event-manager" title="Permalink to this headline">¶</a></h2>
-<p>The centralised event manager script aims to manage connections between event listeners and event invokers, therefore objects can interact without creating instances for the them to know about each other. The core purpose of the event manager is to reduce the complexity inflation as the program expands where more and more scripts need to know each other via instances. This idea can be shown in the plot below:</p>
+<p>The centralised event manager script aims to manage connections between event listeners and event invokers. Therefore objects can interact without creating instances for them to know about each other. The core purpose of the event manager is to reduce the complexity of inflation as the program expands where more and more scripts need to know each other via instances. This idea can be shown in the plot below:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../_images/event_managing_complexity.png"><img alt="../_images/event_managing_complexity.png" src="../_images/event_managing_complexity.png" style="width: 300px;" /></a>
 </div>
@@ -309,7 +310,7 @@
 </div>
 <div class="section" id="listeners">
 <h2>Listeners<a class="headerlink" href="#listeners" title="Permalink to this headline">¶</a></h2>
-<p>In this game, there is only one current listener listening to all the events which is the <code class="docutils literal notranslate"><span class="pre">PlayerStatus</span></code> class. The listener is where we define the actual functionalities as event handler, here we define the four event handling functions (the detailed functionality implementation will be discussed in separate sections):</p>
+<p>In this game, there is only one current listener listening to all the events which are the <code class="docutils literal notranslate"><span class="pre">PlayerStatus</span></code> class. The listener is where we define the actual functionalities as an event handler, here we define the four event handling functions (the detailed functionality implementation will be discussed in separate sections):</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// reduces health by the given damage</span>
 <span class="k">private</span> <span class="k">void</span> <span class="nf">HandleHealthChangedEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">damage</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
@@ -331,7 +332,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Then in the <code class="docutils literal notranslate"><span class="pre">Start</span></code> method, we register the event handling functions to the central event manager (the timer event handling follows a different pattern that would be describe in below section):</p>
+<p>Then in the <code class="docutils literal notranslate"><span class="pre">Start</span></code> method, we register the event handling functions to the central event manager (the timer event handling follows a different pattern that would be described in below section):</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
     <span class="p">...</span>
 
@@ -344,8 +345,8 @@
 </div>
 <div class="section" id="timer-event-handling">
 <h2>Timer Event Handling<a class="headerlink" href="#timer-event-handling" title="Permalink to this headline">¶</a></h2>
-<p>The event handling pattern for the Customised Timer has been separated from the centralised event manager workflow. Logically the timer is a separate process thus in a parallel system make it more modular and easier to debug. On the other hand, unlike the <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code> where one or more float argument unity events could be triggered simultaneously, there should be only one kind of time pattern <span class="guilabel">time starts</span> &gt; <span class="guilabel">time changes</span> &gt; <span class="guilabel">time flows</span> &gt; <span class="guilabel">time finishes</span> (as long as we are still in 3-dimensional world without applying Einstein’s relativity) thus no need for going through a central event manager as no various kinds of time events need to be flexibly manipulated. In this scenario, back to the plot in previous event manager session above, going through the event manager is actually more complex than just using timer instances.</p>
-<p>In this case, the <code class="docutils literal notranslate"><span class="pre">CutomTimer</span></code> acts as the invoker, we first declare the instance of events in teh script without using dictionaries and enumerations:</p>
+<p>The event handling pattern for the Customised Timer has been separated from the centralised event manager workflow. Logically the timer is a separate process, thus in a parallel system make it more modular and easier to debug. On the other hand, unlike the <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code> where one or more float argument unity events could be triggered simultaneously, there should be only one kind of time pattern <span class="guilabel">time starts</span> &gt; <span class="guilabel">time changes</span> &gt; <span class="guilabel">time flows</span> &gt; <span class="guilabel">time finishes</span> (as long as we are still in 3-dimensional world without applying Einstein’s relativity) thus no need for going through a central event manager as no various kinds of time events need to be flexibly manipulated. In this scenario, back to the plot in the previous event manager session above, going through the event manager is actually more complex than just using timer instances.</p>
+<p>In this case, the <code class="docutils literal notranslate"><span class="pre">CutomTimer</span></code> acts as the invoker, we first declare the instance of events in the script without using dictionaries and enumerations:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">readonly</span> <span class="n">TimerChangedEvent</span> <span class="n">_timerChangedEvent</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TimerChangedEvent</span><span class="p">();</span>
 <span class="k">private</span> <span class="k">readonly</span> <span class="n">TimerFinishedEvent</span> <span class="n">_timerFinishedEvent</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TimerFinishedEvent</span><span class="p">();</span>
 </pre></div>
@@ -394,7 +395,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="config_data.html" class="btn btn-neutral float-right" title="Configuration Utilities &amp; Game Initialisation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="config_data.html" class="btn btn-neutral float-right" title="Configuration Utils &amp; Game Initialisation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral float-left" title="Elinging on Time Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

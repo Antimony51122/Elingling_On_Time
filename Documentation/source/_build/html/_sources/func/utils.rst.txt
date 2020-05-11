@@ -5,7 +5,7 @@
 Utility Classes
 ===============
 
-As a professional practice of software engineering, we tends to extract all utility classes which are not inheriting from the Unity :any:`MonoBehaviour` and contain functionalities that could be repeatly used in separate files. Then the scripts handling gameply implementations could just import and use these files like external packages. In this game, apart from the :file:`CustomTimer` class, we have another two utility classes serving these purposes in a similar pattern. Since these are just utility classes with static methods that we can directly utilise, I won't go into details how these functionalities have been implementated.
+As a professional practice of software engineering, we tend to extract all utility classes which are not inheriting from the Unity :any:`MonoBehaviour` and contain functionalities that could be repeatedly used in separate files. Then the scripts handling gameplay implementations could just import and use these files like external packages. In this game, apart from the :file:`CustomTimer` class, we have another two utility classes serving these purposes in a similar pattern. Since these are just utility classes with static methods that we can directly utilise, I won't go into details how these functionalities have been implemented.
 
 The first one is the :file:`ScreenUtils` class which contains static properties of the coordinates of the 4 edges of the screen:
 
@@ -72,7 +72,7 @@ The first one is the :file:`ScreenUtils` class which contains static properties 
         #endregion
     }
 
-Another one is the :any:`Probability` class which helps handling a set of events and assign a set of probabilities to each of them and let them randomly happen:
+Another one is the :any:`Probability` class which helps to handle a set of events and assign a set of probabilities to each of them and let them randomly happen:
 
 .. code-block:: C#
 

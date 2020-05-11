@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration Utilities &amp; Game Initialisation &mdash; Elinging on Time  documentation</title>
+  <title>Configuration Utils &amp; Game Initialisation &mdash; Elinging on Time  documentation</title>
   
 
   
@@ -83,7 +83,7 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="menu.html">Menu &amp; Scene Management</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../func/player.html">Player</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/env_loop.html">Background Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/utils.html">Utility Classes</a></li>
 </ul>
 
             
@@ -136,7 +137,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Configuration Utilities &amp; Game Initialisation</li>
+      <li>Configuration Utils &amp; Game Initialisation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -158,9 +159,9 @@
   <div class="figure align-center">
 <a class="reference internal image-reference" href="../_images/cover.gif"><img alt="../_images/cover.gif" src="../_images/cover.gif" style="width: 100%;" /></a>
 </div>
-<div class="section" id="configuration-utilities-game-initialisation">
-<h1>Configuration Utilities &amp; Game Initialisation<a class="headerlink" href="#configuration-utilities-game-initialisation" title="Permalink to this headline">¶</a></h1>
-<p>As a professional practise of game development, we tends to separate all the configuration parameters used in the game in a centralise data management file, usually in <span class="guilabel">.csv</span> file thus we can tune the game directly in the separate data file.</p>
+<div class="section" id="configuration-utils-game-initialisation">
+<h1>Configuration Utils &amp; Game Initialisation<a class="headerlink" href="#configuration-utils-game-initialisation" title="Permalink to this headline">¶</a></h1>
+<p>As a professional practice of game development, we tend to separate all the configuration parameters used in the game in a centralised data management file, usually in <span class="guilabel">.csv</span> file thus we can tune the game directly in the separate data file.</p>
 <p>Once again, we start with declaring an <code class="docutils literal notranslate"><span class="pre">enum</span></code> of data value names:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">ConfigDataValueName</span> <span class="p">{</span>
     <span class="n">VertSpeed</span><span class="p">,</span>
@@ -197,7 +198,7 @@
 <span class="k">public</span> <span class="kt">float</span> <span class="n">MaxSpawnIntervalSoldier</span>  <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MaxSpawnIntervalSoldier</span><span class="p">];</span>
 </pre></div>
 </div>
-<p>After that, we define the main functionality of stream reading. The function should read configuration data from a file. If the file read fails, the object should contain default values for the configuration data. After reading the data, always remember to close the input file and check if input is <code class="docutils literal notranslate"><span class="pre">null</span></code>. If we close a file that has never been opened, we will get a <code class="docutils literal notranslate"><span class="pre">NullReferenceException</span></code>.</p>
+<p>After that, we define the main functionality of stream reading. The function should read configuration data from a file. If the file read fails, the object should contain default values for the configuration data. After reading the data, always remember to close the input file and check if the input is <code class="docutils literal notranslate"><span class="pre">null</span></code>. If we close a file that has never been opened, we will get a <code class="docutils literal notranslate"><span class="pre">NullReferenceException</span></code>.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="nf">ConfigData</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">StreamReader</span> <span class="n">input</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
 
@@ -231,7 +232,7 @@
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Beware that the <code class="docutils literal notranslate"><span class="pre">Application.streamingAssetsPath</span></code> variable corresponds to a certain directory <span class="guilabel">StreamingAssets</span> for the convenience to deduct redundant hard-coding. However, the <span class="guilabel">.cvs</span> file has to be in this directory or otherwise will trigger the exception.</p>
+<p class="last">Beware that the <code class="docutils literal notranslate"><span class="pre">Application.streamingAssetsPath</span></code> variable corresponds to a certain directory <span class="guilabel">StreamingAssets</span> for the convenience to deduct redundant hard-coding. However, the <span class="guilabel">.cvs</span> file has to be in this directory or otherwise, will trigger the exception.</p>
 </div>
 <div class="figure align-center" id="id1">
 <img alt="../_images/streaming_assets.png" src="../_images/streaming_assets.png" />
@@ -295,7 +296,7 @@
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Note that the phone build have problems with streaming assets reading functionalities thus we just use the default values for phone builds.</p>
+<p class="last">Note that the phone build has problems with streaming assets reading functionalities, thus we just use the default values for phone builds.</p>
 </div>
 </div>
 

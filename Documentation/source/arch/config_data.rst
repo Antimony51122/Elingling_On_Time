@@ -2,10 +2,10 @@
     :align: center
     :width: 100%
 
-Configuration Utilities & Game Initialisation
-=============================================
+Configuration Utils & Game Initialisation
+=========================================
 
-As a professional practise of game development, we tends to separate all the configuration parameters used in the game in a centralise data management file, usually in :guilabel:`.csv` file thus we can tune the game directly in the separate data file.
+As a professional practice of game development, we tend to separate all the configuration parameters used in the game in a centralised data management file, usually in :guilabel:`.csv` file thus we can tune the game directly in the separate data file.
 
 Once again, we start with declaring an ``enum`` of data value names:
 
@@ -49,7 +49,7 @@ Then we declare all the public properties to be utilised elsewhere:
     public float MinSpawnIntervalSoldier  => _values[ConfigDataValueName.MinSpawnIntervalSoldier];
     public float MaxSpawnIntervalSoldier  => _values[ConfigDataValueName.MaxSpawnIntervalSoldier];
 
-After that, we define the main functionality of stream reading. The function should read configuration data from a file. If the file read fails, the object should contain default values for the configuration data. After reading the data, always remember to close the input file and check if input is ``null``. If we close a file that has never been opened, we will get a ``NullReferenceException``.
+After that, we define the main functionality of stream reading. The function should read configuration data from a file. If the file read fails, the object should contain default values for the configuration data. After reading the data, always remember to close the input file and check if the input is ``null``. If we close a file that has never been opened, we will get a ``NullReferenceException``.
 
 .. code-block:: C#
 
@@ -83,7 +83,7 @@ After that, we define the main functionality of stream reading. The function sho
         }
     }
 
-.. warning:: Beware that the ``Application.streamingAssetsPath`` variable corresponds to a certain directory :guilabel:`StreamingAssets` for the convenience to deduct redundant hard-coding. However, the :guilabel:`.cvs` file has to be in this directory or otherwise will trigger the exception. 
+.. warning:: Beware that the ``Application.streamingAssetsPath`` variable corresponds to a certain directory :guilabel:`StreamingAssets` for the convenience to deduct redundant hard-coding. However, the :guilabel:`.cvs` file has to be in this directory or otherwise, will trigger the exception. 
 
 .. figure:: ../_static/screenshots_unity/streaming_assets.png
     :align: center
@@ -152,4 +152,4 @@ Eventually, we call the ``Initialize()`` method in ``GameInitializer`` class whe
         }
     }
 
-.. warning:: Note that the phone build have problems with streaming assets reading functionalities thus we just use the default values for phone builds.
+.. warning:: Note that the phone build has problems with streaming assets reading functionalities, thus we just use the default values for phone builds.

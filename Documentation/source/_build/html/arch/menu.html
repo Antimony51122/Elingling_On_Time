@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Player" href="../func/player.html" />
-    <link rel="prev" title="Configuration Data Utilities &amp; Game Initialisation" href="config_data.html" /> 
+    <link rel="prev" title="Configuration Utils &amp; Game Initialisation" href="config_data.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,18 +83,19 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Menu &amp; Scene Management</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#main-menu">Main Menu</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#score-page">Score Page</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Gameplay Functionality Implementation:</span></p>
+<p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../func/player.html">Player</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/env_loop.html">Background Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/utils.html">Utility Classes</a></li>
 </ul>
 
             
@@ -164,7 +165,7 @@
 </div>
 <div class="section" id="menu-scene-management">
 <h1>Menu &amp; Scene Management<a class="headerlink" href="#menu-scene-management" title="Permalink to this headline">¶</a></h1>
-<p>The game consists of 4 occasions in 3 scenes: a main menu, the gameplay scene, the score page after that and a pause scene which is contained in the gameplay scene. As usual, we start the implementation with an <code class="docutils literal notranslate"><span class="pre">enum</span></code> stating all the cases we are caring:</p>
+<p>The game consists of 4 occasions in 3 scenes: the main menu, the gameplay scene, the score page after that and a pause scene which is contained in the gameplay scene. As usual, we start the implementation with an <code class="docutils literal notranslate"><span class="pre">enum</span></code> stating all the cases we are caring:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">MenuName</span> <span class="p">{</span>
     <span class="n">MainMenu</span><span class="p">,</span>
     <span class="n">Gameplay</span><span class="p">,</span>
@@ -219,7 +220,7 @@
 </div>
 <div class="section" id="score-page">
 <h2>Score Page<a class="headerlink" href="#score-page" title="Permalink to this headline">¶</a></h2>
-<p>The score page inherit score data from previous gameplay session. We first create a <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> class to declare the static variables we are going to show in the score page:</p>
+<p>The score page inherits score data from previous gameplay session. We first create a <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> class to declare the static variables we are going to show in the score page:</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">GameSession</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">ScoreResult</span><span class="p">;</span>
     <span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">TimeResult</span><span class="p">;</span>
@@ -230,7 +231,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>In order to let the <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> object get inherited towards the score page, we have to untilise the <code class="docutils literal notranslate"><span class="pre">DontDestroyOnLoad</span></code> method. In addition, We should keep only one single <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> object throughout the game, thus we need to detect and destroy extra <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> object, we find the length of list of <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> objects and if it’s bigger than 1, that means the current one is the second thus we detroy it. Otherwise, we maintain it towards the next session.</p>
+<p>In order to let the <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> object get inherited towards the score page, we have to utilise the <code class="docutils literal notranslate"><span class="pre">DontDestroyOnLoad</span></code> method. In addition, We should keep only one single <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> object throughout the game, thus we need to detect and destroy extra <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> object, we find the length of the list of <code class="docutils literal notranslate"><span class="pre">GameSession</span></code> objects, and if it’s bigger than 1, that means the current one is the second thus we destroy it. Otherwise, we maintain it towards the next session.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">// Find how many Game Status Objects are there</span>
     <span class="c1">// Beware this time using plural FindObjectsOfType&lt;&gt;() because there might be multiple</span>
@@ -319,7 +320,7 @@
 </tr>
 </tbody>
 </table>
-<p>Lastly, always remember to destory the current game session when restarting the game to avoid conflicts in next loop of game-flow.</p>
+<p>Lastly, always remember to destroy the current game session when restarting the game to avoid conflicts in the next loop of game-flow.</p>
 <div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">DestroyGameSession</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">FindObjectOfType</span><span class="p">&lt;</span><span class="n">GameSession</span><span class="p">&gt;()</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// destroy the current Game Session when restarting the game</span>
@@ -342,7 +343,7 @@
         <a href="../func/player.html" class="btn btn-neutral float-right" title="Player" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="config_data.html" class="btn btn-neutral float-left" title="Configuration Data Utilities &amp; Game Initialisation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="config_data.html" class="btn btn-neutral float-left" title="Configuration Utils &amp; Game Initialisation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

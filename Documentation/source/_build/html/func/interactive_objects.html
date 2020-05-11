@@ -175,7 +175,7 @@
 <h1>Interactive Game Elements &amp; Spawning<a class="headerlink" href="#interactive-game-elements-spawning" title="Permalink to this headline">¶</a></h1>
 <p>We have four kinds of elements that need to be spawned: the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code>, the <code class="docutils literal notranslate"><span class="pre">Soldier</span></code>, the <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> and <code class="docutils literal notranslate"><span class="pre">EnvObj</span></code> each has a corresponding spawning class. The spawners and spawned objects inheritance hierarchy can be shown in the system diagram below, in each hierarchy the class has declared some <code class="docutils literal notranslate"><span class="pre">protected</span></code> method that defined essential functionality patterns that to be utilised and modified by the child classes:</p>
 <div class="figure align-center" id="id2">
-<img alt="../_images/spawning_inheritance_hierarchy_system_diagram.png" src="../_images/spawning_inheritance_hierarchy_system_diagram.png" />
+<img alt="../_images/spawning_inheritance_hierarchy_system_diagram2.png" src="../_images/spawning_inheritance_hierarchy_system_diagram2.png" />
 <p class="caption"><span class="caption-text">System Diagram of Spawning Inheritance Hierarchy (<span class="guilabel">ctrl</span> + <span class="guilabel">+</span> to zoom in)</span></p>
 </div>
 <div class="section" id="spawners">
@@ -371,6 +371,11 @@
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<p>Analogous to the player animation switch, he sprite switching of the solider has been accomplished using the Unity Animator as well. The transition logic between animations is simply actualised by manipulating the <code class="xref any docutils literal notranslate"><span class="pre">IsRunning</span></code> boolean variable which has been shown in above functions.</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="../_images/animator_soldier.png"><img alt="../_images/animator_soldier.png" src="../_images/animator_soldier.png" style="width: 100%;" /></a>
+<p class="caption"><span class="caption-text">Unity Animator</span></p>
 </div>
 <table border="1" class="docutils">
 <colgroup>

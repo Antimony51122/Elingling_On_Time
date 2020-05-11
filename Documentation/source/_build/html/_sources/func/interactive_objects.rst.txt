@@ -7,7 +7,7 @@ Interactive Game Elements & Spawning
 
 We have four kinds of elements that need to be spawned: the ``Vehicle``, the ``Soldier``, the ``BicycleBuff`` and ``EnvObj`` each has a corresponding spawning class. The spawners and spawned objects inheritance hierarchy can be shown in the system diagram below, in each hierarchy the class has declared some ``protected`` method that defined essential functionality patterns that to be utilised and modified by the child classes:
 
-.. figure:: ../_static/system_diagrams/spawning_inheritance_hierarchy_system_diagram.png
+.. figure:: ../_static/system_diagrams/spawning_inheritance_hierarchy_system_diagram2.png
     :align: center
 
     System Diagram of Spawning Inheritance Hierarchy (:guilabel:`ctrl` + :guilabel:`+` to zoom in)
@@ -108,7 +108,7 @@ In the :any:`Start` method we assign each environmental object and lane choices 
         }
     }
 
-
+    
 
 Spawned Objects
 ---------------
@@ -239,6 +239,14 @@ The actual chasing involves the calculating the direction from the soldier towar
             _rb2D.AddForce(direction * _impulseForce, ForceMode2D.Impulse);
         }
     }
+
+Analogous to the player animation switch, he sprite switching of the solider has been accomplished using the Unity Animator as well. The transition logic between animations is simply actualised by manipulating the :any:`IsRunning` boolean variable which has been shown in above functions.
+
+.. figure:: ../_static/screenshots_unity/animator_soldier.png
+    :align: center
+    :width: 100%
+
+    Unity Animator 
 
 .. |soldier_chasing_elingling| image:: ../_static/sprites/soldier/soldier_chasing_elingling.gif
     :align: middle

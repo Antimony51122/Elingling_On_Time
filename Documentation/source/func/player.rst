@@ -178,7 +178,7 @@ The pixel art style Elingling avatar extracted the most significant features fro
 
     Elingling vs Elina
 
-When switching horizontal movement state, the sprite has to switch to corresponding ones. This has been accomplished using the Unity Animator. The transition logic between animations is simply actualised by manipulating the ``OnBicycle`` boolean variable which has been shown in above functions.
+When switching horizontal movement state, the sprite has to switch to corresponding ones. This has been accomplished using the Unity Animator. The transition logic between animations is simply actualised by manipulating the :any:`OnBicycle` boolean variable which has been shown in above functions.
 
 .. figure:: ../_static/screenshots_unity/animator.png
     :align: center

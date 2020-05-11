@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Game Elements &amp; Spawning" href="spawn_obj.html" />
-    <link rel="prev" title="Player" href="player.html" /> 
+    <link rel="next" title="Utility Classes" href="utils.html" />
+    <link rel="prev" title="Interactive Game Elements &amp; Spawning" href="interactive_objects.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,14 +83,15 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../arch/event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Data Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Functionality Implementation:</span></p>
+<p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="player.html">Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="player.html">The Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Background Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spawn_obj.html">Game Elements &amp; Spawning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Classes</a></li>
 </ul>
 
             
@@ -156,10 +157,114 @@
            <div itemprop="articleBody">
             
   <div class="figure align-center">
-<img alt="../_images/cover1.png" src="../_images/cover1.png" />
+<a class="reference internal image-reference" href="../_images/cover1.gif"><img alt="../_images/cover1.gif" src="../_images/cover1.gif" style="width: 100%;" /></a>
 </div>
 <div class="section" id="background-environment">
 <h1>Background Environment<a class="headerlink" href="#background-environment" title="Permalink to this headline">¶</a></h1>
+<p>Since the game is potentially an endless running game, it’s crucial to provide an endless running pattern. It’s not possible to pre-create the entire map which is long enough and let the player running on since this essentially is not endless and will also occupy huge memory spaces. In order to create smooth endless transitioning, we need to have a set of the same background element that the left side of it can connect with the right side and reuse this background element repeatedly when the player is running towards the right.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/background_repetition.png"><img alt="../_images/background_repetition.png" src="../_images/background_repetition.png" style="width: 100%;" /></a>
+<p class="caption"><span class="caption-text">Background Repetition</span></p>
+</div>
+<p>As you can see in the hierarchy tab in the above screenshot, when the game is running, we have 4 background elements in a row. Essentially, when the player is running towards the right, we take the last element which just left the screen the player just run over, and we move it to the right as you can see in the below screenshot, <code class="xref any docutils literal notranslate"><span class="pre">background0</span></code> has now moved from the left which is behind the player to the right which is in front of the player.</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/background_repetition2.png"><img alt="../_images/background_repetition2.png" src="../_images/background_repetition2.png" style="width: 100%;" /></a>
+<p class="caption"><span class="caption-text">Background Repetition 2</span></p>
+</div>
+<p>Then we just keep looping the same pattern and create a smoothly transitioning endless running pattern.</p>
+<p>All of the above logic has been singly implemented in one file <code class="file docutils literal notranslate"><span class="pre">EnvObjLoop</span></code>. We start with declaring all the background objects we want to loop through and store the screen boundary configuration parameter:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="na">[SerializeField]</span> <span class="k">private</span> <span class="n">GameObject</span><span class="p">[]</span> <span class="n">_loopObjs</span><span class="p">;</span>
+
+<span class="p">...</span>
+
+<span class="k">private</span> <span class="n">Vector2</span> <span class="n">_screenBounds</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Then we create a function to load all the objects we want to loop to fill the screen. We firstly figure out the width of the current sprite, ten we calculate how many of the clones wee need to fill the width of the screen, after that we start instantiating the clones and add it as the child:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">LoadChildObjects</span><span class="p">(</span><span class="n">GameObject</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// figure out the width of the current sprite by</span>
+    <span class="c1">// fetching the horizontal value of the boundary box of the sprite</span>
+    <span class="kt">float</span> <span class="n">objectWidth</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SpriteRenderer</span><span class="p">&gt;().</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">x</span> <span class="p">-</span> <span class="n">Choke</span><span class="p">;</span>
+
+    <span class="c1">// how many of the clones we need to make to fill the width of the screen</span>
+    <span class="c1">// Mathf.Ceil makes sure we have enough objects to fill the width</span>
+    <span class="c1">// &quot;+ 2&quot; are safety measure precautions for android devices</span>
+    <span class="kt">int</span> <span class="n">childrenNeeded</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">Mathf</span><span class="p">.</span><span class="n">Ceil</span><span class="p">(</span><span class="n">_screenBounds</span><span class="p">.</span><span class="n">x</span> <span class="p">*</span> <span class="m">2</span> <span class="p">/</span> <span class="n">objectWidth</span><span class="p">)</span> <span class="p">+</span> <span class="m">2</span><span class="p">;</span>
+
+    <span class="c1">// clone the project objects so we have a mold as a reference</span>
+    <span class="n">GameObject</span> <span class="n">clone</span> <span class="p">=</span> <span class="n">Instantiate</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">as</span> <span class="n">GameObject</span><span class="p">;</span>
+
+    <span class="c1">// clone all child objects as reference (instead of just using obj) because</span>
+    <span class="c1">// as we start adding children objects to obj those child objects will be cloned as well</span>
+    <span class="c1">// instead, we need a copy of obj to use for each child</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;=</span> <span class="n">childrenNeeded</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span> <span class="p">{</span>
+        <span class="n">GameObject</span> <span class="n">c</span> <span class="p">=</span> <span class="n">Instantiate</span><span class="p">(</span><span class="n">clone</span><span class="p">)</span> <span class="k">as</span> <span class="n">GameObject</span><span class="p">;</span>
+
+        <span class="c1">// set the clone as the child object of the parent object</span>
+        <span class="n">c</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">SetParent</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">transform</span><span class="p">);</span>
+
+        <span class="c1">// space out these one after each other</span>
+        <span class="n">c</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span>
+            <span class="n">objectWidth</span> <span class="p">*</span> <span class="n">i</span><span class="p">,</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+
+        <span class="n">c</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">name</span> <span class="p">+</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Destroy</span><span class="p">(</span><span class="n">clone</span><span class="p">);</span>
+    <span class="n">Destroy</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SpriteRenderer</span><span class="p">&gt;());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After the step of creating and fulfilling, we need to tackle the re-positioning. We first check if the camera has passed the edge of either the left-most child or the right-most child and re-position the children object accordingly.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">Beware that since the position of each child has been specified using the centre of the object when performing the calculations, we need to deduct or add half object with to reach the left-most or right-most boundary.</p>
+</div>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">RepositionChildObjects</span><span class="p">(</span><span class="n">GameObject</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// be careful with `GetComponentsInChildren` rather than `GetComponentInChildren`</span>
+    <span class="n">Transform</span><span class="p">[]</span> <span class="n">children</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">GetComponentsInChildren</span><span class="p">&lt;</span><span class="n">Transform</span><span class="p">&gt;();</span>
+
+    <span class="c1">// check if the camera extends past to the edge of either the first or the last child</span>
+    <span class="c1">// and re-position the children accordingly</span>
+    <span class="c1">// check there are more than one child in the list</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">children</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;</span> <span class="m">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//Debug.Log(children.Length);</span>
+
+        <span class="c1">// what we really care about is the first and the last child</span>
+        <span class="n">GameObject</span> <span class="n">firstChild</span> <span class="p">=</span> <span class="n">children</span><span class="p">[</span><span class="m">1</span><span class="p">].</span><span class="n">gameObject</span><span class="p">;</span> <span class="c1">// [1] because [0] is the parent object</span>
+        <span class="n">GameObject</span> <span class="n">lastChild</span> <span class="p">=</span> <span class="n">children</span><span class="p">[</span><span class="n">children</span><span class="p">.</span><span class="n">Length</span> <span class="p">-</span> <span class="m">1</span><span class="p">].</span><span class="n">gameObject</span><span class="p">;</span>
+
+        <span class="c1">// transform position is at the centre of the object, so add or subtract half the width</span>
+        <span class="kt">float</span> <span class="n">halfObjectWidth</span> <span class="p">=</span> <span class="n">lastChild</span><span class="p">.</span><span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SpriteRenderer</span><span class="p">&gt;().</span><span class="n">bounds</span><span class="p">.</span><span class="n">extents</span><span class="p">.</span><span class="n">x</span> <span class="p">-</span> <span class="n">Choke</span><span class="p">;</span>
+
+        <span class="c1">// detect if camera is exposing the right edge of the background element</span>
+        <span class="c1">// &quot;4 *&quot; are safety measure precautions for android devices</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="m">4</span> <span class="p">*</span> <span class="n">_screenBounds</span><span class="p">.</span><span class="n">x</span> <span class="p">&gt;</span> <span class="n">lastChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="n">halfObjectWidth</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// move our first child to the end of the list</span>
+            <span class="n">firstChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">SetAsLastSibling</span><span class="p">();</span>
+
+            <span class="c1">// set the position of the first child to be at right edge of the last child object</span>
+            <span class="n">firstChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span>
+                <span class="n">lastChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="n">halfObjectWidth</span> <span class="p">*</span> <span class="m">2</span><span class="p">,</span>
+                <span class="n">lastChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">lastChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">-</span> <span class="n">_screenBounds</span><span class="p">.</span><span class="n">x</span> <span class="p">&lt;</span> <span class="n">firstChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">-</span> <span class="n">halfObjectWidth</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// reverse of the above circumstance</span>
+            <span class="c1">// move last child to the first of the list</span>
+            <span class="n">lastChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">SetAsFirstSibling</span><span class="p">();</span>
+
+            <span class="c1">// set the position of the last child to be at left edge of the first child object</span>
+            <span class="n">lastChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span>
+                <span class="n">firstChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">-</span> <span class="n">halfObjectWidth</span> <span class="p">*</span> <span class="m">2</span><span class="p">,</span>
+                <span class="n">firstChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">firstChild</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -170,10 +275,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="spawn_obj.html" class="btn btn-neutral float-right" title="Game Elements &amp; Spawning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utility Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="player.html" class="btn btn-neutral float-left" title="Player" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="interactive_objects.html" class="btn btn-neutral float-left" title="Interactive Game Elements &amp; Spawning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

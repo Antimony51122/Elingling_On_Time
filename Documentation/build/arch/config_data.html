@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration Data Utilities &amp; Game Initialisation &mdash; Elinging on Time  documentation</title>
+  <title>Configuration Utils &amp; Game Initialisation &mdash; Elinging on Time  documentation</title>
   
 
   
@@ -83,14 +83,15 @@
               <p class="caption"><span class="caption-text">Game Architecture:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="event_handling.html">Event Handling Pattern</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Data Utilities &amp; Game Initialisation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Utils &amp; Game Initialisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="menu.html">Menu &amp; Scene Management</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Functionality Implementation:</span></p>
+<p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../func/player.html">Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/player.html">The Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../func/env_loop.html">Background Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../func/spawn_obj.html">Game Elements &amp; Spawning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../func/utils.html">Utility Classes</a></li>
 </ul>
 
             
@@ -136,7 +137,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Configuration Data Utilities &amp; Game Initialisation</li>
+      <li>Configuration Utils &amp; Game Initialisation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -156,10 +157,147 @@
            <div itemprop="articleBody">
             
   <div class="figure align-center">
-<img alt="../_images/cover.png" src="../_images/cover.png" />
+<a class="reference internal image-reference" href="../_images/cover.gif"><img alt="../_images/cover.gif" src="../_images/cover.gif" style="width: 100%;" /></a>
 </div>
-<div class="section" id="configuration-data-utilities-game-initialisation">
-<h1>Configuration Data Utilities &amp; Game Initialisation<a class="headerlink" href="#configuration-data-utilities-game-initialisation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="configuration-utils-game-initialisation">
+<h1>Configuration Utils &amp; Game Initialisation<a class="headerlink" href="#configuration-utils-game-initialisation" title="Permalink to this headline">¶</a></h1>
+<p>As a professional practice of game development, we tend to separate all the configuration parameters used in the game in a centralised data management file, usually in <span class="guilabel">.csv</span> file thus we can tune the game directly in the separate data file.</p>
+<p>Once again, we start with declaring an <code class="docutils literal notranslate"><span class="pre">enum</span></code> of data value names:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">ConfigDataValueName</span> <span class="p">{</span>
+    <span class="n">VertSpeed</span><span class="p">,</span>
+    <span class="n">HoriSpeed</span><span class="p">,</span>
+    <span class="n">BuffFactor</span><span class="p">,</span>
+    <span class="n">BuffDuration</span><span class="p">,</span>
+    <span class="n">MinSpawnIntervalBuff</span><span class="p">,</span>
+    <span class="n">MaxSpawnIntervalBuff</span><span class="p">,</span>
+    <span class="n">MinSpawnIntervalObstacle</span><span class="p">,</span>
+    <span class="n">MaxSpawnIntervalObstacle</span><span class="p">,</span>
+    <span class="n">MinSpawnIntervalSoldier</span><span class="p">,</span>
+    <span class="n">MaxSpawnIntervalSoldier</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After declaring the enumerations comes the main part where we create the <code class="docutils literal notranslate"><span class="pre">ConfigData</span></code> class for all the data manipulations. Firstly, we declare the variable to store the string of data path and declare the value dictionary:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">ConfigDataFileName</span> <span class="p">=</span> <span class="s">&quot;ConfigData.csv&quot;</span><span class="p">;</span>
+
+<span class="k">private</span> <span class="k">readonly</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">ConfigDataValueName</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;</span> <span class="n">_values</span> <span class="p">=</span>
+    <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">ConfigDataValueName</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;();</span>
+</pre></div>
+</div>
+<p>Then we declare all the public properties to be utilised elsewhere:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// using expression-body style</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">VertSpeed</span>                <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">VertSpeed</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">HoriSpeed</span>                <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">HoriSpeed</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">BuffFactor</span>               <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">BuffFactor</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">BuffDuration</span>             <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">BuffDuration</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">MinSpawnIntervalBuff</span>     <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MinSpawnIntervalBuff</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">MaxSpawnIntervalBuff</span>     <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MaxSpawnIntervalBuff</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">MinSpawnIntervalObstacle</span> <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MinSpawnIntervalObstacle</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">MaxSpawnIntervalObstacle</span> <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MaxSpawnIntervalObstacle</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">MinSpawnIntervalSoldier</span>  <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MinSpawnIntervalSoldier</span><span class="p">];</span>
+<span class="k">public</span> <span class="kt">float</span> <span class="n">MaxSpawnIntervalSoldier</span>  <span class="p">=&gt;</span> <span class="n">_values</span><span class="p">[</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MaxSpawnIntervalSoldier</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>After that, we define the main functionality of stream reading. The function should read configuration data from a file. If the file read fails, the object should contain default values for the configuration data. After reading the data, always remember to close the input file and check if the input is <code class="docutils literal notranslate"><span class="pre">null</span></code>. If we close a file that has never been opened, we will get a <code class="docutils literal notranslate"><span class="pre">NullReferenceException</span></code>.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="nf">ConfigData</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">StreamReader</span> <span class="n">input</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="c1">// create stream reader object</span>
+        <span class="n">input</span> <span class="p">=</span> <span class="n">File</span><span class="p">.</span><span class="n">OpenText</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span>
+            <span class="n">Application</span><span class="p">.</span><span class="n">streamingAssetsPath</span><span class="p">,</span> <span class="n">ConfigDataFileName</span><span class="p">));</span>
+
+        <span class="c1">// populate in names and values</span>
+        <span class="kt">string</span> <span class="n">currentLine</span> <span class="p">=</span> <span class="n">input</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">currentLine</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">string</span><span class="p">[]</span> <span class="n">tokens</span> <span class="p">=</span> <span class="n">currentLine</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="sc">&#39;,&#39;</span><span class="p">);</span>
+            <span class="n">ConfigDataValueName</span> <span class="n">valueName</span> <span class="p">=</span> <span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">)</span><span class="n">Enum</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span>
+                <span class="k">typeof</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">),</span> <span class="n">tokens</span><span class="p">[</span><span class="m">0</span><span class="p">]);</span>
+            <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">valueName</span><span class="p">,</span> <span class="kt">float</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="m">1</span><span class="p">]));</span>
+            <span class="n">currentLine</span> <span class="p">=</span> <span class="n">input</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+
+        <span class="c1">// set default values if something went wrong</span>
+        <span class="n">SetDefaultValues</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+        <span class="c1">// if close a file that never even opened, will get NullReferenceException</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">input</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">input</span><span class="p">.</span><span class="n">Close</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Beware that the <code class="docutils literal notranslate"><span class="pre">Application.streamingAssetsPath</span></code> variable corresponds to a certain directory <span class="guilabel">StreamingAssets</span> for the convenience to deduct redundant hard-coding. However, the <span class="guilabel">.cvs</span> file has to be in this directory or otherwise, will trigger the exception.</p>
+</div>
+<div class="figure align-center" id="id1">
+<img alt="../_images/streaming_assets.png" src="../_images/streaming_assets.png" />
+<p class="caption"><span class="caption-text">screenshots of streaming assets path in unity</span></p>
+</div>
+<p>As a fallback plan if the stream reading fails, we should always declare default values:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">SetDefaultValues</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">VertSpeed</span><span class="p">,</span>                <span class="m">10.0f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">HoriSpeed</span><span class="p">,</span>                <span class="m">0.2f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">BuffFactor</span><span class="p">,</span>               <span class="m">3.0f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">BuffDuration</span><span class="p">,</span>             <span class="m">4.0f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MinSpawnIntervalBuff</span><span class="p">,</span>     <span class="m">8.0f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MaxSpawnIntervalBuff</span><span class="p">,</span>     <span class="m">12.0f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MinSpawnIntervalObstacle</span><span class="p">,</span> <span class="m">1.25f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MaxSpawnIntervalObstacle</span><span class="p">,</span> <span class="m">1.75f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MinSpawnIntervalSoldier</span><span class="p">,</span>  <span class="m">12.0f</span><span class="p">);</span>
+    <span class="n">_values</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ConfigDataValueName</span><span class="p">.</span><span class="n">MaxSpawnIntervalSoldier</span><span class="p">,</span>  <span class="m">20.0f</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After declaring the <code class="docutils literal notranslate"><span class="pre">ConfigData</span></code> class, we declare a <code class="docutils literal notranslate"><span class="pre">ConfigUtils</span></code> utility class to declare static variables of each of the parameters, Since these are utility classes we don’t need to inherit from the <code class="docutils literal notranslate"><span class="pre">MonoBehaviour</span></code> unity class as we don’t want to attach the class to game objects to instantiate it. We just want consumers to access the class directly.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">ConfigUtils</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="n">ConfigData</span> <span class="n">_configData</span><span class="p">;</span>
+
+    <span class="c1">// using expression-body style</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">VertSpeed</span>                <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">VertSpeed</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">HoriSpeed</span>                <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">HoriSpeed</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">BuffFactor</span>               <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">BuffFactor</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">BuffDuration</span>             <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">BuffDuration</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">MinSpawnIntervalBuff</span>     <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">MinSpawnIntervalBuff</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">MaxSpawnIntervalBuff</span>     <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">MaxSpawnIntervalBuff</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">MinSpawnIntervalObstacle</span> <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">MinSpawnIntervalObstacle</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">MaxSpawnIntervalObstacle</span> <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">MaxSpawnIntervalObstacle</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">MinSpawnIntervalSoldier</span>  <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">MinSpawnIntervalSoldier</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">MaxSpawnIntervalSoldier</span>  <span class="p">=&gt;</span> <span class="n">_configData</span><span class="p">.</span><span class="n">MaxSpawnIntervalSoldier</span><span class="p">;</span>
+
+    <span class="c1">// Initialise the config utils, run the initialisation in GameInitializer.cs</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Initialize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">_configData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ConfigData</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Eventually, we call the <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> method in <code class="docutils literal notranslate"><span class="pre">GameInitializer</span></code> class where all the functionalities including <code class="docutils literal notranslate"><span class="pre">EventManager</span></code> functionalities from the previous section initialise for the current game session. The <code class="docutils literal notranslate"><span class="pre">GameInitializer</span></code> class should be the first script attached to the <span class="guilabel">Main Camera</span> in the Gamplay Scene:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">GameInitializer</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
+    <span class="c1">// Awake is called before Start</span>
+    <span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// initialise the screen utils</span>
+        <span class="n">ScreenUtils</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+
+        <span class="c1">// initialise the config utils</span>
+        <span class="c1">// Beware: build on phone device has problem reading streaming assets</span>
+        <span class="n">ConfigUtils</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+
+        <span class="c1">// initialise all event handling functionality</span>
+        <span class="n">EventManager</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Note that the phone build has problems with streaming assets reading functionalities, thus we just use the default values for phone builds.</p>
+</div>
 </div>
 
 

@@ -132,7 +132,111 @@ The ``FloatEventInvoker`` and ``ZPosChangeable`` classes have been discussed in 
 Vehicles
 ~~~~~~~~
 
+The implementation of the ``Vehicle`` class starts with the lane choice:
 
+.. code-block:: C#
 
+    public enum VehicleLane {
+        Top,
+        Bottom
+    }
 
+.. code-block:: C#
+
+    public class Vehicle : SpawnedObj {
+        private Rigidbody2D    _rb2D;
+        private SpriteRenderer _spriteRenderer;
+
+        ...
+
+        private VehicleLane _vehicleLane;
+
+The event trigger and self-destroy invoker removal functionalities have been discussed in previous sections, in this section we only discuss about the setting direction according to lane choice functionality. 
+
+We first choose the lane by utilising the built in ``Random.Range`` function. Then if the lane choic is top, spawn on top lane range, otherwise spawn on bottom lane range. We place the vehicle to corresponding initial position and make the vehicle start moving by adding force onto the :any:`rigidbody2D` component. Finally we decide the sprite direction.
+
+.. code-block:: C#
+
+    private void SetLaneAndDirection() {
+        int enumLen = System.Enum.GetNames(typeof(VehicleLane)).Length;
+        _vehicleLane = (VehicleLane) Random.Range(0, enumLen);
+
+        if (_vehicleLane == VehicleLane.Top) {
+            transform.position = new Vector3(
+                transform.position.x,
+                Random.Range(_topLaneBot, _topLaneTop),
+                transform.position.z);
+
+            _rb2D.AddForce(new Vector2(100, 0)); // moving towards right
+
+            // flip the sprite horizontally to make the vehicle face right
+            _spriteRenderer.flipX = true;
+        } else {
+            transform.position = new Vector3(
+                transform.position.x,
+                Random.Range(_botLaneBot, _botLaneTop),
+                transform.position.z);
+
+            // add force to initialise the vehicle movement
+            _rb2D.AddForce(new Vector2(-200, 0)); // moving towards left
+
+            // don't flip the sprite horizontally to so the vehicle faces left
+            _spriteRenderer.flipX = false;
+        }
+    }
+
+.. |vehicles_towards_left| image:: ../_static/sprites/vehicles/vehicles_towards_left.gif
+    :align: middle
+    :width: 700
+
+.. |vehicles_towards_right| image:: ../_static/sprites/vehicles/vehicles_towards_right.gif
+    :align: middle
+    :width: 700
+
++------------------------------------------------+
+|  Vehicles towards left without sprite flipping |
++------------------------------------------------+
+| |vehicles_towards_left|                        | 
++------------------------------------------------+
+|  Vehicles towards right with sprite flipping   |
++------------------------------------------------+
+| |vehicles_towards_right|                       | 
++------------------------------------------------+
+
+Soldier
+~~~~~~~
+
+Apart from event handling functionalities we have discussed in previous sections, the interesting part about ``Soldier`` class is the chasing functionality. 
+
+Initially the soldier is standing still, as long as the x-position of the main chrarcter is bigger than that of the ``Soldier`` which means it's on the right of the ``Soldier``, it will start the chasing: 
+
+.. code-block:: C#
+
+    private void StartChasing() {
+        if (!_isRunning && PlayerControl.PlayerTransform.position.x > transform.position.x) {
+            _isRunning = true;
+            _animator.SetBool("IsRunning", _isRunning);
+        }
+    }
+
+The actual chasing involves the calculating the direction from the soldier towards the main character and normalise it. Then adding the force towards the normalised direction to consistently chasing down the player:
+
+.. code-block:: C#
+
+    private void Chasing() {
+        if (_isRunning) {
+            _rb2D.velocity = Vector2.zero;
+
+            // calculate direction to the player and moving towards it
+            Vector2 direction = new Vector2(
+                PlayerControl.PlayerTransform.position.x - transform.position.x,
+                PlayerControl.PlayerTransform.position.y - transform.position.y);
+            direction.Normalize(); // normalise it to make it a unity vector
+
+            // because we set the speed to zero previously, adding the force with the original
+            // impulse force with the normalised direction we have just calculated will
+            // make the game object moving at the same speed as before
+            _rb2D.AddForce(direction * _impulseForce, ForceMode2D.Impulse);
+        }
+    }
 

@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Utility Classes &mdash; Elinging on Time  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Background Environment" href="env_loop.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Elinging on Time
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Game Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../arch/event_handling.html">Event Handling Pattern</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="player.html">The Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="env_loop.html">Background Environment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utility Classes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Elinging on Time</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Utility Classes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/func/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/cover1.gif"><img alt="../_images/cover1.gif" src="../_images/cover1.gif" style="width: 100%;" /></a>
+</div>
+<div class="section" id="utility-classes">
+<h1>Utility Classes<a class="headerlink" href="#utility-classes" title="Permalink to this headline">¶</a></h1>
+<p>As a professional practice of software engineering, we tend to extract all utility classes which are not inheriting from the Unity <code class="xref any docutils literal notranslate"><span class="pre">MonoBehaviour</span></code> and contain functionalities that could be repeatedly used in separate files. Then the scripts handling gameplay implementations could just import and use these files like external packages. In this game, apart from the <code class="file docutils literal notranslate"><span class="pre">CustomTimer</span></code> class, we have another two utility classes serving these purposes in a similar pattern. Since these are just utility classes with static methods that we can directly utilise, I won’t go into details how these functionalities have been implemented.</p>
+<p>The first one is the <code class="file docutils literal notranslate"><span class="pre">ScreenUtils</span></code> class which contains static properties of the coordinates of the 4 edges of the screen:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="c1">// Provides screen utilities</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">ScreenUtils</span> <span class="p">{</span>
+    <span class="cp">#region Fields</span>
+
+    <span class="c1">// cached for efficient boundary checking</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenLeft</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenRight</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenTop</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenBottom</span><span class="p">;</span>
+
+    <span class="cp">#endregion</span>
+
+    <span class="cp">#region Properties</span>
+
+    <span class="c1">// Gets the left edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenLeft</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenLeft</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Gets the right edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenRight</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenRight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Gets the top edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenTop</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenTop</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Gets the bottom edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenBottom</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenBottom</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cp">#endregion</span>
+
+    <span class="cp">#region Methods</span>
+
+    <span class="c1">// Initialises the screen utilities</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Initialize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// save screen edges in world coordinates</span>
+        <span class="kt">float</span> <span class="n">screenZ</span> <span class="p">=</span> <span class="p">-</span><span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">;</span>
+
+        <span class="n">Vector3</span> <span class="n">lowerLeftCornerScreen</span>  <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="m">0</span><span class="p">,</span>            <span class="m">0</span><span class="p">,</span>             <span class="n">screenZ</span><span class="p">);</span>
+        <span class="n">Vector3</span> <span class="n">upperRightCornerScreen</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">Screen</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">Screen</span><span class="p">.</span><span class="n">height</span><span class="p">,</span> <span class="n">screenZ</span><span class="p">);</span>
+        <span class="n">Vector3</span> <span class="n">lowerLeftCornerWorld</span>   <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">lowerLeftCornerScreen</span><span class="p">);</span>
+        <span class="n">Vector3</span> <span class="n">upperRightCornerWorld</span>  <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">upperRightCornerScreen</span><span class="p">);</span>
+
+        <span class="n">_screenLeft</span>   <span class="p">=</span> <span class="n">lowerLeftCornerWorld</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+        <span class="n">_screenRight</span>  <span class="p">=</span> <span class="n">upperRightCornerWorld</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+        <span class="n">_screenTop</span>    <span class="p">=</span> <span class="n">upperRightCornerWorld</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+        <span class="n">_screenBottom</span> <span class="p">=</span> <span class="n">lowerLeftCornerWorld</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cp">#endregion</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Another one is the <code class="xref any docutils literal notranslate"><span class="pre">Probability</span></code> class which helps to handle a set of events and assign a set of probabilities to each of them and let them randomly happen:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Probability</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">T</span> <span class="n">RandomEventsWithProb</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span>
+        <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="n">items</span><span class="p">,</span> <span class="kt">float</span> <span class="n">totalProb</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// pick random value with in range the sum of all occurence probabilities</span>
+        <span class="kt">float</span> <span class="n">randomValue</span> <span class="p">=</span> <span class="n">Random</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">totalProb</span><span class="p">);</span>
+        <span class="kt">float</span> <span class="n">cumulative</span>  <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;</span> <span class="n">item</span> <span class="k">in</span> <span class="n">items</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cumulative</span> <span class="p">+=</span> <span class="n">item</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">randomValue</span> <span class="p">&lt;</span> <span class="n">cumulative</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">item</span><span class="p">.</span><span class="n">Key</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="k">default</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="env_loop.html" class="btn btn-neutral float-left" title="Background Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Renke Huang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

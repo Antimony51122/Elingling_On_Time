@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Player &mdash; Elinging on Time  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Interactive Game Elements &amp; Spawning" href="interactive_objects.html" />
+    <link rel="prev" title="Menu &amp; Scene Management" href="../arch/menu.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Elinging on Time
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Game Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../arch/event_handling.html">Event Handling Pattern</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/config_data.html">Configuration Utils &amp; Game Initialisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arch/menu.html">Menu &amp; Scene Management</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Gameplay Implementation:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Player</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#playerstatus">PlayerStatus</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#health-death">Health &amp; Death</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#speed-up-timer">Speed Up &amp; Timer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sprites-manipulation">Sprites Manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#player-control">Player Control</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vertical-movement">Vertical Movement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#horizontal-movement">Horizontal Movement</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#z-position-of-the-sprites">Z-Position of the Sprites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_objects.html">Interactive Game Elements &amp; Spawning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="env_loop.html">Background Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Classes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Elinging on Time</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>The Player</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/func/player.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/cover1.gif"><img alt="../_images/cover1.gif" src="../_images/cover1.gif" style="width: 100%;" /></a>
+</div>
+<div class="section" id="the-player">
+<h1>The Player<a class="headerlink" href="#the-player" title="Permalink to this headline">¶</a></h1>
+<p>For the purpose of an easier modular approach. The Player’s implementation has been divided into two scripts:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">PlayerControl</span></code> which solely handling player’s horizontal and vertical movements.</li>
+<li><code class="docutils literal notranslate"><span class="pre">PlayerStatus</span></code> which handling the player’s properties including health, running distance score, invincibility and amount of buffs collected.</li>
+</ul>
+<div class="section" id="playerstatus">
+<h2>PlayerStatus<a class="headerlink" href="#playerstatus" title="Permalink to this headline">¶</a></h2>
+<p>The manipulation of the status has primarily based on the event handling system, which has been discussed in the previous section. In this section, we focus more on the actual handler functions.</p>
+<p>All player status properties have been declared as static field variable at the top and initialised in the <code class="docutils literal notranslate"><span class="pre">Start()</span></code> method:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// static fields to describe the player&#39;s current condition</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">Health</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">int</span>   <span class="n">Score</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span>  <span class="n">Invincible</span><span class="p">;</span>
+
+<span class="c1">// power buff collection and miss count</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">BuffCollectedCount</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">BuffMissedCount</span><span class="p">;</span>
+
+<span class="p">...</span>
+
+<span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// initialise player health with 3 hearts</span>
+    <span class="n">Health</span> <span class="p">=</span> <span class="m">3</span><span class="p">;</span>
+
+    <span class="c1">// initialise player invincibility mode with false</span>
+    <span class="n">Invincible</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+    <span class="n">BuffCollectedCount</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="n">BuffMissedCount</span>    <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="n">TotalPlayTime</span>      <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="health-death">
+<h3>Health &amp; Death<a class="headerlink" href="#health-death" title="Permalink to this headline">¶</a></h3>
+<p>After subscribing to the listening to the <code class="docutils literal notranslate"><span class="pre">HealthChangedEvent</span></code>, we define the actual health handler, the deduction will only trigger when the player is not in <code class="docutils literal notranslate"><span class="pre">Invincible</span></code> mode:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleHealthChangedEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">damage</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// only deduct health when the player is not invincible</span>
+    <span class="k">if</span> <span class="p">(!</span><span class="n">Invincible</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// don&#39;t go below zero in health</span>
+        <span class="n">Health</span> <span class="p">=</span> <span class="n">Mathf</span><span class="p">.</span><span class="n">Max</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">Health</span> <span class="p">-</span> <span class="n">damage</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As you can see, the function is taking in a float argument which is the health point deducted when triggering the event. This number will be passed in the invoker when the event happens.</p>
+</div>
+<p>We also define the game over handler, which stores the result and go to score page:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleGameOverEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">unused</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">ScoreResult</span>         <span class="p">=</span> <span class="n">Score</span><span class="p">;</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">TimeResult</span>          <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">TotalPlayTime</span><span class="p">;</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">BuffCollectedResult</span> <span class="p">=</span> <span class="n">BuffCollectedCount</span><span class="p">;</span>
+    <span class="n">GameSession</span><span class="p">.</span><span class="n">BuffMissedResult</span>    <span class="p">=</span> <span class="n">BuffMissedCount</span><span class="p">;</span>
+
+    <span class="n">MenuManager</span><span class="p">.</span><span class="n">GoToMenu</span><span class="p">(</span><span class="n">MenuName</span><span class="p">.</span><span class="n">ScorePage</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The event triggers when colliding with a <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> object. In the <code class="docutils literal notranslate"><span class="pre">Vehicle</span></code> script we define the <code class="docutils literal notranslate"><span class="pre">OnTriggerEnter2D</span></code> function as follow. 1 health point will be deducted as the event fires, if the health point reaches 0, trigger the game over event. As you can see that the event invoking requires a float argument passing in which is corresponding to the float argument of <code class="docutils literal notranslate"><span class="pre">HandleHealthChangedEvent</span></code> function above:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Player&quot;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1">// deduct the health by 1</span>
+        <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">HealthChangedEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="m">1.0f</span><span class="p">);</span>
+
+        <span class="c1">// check for game over</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">PlayerStatus</span><span class="p">.</span><span class="n">Health</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">GameOverEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">base</span><span class="p">.</span><span class="n">OnTriggerEnter2D</span><span class="p">(</span><span class="n">coll</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="speed-up-timer">
+<h3>Speed Up &amp; Timer<a class="headerlink" href="#speed-up-timer" title="Permalink to this headline">¶</a></h3>
+<p>The speed-up event triggers when colliding with the bicycle object. The implementation requires two functionalities: the speed up and timer to calculate whether the buff time has expired. These have been done by the following two handlers. The <code class="docutils literal notranslate"><span class="pre">HandleSpeedUpEffectEvent</span></code> handler boosts the player movement speed, turn the player into an invincible mode, change the sprite of the player to bicycle riding mode and switch the 2D collider’s <code class="docutils literal notranslate"><span class="pre">isTrigger</span></code> property to false thus the player has a real collider volume to crash the vehicles away.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleSpeedUpEffectEvent</span><span class="p">(</span><span class="kt">float</span> <span class="n">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// set invincibility mode to true thus player will not deduct health during invincible mode</span>
+    <span class="n">Invincible</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+    <span class="c1">// Player movement speed set to buffed state</span>
+    <span class="n">PlayerControl</span><span class="p">.</span><span class="n">HoriMvtState</span> <span class="p">=</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Buffed</span><span class="p">;</span>
+
+    <span class="c1">// change the sprite animation to riding bicycle in the animator</span>
+    <span class="n">_animator</span><span class="p">.</span><span class="n">SetBool</span><span class="p">(</span><span class="s">&quot;OnBicycle&quot;</span><span class="p">,</span> <span class="n">Invincible</span><span class="p">);</span>
+
+    <span class="c1">// set isTrigger property to false so the player can crash away the car and bus</span>
+    <span class="n">_capColl2D</span><span class="p">.</span><span class="n">isTrigger</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+    <span class="c1">// start the buff timer and exit buffed mode after buff duration</span>
+    <span class="n">_buffTimer</span><span class="p">.</span><span class="n">Run</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>At the end of the function, we start the timer running, and after a buffer duration, we shut it down. We actualise this by subscribing to the timer invoker, and let the buff timer instance listen to the <code class="docutils literal notranslate"><span class="pre">HandleBuffTimerFinishedEvent</span></code> handler after the buff time has finished:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="c1">// access to the invoker class by getting the CustomerTimer component from the game object</span>
+    <span class="n">_buffTimer</span> <span class="p">=</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">AddComponent</span><span class="p">&lt;</span><span class="n">CustomTimer</span><span class="p">&gt;();</span>
+    <span class="n">_buffTimer</span><span class="p">.</span><span class="n">Duration</span> <span class="p">=</span> <span class="n">ConfigUtils</span><span class="p">.</span><span class="n">BuffDuration</span><span class="p">;</span>
+    <span class="n">_buffTimer</span><span class="p">.</span><span class="n">AddTimerFinishedEventListener</span><span class="p">(</span><span class="n">HandleBuffTimerFinishedEvent</span><span class="p">);</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The actual timer finish handler has been declared as follow, the player exit the invincible mode, the sprite has been changed back to running, the 2D collider’s <code class="docutils literal notranslate"><span class="pre">isTrigger</span></code> property switches back to true thus the player will no longer have a collision volume, and will go through other objects when colliding and lastly change the horizontal moving state back to normal.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HandleBuffTimerFinishedEvent</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Invincible</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+    <span class="c1">// change the sprite animation to riding bicycle in the animator</span>
+    <span class="n">_animator</span><span class="p">.</span><span class="n">SetBool</span><span class="p">(</span><span class="s">&quot;OnBicycle&quot;</span><span class="p">,</span> <span class="n">Invincible</span><span class="p">);</span>
+
+    <span class="c1">// set isTrigger property back to true thus the player won&#39;t physically interact with vehicles</span>
+    <span class="n">_capColl2D</span><span class="p">.</span><span class="n">isTrigger</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+    <span class="c1">// Player movement speed set back to normal state</span>
+    <span class="n">PlayerControl</span><span class="p">.</span><span class="n">HoriMvtState</span> <span class="p">=</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Normal</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The event triggers when colliding with a <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> object. In the <code class="docutils literal notranslate"><span class="pre">BicycleBuff</span></code> script we define the <code class="docutils literal notranslate"><span class="pre">OnTriggerEnter2D</span></code> function as follow. We trigger the event by invoking the <code class="docutils literal notranslate"><span class="pre">SpeedUpActivatedEvent``and</span> <span class="pre">increment</span> <span class="pre">the</span> <span class="pre">``BuffCollectedCount</span></code> property of the <code class="docutils literal notranslate"><span class="pre">PlayerStatus</span></code> class.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Player&quot;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1">// TODO: this float argument here is actually unused, make it useful</span>
+        <span class="n">UnityEvents</span><span class="p">[</span><span class="n">EventName</span><span class="p">.</span><span class="n">SpeedUpActivatedEvent</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="n">ConfigUtils</span><span class="p">.</span><span class="n">BuffDuration</span><span class="p">);</span>
+
+        <span class="c1">// add to buff collected count when the buff destroys due to being collected</span>
+        <span class="n">PlayerStatus</span><span class="p">.</span><span class="n">BuffCollectedCount</span><span class="p">++;</span>
+
+        <span class="c1">// buff object disappears after the player collects it</span>
+        <span class="n">Destroy</span><span class="p">(</span><span class="n">gameObject</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="sprites-manipulation">
+<h2>Sprites Manipulation<a class="headerlink" href="#sprites-manipulation" title="Permalink to this headline">¶</a></h2>
+<p>The pixel art style Elingling avatar extracted the most significant features from Elina’s portrait, the glasses, the hairstyle and the overall cute looking.</p>
+<div class="figure align-center" id="id1">
+<img alt="../_images/elingling_elina.png" src="../_images/elingling_elina.png" />
+<p class="caption"><span class="caption-text">Elingling vs Elina</span></p>
+</div>
+<p>When switching horizontal movement state, the sprite has to switch to corresponding ones. This has been accomplished using the Unity Animator. The transition logic between animations is simply actualised by manipulating the <code class="xref any docutils literal notranslate"><span class="pre">OnBicycle</span></code> boolean variable which has been shown in the above functions.</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/animator.png"><img alt="../_images/animator.png" src="../_images/animator.png" style="width: 100%;" /></a>
+<p class="caption"><span class="caption-text">Unity Animator</span></p>
+</div>
+<p>Then the sprites can swtich between the following two animations correspondingly:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Running</td>
+<td>Cycling</td>
+</tr>
+<tr class="row-even"><td><img alt="running" class="align-middle" src="../_images/running.gif" /></td>
+<td><img alt="cycling" class="align-middle" src="../_images/cycling.gif" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="player-control">
+<h2>Player Control<a class="headerlink" href="#player-control" title="Permalink to this headline">¶</a></h2>
+<p>The implementation of player control starts with defining enumerations of horizontal and vertical states in separate files:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="c1">// An enumeration of the horizontal movement states</span>
+<span class="k">public</span> <span class="k">enum</span> <span class="n">HoriMvtState</span> <span class="p">{</span>
+    <span class="n">Normal</span><span class="p">,</span>
+    <span class="n">Buffed</span>
+<span class="p">}</span>
+
+<span class="c1">// An enumeration of the vertical movement states</span>
+<span class="k">public</span> <span class="k">enum</span> <span class="n">VertMvtState</span> <span class="p">{</span>
+    <span class="n">MovingDown</span><span class="p">,</span>
+    <span class="n">MovingUp</span><span class="p">,</span>
+    <span class="n">Still</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then we initialise the vertical movement states of the player as <code class="docutils literal notranslate"><span class="pre">Still</span></code> and horizontal movement state as <code class="docutils literal notranslate"><span class="pre">Normal</span></code> respectively.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">static</span> <span class="n">VertMvtState</span> <span class="n">VertMvtState</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="n">HoriMvtState</span> <span class="n">HoriMvtState</span><span class="p">;</span>
+
+<span class="p">...</span>
+
+<span class="k">void</span> <span class="nf">Start</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="c1">// initialise the vertical movement state with still where the player keeps the altitude</span>
+    <span class="n">VertMvtState</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VertMvtState</span><span class="p">();</span>
+    <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">;</span>
+
+    <span class="c1">// initialise the horizontal movement state with normal where the player keeps steady speed</span>
+    <span class="n">HoriMvtState</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HoriMvtState</span><span class="p">();</span>
+    <span class="n">HoriMvtState</span> <span class="p">=</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Normal</span><span class="p">;</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="vertical-movement">
+<h3>Vertical Movement<a class="headerlink" href="#vertical-movement" title="Permalink to this headline">¶</a></h3>
+<p>The actual effect of switching between vertical movement states has been handled by <code class="docutils literal notranslate"><span class="pre">VertMvtHandler</span></code> function utilising the unity <code class="docutils literal notranslate"><span class="pre">transform.Translate()</span></code> built-in function</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">VertMvtHandler</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">VertMvtState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingDown</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="p">-</span><span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="n">_vertSpeed</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingUp</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="n">_vertSpeed</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">:</span>
+            <span class="c1">// stop only the vertical speed by setting the vertical component to 0</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="c1">//transform.position = gameObject.transform.position;</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span>
+                <span class="n">Vector3</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Space</span><span class="p">.</span><span class="n">World</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In order to prevent the player from moving outside the screen boundaries, we introduce a clamping position function:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">CalculateClampedY</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// remember to add z pos, if using Vector2, the z pos will go back to 0</span>
+    <span class="c1">// where the player will be behind the background</span>
+    <span class="n">Vector3</span> <span class="n">playerPos</span> <span class="p">=</span> <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">playerPos</span><span class="p">.</span><span class="n">y</span> <span class="p">&gt;</span> <span class="n">_playerMvtUpperLimit</span> <span class="p">||</span> <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="n">_playerMvtLowerLimit</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span> <span class="p">=</span> <span class="n">Mathf</span><span class="p">.</span><span class="n">Clamp</span><span class="p">(</span>
+            <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">_playerMvtLowerLimit</span><span class="p">,</span>
+            <span class="n">_playerMvtUpperLimit</span><span class="p">);</span>
+
+        <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="n">playerPos</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The actual player control follows two discipline: keyboard control or phone controls. The program will detect first which platform the game is currently running on. The Phone version of the game utilises the accelerometer of the phone. When the phone has been tilting over a certain degree, the player will go towards the up direction and vice versa while the keyboard version follows the most basic simple control of using <span class="guilabel">w</span> and <span class="guilabel">s</span> to control the avatar to move up and down.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// using phone gyroscope &amp; accelerometer input when running as phone apps</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="n">platform</span> <span class="p">==</span> <span class="n">RuntimePlatform</span><span class="p">.</span><span class="n">Android</span> <span class="p">||</span>
+        <span class="n">Application</span><span class="p">.</span><span class="n">platform</span> <span class="p">==</span> <span class="n">RuntimePlatform</span><span class="p">.</span><span class="n">IPhonePlayer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">PhoneSensorControl</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// using keyboard vertical input axis when running on any other platform</span>
+        <span class="n">KeyboardControl</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">VertMvtHandler</span><span class="p">();</span>
+    <span class="n">HoriMvtHandler</span><span class="p">();</span>
+    <span class="n">CalculateClampedY</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// ----- Phone Sensor Control -----</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">PhoneSensorControl</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">acceleration</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="p">-</span><span class="m">0.60</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingDown</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">acceleration</span><span class="p">.</span><span class="n">y</span> <span class="p">&gt;</span> <span class="p">-</span><span class="m">0.25</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingUp</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// ----- Keyboard Control -----</span>
+<span class="k">private</span> <span class="k">void</span> <span class="nf">KeyboardControl</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">S</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingDown</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">W</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">MovingUp</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">VertMvtState</span> <span class="p">=</span> <span class="n">VertMvtState</span><span class="p">.</span><span class="n">Still</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="horizontal-movement">
+<h3>Horizontal Movement<a class="headerlink" href="#horizontal-movement" title="Permalink to this headline">¶</a></h3>
+<p>The horizontal movement simply utilises the unity <code class="docutils literal notranslate"><span class="pre">transform.Translate()</span></code> built in function:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">void</span> <span class="nf">HoriMvtHandler</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">HoriMvtState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Normal</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span><span class="n">Vector3</span><span class="p">.</span><span class="n">right</span> <span class="p">*</span> <span class="n">_horiSpeed</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">HoriMvtState</span><span class="p">.</span><span class="n">Buffed</span><span class="p">:</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span><span class="n">Vector3</span><span class="p">.</span><span class="n">right</span> <span class="p">*</span> <span class="n">_horiSpeed</span> <span class="p">*</span> <span class="n">_buffFactor</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The movement function has not much to discuss, what interesting is if the player runs towards the right of the screen, how to keep it always on the screen. This functionality has been accomplished in <code class="docutils literal notranslate"><span class="pre">EnvObjLoop</span></code> script which has been attached to the main camera. We create an instance of the player in the script and let the camera keep tracking of the player’s position:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EnvObjLoop</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
+    <span class="p">...</span>
+
+<span class="na">    [SerializeField]</span> <span class="k">private</span> <span class="n">GameObject</span> <span class="n">_player</span><span class="p">;</span>
+
+    <span class="p">...</span>
+
+    <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// let the camera follow the player and locate the player at x = -5 of the screen</span>
+        <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span>
+            <span class="n">_player</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="z-position-of-the-sprites">
+<h2>Z-Position of the Sprites<a class="headerlink" href="#z-position-of-the-sprites" title="Permalink to this headline">¶</a></h2>
+<p>A weird scenario of smaller objects (player and soldier) run on top of the larger objects (vehicles) arises when the objects run into each other. In this case, the smaller object should be behind the larger object, however, it runs on top since the z-position of the smaller object is closer to the camera than the larger one. In order to tackle this problem, we add one child class in between the <code class="docutils literal notranslate"><span class="pre">FloatEventInvoker</span></code> and the <code class="docutils literal notranslate"><span class="pre">SpawnObj</span></code> -&gt; the <code class="docutils literal notranslate"><span class="pre">ZPosChangeable</span></code> class.</p>
+<p>In this class, we set all vehicles spawned to be originally at the same level of z-position and determine the player and soldier sprite’s z-pos by comparing with the colliding vehicle objects, and if its position should look closer to the camera, we set its z-position closer to the camera than the vehicles.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="k">virtual</span> <span class="k">void</span> <span class="nf">OnTriggerEnter2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// only affect the player and the soldiers</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Player&quot;</span> <span class="p">||</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Soldier(Clone)&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// when the Player&#39;s or Soldier&#39;s center y-pos is lower than</span>
+        <span class="c1">// - Bus&#39;s center y-pos by more than 1 unit</span>
+        <span class="c1">// - Car&#39;s center y-pos by more than 0.25 units</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Bus(Clone)&quot;</span> <span class="p">&amp;&amp;</span>
+             <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="n">coll</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">-</span> <span class="m">1.0f</span><span class="p">)</span> <span class="p">||</span>
+            <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Car(Clone)&quot;</span> <span class="p">&amp;&amp;</span>
+             <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">&lt;</span> <span class="n">coll</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="p">-</span> <span class="m">0.25f</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">// set z-pos of player to closer than the vehicles</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="p">-</span><span class="m">3</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When the smaller object’s collider leave the larger object’s collider, we set its z-position back to original:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">OnTriggerExit2D</span><span class="p">(</span><span class="n">Collider2D</span> <span class="n">coll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// only affect the player and the soldiers</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Player&quot;</span> <span class="p">||</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">name</span> <span class="p">==</span> <span class="s">&quot;Soldier(Clone)&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">coll</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">CompareTag</span><span class="p">(</span><span class="s">&quot;Vehicle&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="p">-</span><span class="m">1</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="interactive_objects.html" class="btn btn-neutral float-right" title="Interactive Game Elements &amp; Spawning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../arch/menu.html" class="btn btn-neutral float-left" title="Menu &amp; Scene Management" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Renke Huang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -160,7 +160,94 @@
 </div>
 <div class="section" id="utility-classes">
 <h1>Utility Classes<a class="headerlink" href="#utility-classes" title="Permalink to this headline">¶</a></h1>
-<p>As a professional practice of software engineering, we tends to extract all utility classes which contain functionalities that could b</p>
+<p>As a professional practice of software engineering, we tends to extract all utility classes which are not inheriting from the Unity <code class="xref any docutils literal notranslate"><span class="pre">MonoBehaviour</span></code> and contain functionalities that could be repeatly used in separate files. Then the scripts handling gameply implementations could just import and use these files like external packages. In this game, apart from the <code class="file docutils literal notranslate"><span class="pre">CustomTimer</span></code> class, we have another two utility classes serving these purposes in a similar pattern. Since these are just utility classes with static methods that we can directly utilise, I won’t go into details how these functionalities have been implementated.</p>
+<p>The first one is the <code class="file docutils literal notranslate"><span class="pre">ScreenUtils</span></code> class which contains static properties of the coordinates of the 4 edges of the screen:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="c1">// Provides screen utilities</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">ScreenUtils</span> <span class="p">{</span>
+    <span class="cp">#region Fields</span>
+
+    <span class="c1">// cached for efficient boundary checking</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenLeft</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenRight</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenTop</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">_screenBottom</span><span class="p">;</span>
+
+    <span class="cp">#endregion</span>
+
+    <span class="cp">#region Properties</span>
+
+    <span class="c1">// Gets the left edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenLeft</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenLeft</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Gets the right edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenRight</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenRight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Gets the top edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenTop</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenTop</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Gets the bottom edge of the screen in world coordinates</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">float</span> <span class="n">ScreenBottom</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenBottom</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cp">#endregion</span>
+
+    <span class="cp">#region Methods</span>
+
+    <span class="c1">// Initialises the screen utilities</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Initialize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// save screen edges in world coordinates</span>
+        <span class="kt">float</span> <span class="n">screenZ</span> <span class="p">=</span> <span class="p">-</span><span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">;</span>
+
+        <span class="n">Vector3</span> <span class="n">lowerLeftCornerScreen</span>  <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="m">0</span><span class="p">,</span>            <span class="m">0</span><span class="p">,</span>             <span class="n">screenZ</span><span class="p">);</span>
+        <span class="n">Vector3</span> <span class="n">upperRightCornerScreen</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">Screen</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">Screen</span><span class="p">.</span><span class="n">height</span><span class="p">,</span> <span class="n">screenZ</span><span class="p">);</span>
+        <span class="n">Vector3</span> <span class="n">lowerLeftCornerWorld</span>   <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">lowerLeftCornerScreen</span><span class="p">);</span>
+        <span class="n">Vector3</span> <span class="n">upperRightCornerWorld</span>  <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">upperRightCornerScreen</span><span class="p">);</span>
+
+        <span class="n">_screenLeft</span>   <span class="p">=</span> <span class="n">lowerLeftCornerWorld</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+        <span class="n">_screenRight</span>  <span class="p">=</span> <span class="n">upperRightCornerWorld</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+        <span class="n">_screenTop</span>    <span class="p">=</span> <span class="n">upperRightCornerWorld</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+        <span class="n">_screenBottom</span> <span class="p">=</span> <span class="n">lowerLeftCornerWorld</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cp">#endregion</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Another one is the <code class="xref any docutils literal notranslate"><span class="pre">Probability</span></code> class which helps handling a set of events and assign a set of probabilities to each of them and let them randomly happen:</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Probability</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">T</span> <span class="n">RandomEventsWithProb</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span>
+        <span class="n">List</span><span class="p">&lt;</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;&gt;</span> <span class="n">items</span><span class="p">,</span> <span class="kt">float</span> <span class="n">totalProb</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// pick random value with in range the sum of all occurence probabilities</span>
+        <span class="kt">float</span> <span class="n">randomValue</span> <span class="p">=</span> <span class="n">Random</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">totalProb</span><span class="p">);</span>
+        <span class="kt">float</span> <span class="n">cumulative</span>  <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">KeyValuePair</span><span class="p">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">float</span><span class="p">&gt;</span> <span class="n">item</span> <span class="k">in</span> <span class="n">items</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cumulative</span> <span class="p">+=</span> <span class="n">item</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">randomValue</span> <span class="p">&lt;</span> <span class="n">cumulative</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">item</span><span class="p">.</span><span class="n">Key</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="k">default</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 
 
